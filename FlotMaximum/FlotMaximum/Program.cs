@@ -12,7 +12,8 @@ Vertex s = new Vertex("s");
 Vertex p = new Vertex("p");
 
 // réseau de flot du TD de Bessy
-FlowNetwork nf = new([(a, c, 10), (c, a, 4), (a, b, 12), (b, c, 9), (c, d, 14), (d, b, 7)], s, p, [(a, 16), (c, 13)], [(b, 20), (d, 4)]);
+FlowNetwork nf = new([
+    (a, b, 12), (a, c, 10), (d, b, 7), (b, c, 9), (c, a, 4), (c, d, 14)], s, p, [(a, 16), (c, 13)], [(b, 20), (d, 4)]);
 foreach (var edge in nf.Edges)
 {
     Console.WriteLine(edge);
@@ -35,7 +36,10 @@ foreach (var edge in nf.NewEdges.Keys)
 //     Console.WriteLine(v.id);
 // }
 var val = nf.FordFulkerson();
+int i = 0;
 foreach (var edge in val.Item1)
 {
-    Console.WriteLine(edge + " " + val.Item2);
+    Console.WriteLine(edge);
+    i = val.Item2;
 }
+Console.WriteLine("Valeur du flot : " + i);

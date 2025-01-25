@@ -4,7 +4,6 @@ public class Graph : ICloneable
 {
     public List<Vertex> Vertices { get; } = new();
     public Dictionary<Vertex, HashSet<Vertex>> AdjVertices { get; } = new();
-    public int NbVertices = 0;
     public Dictionary<(Vertex, Vertex), int> Edges { get; set; } = new ();
     
     public Graph(IEnumerable<(Vertex, Vertex, int)> neighbors) {
@@ -15,7 +14,6 @@ public class Graph : ICloneable
             AddEdge((element.Item1, element.Item2), element.Item3);
         }
         Vertices = new (vertexSet);
-        NbVertices = vertexSet.Count;
     }
     
     public void AddEdge((Vertex, Vertex) edge, int weight) {
@@ -39,7 +37,6 @@ public class Graph : ICloneable
     }
 
     public Graph(int nbVertices, int maxDeg, int minDeg, long seed) {
-        NbVertices = nbVertices;
         AdjVertices = new();
     }
 

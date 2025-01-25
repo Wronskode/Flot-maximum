@@ -33,9 +33,18 @@ public class FlowNetwork : Graph
 
     public (Dictionary<(Vertex, Vertex), int>, int) FordFulkerson()
     {
+        return GetMaxFlow((nf) => nf.Chemin());
+    }
+    
+    public (Dictionary<(Vertex, Vertex), int>, int) EdmondsKarp()
+    {
+        return GetMaxFlow((nf) => nf.CheminBFS());
+    }
+    public (Dictionary<(Vertex, Vertex), int>, int) GetMaxFlow(Func<FlowNetwork, List<Vertex>> getPath)
+    {
         Dictionary<(Vertex, Vertex), int> flot = NewEdges.ToDictionary(edge => edge.Key, edge => 0);
         FlowNetwork Nf = GetGraphResiduel(flot);
-        List<Vertex> chemin = Nf.Chemin();
+        List<Vertex> chemin = getPath(Nf);
 
         while (chemin.Count > 0)
         {
@@ -66,7 +75,7 @@ public class FlowNetwork : Graph
             }
             
             Nf = GetGraphResiduel(flot);
-            chemin = Nf.Chemin();
+            chemin = getPath(Nf);
         }
         int valeurFlot = flot.Where(edge => edge.Key.Item2 == Puits).Sum(edge => edge.Value);
         return (flot, valeurFlot);
@@ -134,14 +143,6 @@ public class FlowNetwork : Graph
         {
             List<Vertex> path = [Puits];
             int lenght = chemin.Count - 1;
-            // for (int i = 0; i < chemin.Count; i++)
-            // {
-            //     if (chemin[i].Select(x => x.Item1).Contains(Puits))
-            //     {
-            //         lenght = i;
-            //         break;
-            //     }
-            // }
             while (lenght > 0)
             {
                 foreach (var edge in chemin[lenght])
@@ -157,5 +158,49 @@ public class FlowNetwork : Graph
             return path;
         }
         return [];
+    }
+    
+    // Edmonds-Karp
+    public List<Vertex> CheminBFS()
+    {
+        Dictionary<Vertex, Vertex> parents = new();
+        Queue<Vertex> queue = new();
+        HashSet<Vertex> visited = new();
+        queue.Enqueue(Source);
+        visited.Add(Source);
+        while (queue.Count > 0)
+        {
+            var current = queue.Dequeue();
+
+            foreach (var edge in NewEdges)
+            {
+                var start = edge.Key.Item1;
+                var end = edge.Key.Item2;
+                var capacity = edge.Value;
+                if (start == current && capacity > 0 && !visited.Contains(end))
+                {
+                    queue.Enqueue(end);
+                    visited.Add(end);
+                    parents[end] = current;
+                    if (end == Puits)
+                    {
+                        break;
+                    }
+                }
+            }
+        }
+        if (!parents.ContainsKey(Puits))
+        {
+            return [];
+        }
+        List<Vertex> path = [Puits];
+        var currentVertex = Puits;
+
+        while (currentVertex != Source)
+        {
+            currentVertex = parents[currentVertex];
+            path.Insert(0, currentVertex);
+        }
+        return path;
     }
 }

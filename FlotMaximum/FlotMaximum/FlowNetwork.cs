@@ -1,3 +1,5 @@
+using System.Text;
+
 namespace FlotMaximum;
 
 public class FlowNetwork : Graph
@@ -8,13 +10,13 @@ public class FlowNetwork : Graph
     private List<(Vertex, int)> PuitsNeighbors;
     public Dictionary<(Vertex, Vertex), int> NewEdges { get; set; } = new ();
 
-    public FlowNetwork(IEnumerable<(Vertex, Vertex, int)> neighbors, Vertex source, Vertex puits, List<
-        (Vertex, int)> sourceNeighbors, List<(Vertex, int)> puitsNeighbors) : base(neighbors)
+    public FlowNetwork(IEnumerable<(Vertex, Vertex, int)> neighbors, Vertex source, Vertex puits, IEnumerable<
+        (Vertex, int)> sourceNeighbors, IEnumerable<(Vertex, int)> puitsNeighbors, IEnumerable<Vertex> vertices) : base(neighbors, vertices)
     {
         Source = source;
         Puits = puits;
-        SourceNeighbors = sourceNeighbors;
-        PuitsNeighbors = puitsNeighbors;
+        SourceNeighbors = sourceNeighbors.ToList();
+        PuitsNeighbors = puitsNeighbors.ToList();
         NewEdges = new(Edges);
 
         foreach (var vertex in SourceNeighbors)
@@ -80,7 +82,7 @@ public class FlowNetwork : Graph
 
     public FlowNetwork GetResidualNetwork(Flow  flot)
     {
-        FlowNetwork residuel = new(Edges.Select(x => (x.Key.Item1, x.Key.Item2, x.Value)), Source, Puits, SourceNeighbors, PuitsNeighbors);
+        FlowNetwork residuel = new(Edges.Select(x => (x.Key.Item1, x.Key.Item2, x.Value)), Source, Puits, SourceNeighbors, PuitsNeighbors, Vertices);
         Dictionary<(Vertex, Vertex), int> newEdgesNf = new(NewEdges);
         foreach (var edge in NewEdges)
         {
@@ -202,7 +204,83 @@ public class FlowNetwork : Graph
 
     public override string ToString()
     {
-        Graph graph = new Graph(NewEdges);
+        Graph graph = new Graph(NewEdges.Select(x => (x.Key.Item1, x.Key.Item2, x.Value)), Vertices);
         return graph.ToString();
+    }
+
+    public string ToMiniZinc()
+{
+    StringBuilder sommetsBuilder = new StringBuilder("enum SOMMET = {\n");
+    var newVertices = new List<Vertex>(Vertices) { Source, Puits };
+    var newAdjVertices = new Dictionary<Vertex, HashSet<Vertex>>(AdjVertices)
+    {
+        [Source] = SourceNeighbors.Select(x => x.Item1).ToHashSet()
+    };
+
+    foreach (var neighbor in PuitsNeighbors.Select(x => x.Item1))
+    {
+        if (!newAdjVertices.ContainsKey(neighbor))
+        {
+            newAdjVertices[neighbor] = new HashSet<Vertex> { Puits };
+        }
+        else
+        {
+            newAdjVertices[neighbor].Add(Puits);
+        }
+    }
+    newAdjVertices[Puits] = new HashSet<Vertex>();
+    foreach (var sommet in newVertices)
+    {
+        if (sommet == Source)
+            sommetsBuilder.Append("s,");
+        else if (sommet == Puits)
+            sommetsBuilder.Append("p,");
+        else
+            sommetsBuilder.Append($"S{sommet},");
+    }
+    sommetsBuilder.Length--;
+    sommetsBuilder.Append("\n};");
+    StringBuilder matriceBuilder = new StringBuilder("array[SOMMET, SOMMET] of int: flots_max = \n[| ");
+    int sumCapacity = 0;
+
+    foreach (var u in newVertices)
+    {
+        foreach (var v in newVertices)
+        {
+            if (u == Puits && v == Source)
+            {
+                matriceBuilder.Append(sumCapacity + ",");
+            }
+            else if (newAdjVertices[u].Contains(v))
+            {
+                var edgeValue = NewEdges[(u, v)];
+                matriceBuilder.Append(edgeValue + ",");
+                if (u == Source)
+                    sumCapacity += edgeValue;
+            }
+            else
+            {
+                matriceBuilder.Append("0,");
+            }
+        }
+        matriceBuilder.Length--;
+        matriceBuilder.Append("\n | ");
+    }
+    matriceBuilder.Length -= 4;
+    matriceBuilder.Append(" |];\n");
+    matriceBuilder.Append("SOMMET: source = s;\nSOMMET: puits = p;");
+    string resultat = sommetsBuilder.ToString() + "\n" + matriceBuilder.ToString()
+        + "\narray[SOMMET,SOMMET] of var int: flots;\n\nconstraint forall(s1,s2 in SOMMET)(flots[s1,s2] >= 0 /\\ flots[s1,s2] <= flots_max[s1,s2]);\n\nconstraint forall(x in SOMMET where x != source /\\ x != puits)(\n  sum(s2 in SOMMET)(flots[x,s2]) = sum(s2 in SOMMET)(flots[s2,x])\n);\n\nvar int: flot_sortie;\nconstraint flot_sortie = sum(x in SOMMET)(flots[x,puits]);\n\nsolve maximize flot_sortie;";
+    File.WriteAllText("maxflow.mzn", resultat);
+
+    return resultat;
+}
+
+
+    public override object Clone()
+    {
+        return new FlowNetwork(Edges.Select(x => (x.Key.Item1.Clone() as Vertex, x.Key.Item2.Clone() as Vertex, x.Value)),
+            Source.Clone() as Vertex, Puits.Clone() as Vertex, SourceNeighbors.Select(x => (x.Item1.Clone() as Vertex, x.Item2)), PuitsNeighbors.Select(x => (x.Item1.Clone() as Vertex, x.Item2)),
+            Vertices.Select(x => x.Clone() as Vertex));
     }
 }

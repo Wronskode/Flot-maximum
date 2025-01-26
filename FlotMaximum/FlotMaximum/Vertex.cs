@@ -2,26 +2,19 @@ namespace FlotMaximum;
 
 public class Vertex : ICloneable
 {
-    public HashSet<Vertex> Neighbors { get; set; } = new();
-    public string id;
-    public Vertex(HashSet<Vertex> neighbors, string id)
-    {
-        Neighbors = neighbors;
-        this.id = id;
-    }
+    private string Id { get; set; }
 
     public Vertex(string id)
     {
-        this.id = id;
+        Id = id;
     }
 
     public override string ToString()
     {
-        return id.ToString();
+        return Id;
     }
-
     public object Clone()
     {
-        return new Vertex(Neighbors, id);
+        return new Vertex(Id);
     }
 }

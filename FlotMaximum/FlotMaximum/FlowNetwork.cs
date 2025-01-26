@@ -2,8 +2,8 @@ namespace FlotMaximum;
 
 public class FlowNetwork : Graph
 {
-    private Vertex Source;
-    private Vertex Puits;
+    private readonly Vertex Source;
+    private readonly Vertex Puits;
     private List<(Vertex, int)> SourceNeighbors;
     private List<(Vertex, int)> PuitsNeighbors;
     public Dictionary<(Vertex, Vertex), int> NewEdges { get; set; } = new ();
@@ -15,10 +15,7 @@ public class FlowNetwork : Graph
         Puits = puits;
         SourceNeighbors = sourceNeighbors;
         PuitsNeighbors = puitsNeighbors;
-        foreach (var edge in Edges)
-        {
-            NewEdges.Add(edge.Key, edge.Value);
-        }
+        NewEdges = new(Edges);
 
         foreach (var vertex in SourceNeighbors)
         {
@@ -38,13 +35,13 @@ public class FlowNetwork : Graph
     
     public (Dictionary<(Vertex, Vertex), int>, int) EdmondsKarp()
     {
-        return GetMaxFlow((nf) => nf.CheminBFS());
+        return GetMaxFlow((nf) => nf.CheminBfs());
     }
     public (Dictionary<(Vertex, Vertex), int>, int) GetMaxFlow(Func<FlowNetwork, List<Vertex>> getPath)
     {
-        Dictionary<(Vertex, Vertex), int> flot = NewEdges.ToDictionary(edge => edge.Key, edge => 0);
-        FlowNetwork Nf = GetGraphResiduel(flot);
-        List<Vertex> chemin = getPath(Nf);
+        Flow flot = new(NewEdges.ToDictionary(edge => edge.Key, _ => 0), Puits);
+        FlowNetwork nf = GetResidualNetwork(flot);
+        List<Vertex> chemin = getPath(nf);
 
         while (chemin.Count > 0)
         {
@@ -53,7 +50,7 @@ public class FlowNetwork : Graph
             {
                 var edge = (chemin[i], chemin[i + 1]);
 
-                if (Nf.NewEdges.TryGetValue(edge, out int capacity))
+                if (nf.NewEdges.TryGetValue(edge, out int capacity))
                 {
                     delta = Math.Min(delta, capacity);
                 }
@@ -64,44 +61,43 @@ public class FlowNetwork : Graph
                 var forwardEdge = (chemin[i], chemin[i + 1]);
                 var backwardEdge = (chemin[i + 1], chemin[i]);
 
-                if (flot.ContainsKey(forwardEdge))
+                if (flot.FlowEdges.ContainsKey(forwardEdge))
                 {
-                    flot[forwardEdge] += delta;
+                    flot.IncreaseFlow(forwardEdge, delta);
                 }
                 else
                 {
-                    flot[backwardEdge] -= delta;
+                    flot.DecreaseFlow(backwardEdge, delta);
                 }
             }
             
-            Nf = GetGraphResiduel(flot);
-            chemin = getPath(Nf);
+            nf = GetResidualNetwork(flot);
+            chemin = getPath(nf);
         }
-        int valeurFlot = flot.Where(edge => edge.Key.Item2 == Puits).Sum(edge => edge.Value);
-        return (flot, valeurFlot);
+        return (flot.FlowEdges, flot.Value);
     }
 
 
-    public FlowNetwork GetGraphResiduel(Dictionary<(Vertex, Vertex), int> flot)
+    public FlowNetwork GetResidualNetwork(Flow  flot)
     {
         FlowNetwork residuel = new(Edges.Select(x => (x.Key.Item1, x.Key.Item2, x.Value)), Source, Puits, SourceNeighbors, PuitsNeighbors);
-        var newEdgesNF = NewEdges.ToDictionary();
+        Dictionary<(Vertex, Vertex), int> newEdgesNf = new(NewEdges);
         foreach (var edge in NewEdges)
         {
             int capacity = edge.Value;
-            int currentFlow = flot[(edge.Key.Item1, edge.Key.Item2)];
-            newEdgesNF[(edge.Key.Item1, edge.Key.Item2)] = capacity-currentFlow;
+            int currentFlow = flot.FlowEdges[(edge.Key.Item1, edge.Key.Item2)];
+            newEdgesNf[(edge.Key.Item1, edge.Key.Item2)] = capacity-currentFlow;
             if (edge.Key.Item2 != Puits && edge.Key.Item1 != Source)
             {
-                bool ok = newEdgesNF.TryAdd((edge.Key.Item2, edge.Key.Item1), currentFlow);
+                bool ok = newEdgesNf.TryAdd((edge.Key.Item2, edge.Key.Item1), currentFlow);
                 if (!ok)
                 {
-                    newEdgesNF[(edge.Key.Item1, edge.Key.Item2)] += currentFlow;
+                    newEdgesNf[(edge.Key.Item1, edge.Key.Item2)] += currentFlow;
                 }
             }
         }
-        newEdgesNF = newEdgesNF.Where(x => x.Value > 0).ToDictionary();
-        residuel.NewEdges = newEdgesNF;
+        newEdgesNf = newEdgesNf.Where(x => x.Value > 0).ToDictionary();
+        residuel.NewEdges = newEdgesNf;
         return residuel;
     }
 
@@ -161,7 +157,7 @@ public class FlowNetwork : Graph
     }
     
     // Edmonds-Karp
-    public List<Vertex> CheminBFS()
+    public List<Vertex> CheminBfs()
     {
         Dictionary<Vertex, Vertex> parents = new();
         Queue<Vertex> queue = new();
@@ -202,5 +198,11 @@ public class FlowNetwork : Graph
             path.Insert(0, currentVertex);
         }
         return path;
+    }
+
+    public override string ToString()
+    {
+        Graph graph = new Graph(NewEdges);
+        return graph.ToString();
     }
 }

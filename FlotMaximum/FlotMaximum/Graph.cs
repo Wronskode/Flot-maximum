@@ -2,8 +2,8 @@ namespace FlotMaximum;
 
 public class Graph : ICloneable
 {
-    public List<Vertex> Vertices { get; } = new();
-    public Dictionary<Vertex, HashSet<Vertex>> AdjVertices { get; } = new();
+    private List<Vertex> Vertices { get; } = new();
+    private Dictionary<Vertex, HashSet<Vertex>> AdjVertices { get; } = new();
     public Dictionary<(Vertex, Vertex), int> Edges { get; set; } = new ();
     
     public Graph(IEnumerable<(Vertex, Vertex, int)> neighbors) {
@@ -12,6 +12,16 @@ public class Graph : ICloneable
             vertexSet.Add(element.Item1);
             vertexSet.Add(element.Item2);
             AddEdge((element.Item1, element.Item2), element.Item3);
+        }
+        Vertices = new (vertexSet);
+    }
+    
+    public Graph(IEnumerable<KeyValuePair<(Vertex, Vertex), int>> neighbors) {
+        HashSet<Vertex> vertexSet = new();
+        foreach (KeyValuePair<(Vertex, Vertex), int> element in neighbors) {
+            vertexSet.Add(element.Key.Item1);
+            vertexSet.Add(element.Key.Item2);
+            AddEdge((element.Key.Item1, element.Key.Item2), element.Value);
         }
         Vertices = new (vertexSet);
     }
@@ -27,39 +37,32 @@ public class Graph : ICloneable
             Vertices.Add(edge.Item1);
             AdjVertices.Add(edge.Item1, []);
         }
-        if (!AdjVertices.ContainsKey(edge.Item2))
-        {
-            Vertices.Add(edge.Item2);
-            AdjVertices.Add(edge.Item2, []);
-        }
         AdjVertices[edge.Item1].Add(edge.Item2);
-        AdjVertices[edge.Item2].Add(edge.Item1);
     }
 
-    public Graph(int nbVertices, int maxDeg, int minDeg, long seed) {
-        AdjVertices = new();
-    }
-
-    public Graph() {
-        AdjVertices = new ();
-    }
-    public void AddVertex(Vertex v) {
-        if (AdjVertices.ContainsKey(v)) return;
-        AdjVertices.TryAdd(v, new());
-        Vertices.Add(v);
-    }
-
-    public void RemoveVertex(Vertex v) {
-        Vertices.Remove(v);
-        AdjVertices.Remove(v);
-        foreach (HashSet<Vertex> listVertex in AdjVertices.Values) {
-            listVertex.Remove(v);
+    public override string ToString()
+    {
+        string output = "";
+        foreach (Vertex vertex in Vertices)
+        {
+            string txt = "";
+            foreach (var edge in Edges)
+            {
+                if (edge.Key.Item2 == vertex)
+                {
+                    txt += edge.Key.Item1 + ",";
+                }
+            }
+            txt = txt.TrimEnd(',');
+            if (txt.Length == 0) continue;
+            txt += " -> " + vertex;
+            output += txt + "\n";
         }
-        Edges = Edges.Where((neighbor) =>  neighbor.Key.Item1 != v && neighbor.Key.Item2 != v).ToDictionary();
+        return output;
     }
 
     public object Clone()
     {
-        return new Graph(Edges.Select(x => (x.Key.Item1, x.Key.Item2, x.Value)));
+        return new Graph(Edges.Select(x => (x.Key.Item1.Clone() as Vertex, x.Key.Item2.Clone() as Vertex, x.Value)));
     }
 }

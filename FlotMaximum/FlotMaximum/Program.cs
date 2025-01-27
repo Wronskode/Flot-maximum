@@ -13,8 +13,7 @@ Vertex p = new Vertex("p");
 
 // réseau de flot du TD de Bessy
 //FlowNetwork nf = new([
-//(a, b, 12), (a, c, 10), (d, b, 7), (b, c, 9), (c, a, 4), (c, d, 14)], s, p, [(a, 16), (c, 13)], [(b, 20), (d, 4)],
-  //[a,b,c,d]);
+//(a, b, 12), (a, c, 10), (d, b, 7), (b, c, 9), (c, a, 4), (c, d, 14)], s, p, [(a, 16), (c, 13)], [(b, 20), (d, 4)]);
 
 //FlowNetwork nf = new([
 //(a,d, 13), (a, b, 8), (a, c, 10), (b,c,26), (c,d,20),
@@ -34,9 +33,10 @@ foreach (var edge in val.Item1)
 }
 Console.WriteLine("Valeur du flot : " + i);*/
 
-RandomFlowNetwork randomFlow = new(100*10, 1000*100);
+RandomFlowNetwork randomFlow = new(100*10, 1000*50);
 var nf = randomFlow.Generate();
-Console.WriteLine("Généré");
+Console.WriteLine("Généré avec " + (nf.AdjVertices.Keys.Count + 2) + " sommets et " +
+                  (nf.Edges.Count + nf.SourceNeighbors.Count + nf.PuitsNeighbors.Count) + " arêtes.");
 var startTime = Stopwatch.GetTimestamp();
 var val = nf.EdmondsKarp();
 Console.WriteLine("Elapsed : " + Stopwatch.GetElapsedTime(startTime));

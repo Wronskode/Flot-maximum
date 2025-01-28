@@ -44,6 +44,6 @@ public class RandomFlowNetwork
         List<(Vertex, int)> sourceVerticesList = new(sourceVertices.Select(v => (v, Random.Next(0, EdgeNumber))));
         List<(Vertex, int)> puitsVerticesList = new(puitsVertices.Select(v => (v, Random.Next(0, EdgeNumber))));
         var edgesList = graph.Edges.Select(v => (v.Key.Item1, v.Key.Item2, v.Value));
-        return new FlowNetwork(edgesList, new Vertex("s"), new Vertex("p"), sourceVerticesList, puitsVerticesList);
+        return new FlowNetwork(edgesList, new Vertex("s"), new Vertex("p"), sourceVerticesList, puitsVerticesList, vertices);
     }
 }

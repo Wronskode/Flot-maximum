@@ -8,51 +8,53 @@ public class FlowNetwork : Graph
     private readonly Vertex Puits;
     public List<(Vertex, int)> SourceNeighbors { get; }
     public List<(Vertex, int)> PuitsNeighbors { get; }
-    public Dictionary<(Vertex, Vertex), int> NewEdges { get; set; }
 
     public FlowNetwork(IEnumerable<(Vertex, Vertex, int)> neighbors, Vertex source, Vertex puits, IEnumerable<
-        (Vertex, int)> sourceNeighbors, IEnumerable<(Vertex, int)> puitsNeighbors) : base(neighbors, [])
+        (Vertex, int)> sourceNeighbors, IEnumerable<(Vertex, int)> puitsNeighbors, IEnumerable<Vertex> vertices) : base(neighbors, vertices)
     {
         Source = source;
         Puits = puits;
         SourceNeighbors = sourceNeighbors.ToList();
         PuitsNeighbors = puitsNeighbors.ToList();
-        NewEdges = new(Edges);
-
-        foreach (var vertex in SourceNeighbors)
-        {
-            NewEdges.Add((Source, vertex.Item1), vertex.Item2);
-        }
-        
-        foreach (var vertex in PuitsNeighbors)
-        {
-            NewEdges.Add((vertex.Item1, Puits), vertex.Item2);
-        }
+        InitFlowNetwork();
     }
     
     public FlowNetwork(Dictionary<(Vertex, Vertex), int> neighbors, Vertex source, Vertex puits, IEnumerable<
-        (Vertex, int)> sourceNeighbors, IEnumerable<(Vertex, int)> puitsNeighbors) : base(neighbors, [])
+        (Vertex, int)> sourceNeighbors, IEnumerable<(Vertex, int)> puitsNeighbors, IEnumerable<Vertex> vertices) : base(neighbors, vertices)
     {
         Source = source;
         Puits = puits;
         SourceNeighbors = sourceNeighbors.ToList();
         PuitsNeighbors = puitsNeighbors.ToList();
-        NewEdges = new(Edges);
+        InitFlowNetwork();
+    }
 
+    private void InitFlowNetwork()
+    {
+        Dictionary<(Vertex, Vertex), int> newEdges = new(Edges);
+        Dictionary<Vertex, HashSet<Vertex>> newAdjVertices = new(AdjVertices.Select(x => new KeyValuePair<Vertex, HashSet<Vertex>>(x.Key, new(x.Value))));
+
+        newAdjVertices.TryAdd(Source, []);
+        newAdjVertices.TryAdd(Puits, []);
         foreach (var vertex in SourceNeighbors)
         {
-            NewEdges.Add((Source, vertex.Item1), vertex.Item2);
+            newEdges.TryAdd((Source, vertex.Item1), vertex.Item2);
+            newAdjVertices[Source].Add(vertex.Item1);
         }
         
         foreach (var vertex in PuitsNeighbors)
         {
-            NewEdges.Add((vertex.Item1, Puits), vertex.Item2);
+            newEdges.TryAdd((vertex.Item1, Puits), vertex.Item2);
+            newAdjVertices[vertex.Item1].Add(Puits);
         }
+
+        Edges = newEdges;
+        AdjVertices = newAdjVertices;
     }
 
     public (Dictionary<(Vertex, Vertex), int>, int) FordFulkerson()
     {
-        return GetMaxFlow((nf) => nf.Chemin());
+        return GetMaxFlow((nf) => nf.CheminDfs());
     }
     
     public (Dictionary<(Vertex, Vertex), int>, int) EdmondsKarp()
@@ -61,7 +63,7 @@ public class FlowNetwork : Graph
     }
     public (Dictionary<(Vertex, Vertex), int>, int) GetMaxFlow(Func<FlowNetwork, List<Vertex>> getPath)
     {
-        Flow flot = new(NewEdges.ToDictionary(edge => edge.Key, _ => 0), Puits);
+        Flow flot = new(Edges.ToDictionary(edge => edge.Key, _ => 0), Puits);
         FlowNetwork nf = GetResidualNetwork(flot);
         List<Vertex> chemin = getPath(nf);
 
@@ -72,7 +74,7 @@ public class FlowNetwork : Graph
             {
                 var edge = (chemin[i], chemin[i + 1]);
 
-                if (nf.NewEdges.TryGetValue(edge, out int capacity))
+                if (nf.Edges.TryGetValue(edge, out int capacity))
                 {
                     delta = Math.Min(delta, capacity);
                 }
@@ -83,7 +85,7 @@ public class FlowNetwork : Graph
                 var forwardEdge = (chemin[i], chemin[i + 1]);
                 var backwardEdge = (chemin[i + 1], chemin[i]);
 
-                if (flot.FlowEdges.ContainsKey(forwardEdge))
+                if (Edges.ContainsKey(forwardEdge))
                 {
                     flot.IncreaseFlow(forwardEdge, delta);
                 }
@@ -102,9 +104,9 @@ public class FlowNetwork : Graph
 
     public FlowNetwork GetResidualNetwork(Flow  flot)
     {
-        FlowNetwork residuel = new(Edges, Source, Puits, SourceNeighbors, PuitsNeighbors);
-        Dictionary<(Vertex, Vertex), int> newEdgesNf = new(NewEdges);
-        foreach (var edge in NewEdges)
+        FlowNetwork residuel = new(Edges, Source, Puits, SourceNeighbors, PuitsNeighbors, AdjVertices.Keys);
+        Dictionary<(Vertex, Vertex), int> newEdgesNf = new(Edges);
+        foreach (var edge in Edges)
         {
             int capacity = edge.Value;
             int currentFlow = flot.FlowEdges[(edge.Key.Item1, edge.Key.Item2)];
@@ -113,66 +115,37 @@ public class FlowNetwork : Graph
             if (currentFlow == 0 || edge.Key.Item2 == Puits || edge.Key.Item1 == Source) continue;
             if (!newEdgesNf.TryAdd((edge.Key.Item2, edge.Key.Item1), currentFlow))
             {
-                newEdgesNf[(edge.Key.Item1, edge.Key.Item2)] += currentFlow;
+                newEdgesNf[(edge.Key.Item2, edge.Key.Item1)] += currentFlow;
             }
-            if (remainFlow == 0)
-                newEdgesNf.Remove((edge.Key.Item1, edge.Key.Item2));
         }
-        residuel.NewEdges = newEdgesNf;
+        residuel.Edges = newEdgesNf.Where(x => x.Value > 0).ToDictionary();
         return residuel;
     }
 
-    public List<Vertex> Chemin()
+    // Non fonctionnel
+    public List<Vertex> CheminDfs()
     {
-        List<HashSet< (Vertex, Vertex)>> chemin = [[(Source, Source)]];
-        while (true)
+        Stack<(Vertex, List<Vertex>)> pile = [];
+        pile.Push((Source, [Source]));
+        HashSet<Vertex> marked = [];
+        while (pile.Count > 0)
         {
-            HashSet<(Vertex, Vertex)> newVertex = [];
-            bool puitsReached = false;
-            foreach (var edge in NewEdges)
+            var (s, path) = pile.Pop();
+            if (!marked.Contains(s))
             {
-                if (!chemin.Last().Select(x => x.Item1).Contains(edge.Key.Item2) && chemin.Last().Select(x => x.Item1).Contains(edge.Key.Item1))
+                if (s == Puits)
                 {
-                    bool isContained = false;
-                    foreach (var path in chemin)
+                    return path;
+                }
+                marked.Add(s);
+                foreach (var t in AdjVertices[s])
+                {
+                    if (Edges.ContainsKey((s, t)))
                     {
-                        if (path.Select(x => x.Item1).Contains(edge.Key.Item2))
-                        {
-                            isContained = true;
-                            break;
-                        }
-                    }
-
-                    if (!isContained)
-                    {
-                        newVertex.Add((edge.Key.Item2, edge.Key.Item1));
-                        if (edge.Key.Item2 == Puits) 
-                            puitsReached = true;
+                        pile.Push((t, [..path, t]));
                     }
                 }
             }
-            if (newVertex.Count == 0) break;
-            chemin.Add(newVertex);
-            if (puitsReached) break;
-        }
-
-        if (chemin.SelectMany(x => x).Select(x => x.Item1).Contains(Puits))
-        {
-            List<Vertex> path = [Puits];
-            int lenght = chemin.Count - 1;
-            while (lenght > 0)
-            {
-                foreach (var edge in chemin[lenght])
-                {
-                    if (edge.Item1 == path[0])
-                    {
-                        path.Insert(0, edge.Item2);
-                        lenght--;
-                        break;
-                    }
-                }
-            }
-            return path;
         }
         return [];
     }
@@ -189,7 +162,7 @@ public class FlowNetwork : Graph
         {
             var current = queue.Dequeue();
 
-            foreach (var edge in NewEdges)
+            foreach (var edge in Edges)
             {
                 var start = edge.Key.Item1;
                 var end = edge.Key.Item2;
@@ -223,31 +196,14 @@ public class FlowNetwork : Graph
 
     public override string ToString()
     {
-        Graph graph = new Graph(NewEdges.Select(x => (x.Key.Item1, x.Key.Item2, x.Value)), AdjVertices.Keys);
+        Graph graph = new Graph(Edges.Select(x => (x.Key.Item1, x.Key.Item2, x.Value)), AdjVertices.Keys);
         return graph.ToString();
     }
 
     public string ToMiniZinc()
     {
         StringBuilder sommetsBuilder = new StringBuilder("enum SOMMET = {\n");
-        var newVertices = new List<Vertex>(AdjVertices.Keys) { Source, Puits };
-        var newAdjVertices = new Dictionary<Vertex, HashSet<Vertex>>(AdjVertices)
-        {
-            [Source] = SourceNeighbors.Select(x => x.Item1).ToHashSet()
-        };
-
-        foreach (var neighbor in PuitsNeighbors.Select(x => x.Item1))
-        {
-            if (!newAdjVertices.ContainsKey(neighbor))
-            {
-                newAdjVertices[neighbor] = new HashSet<Vertex> { Puits };
-            }
-            else
-            {
-                newAdjVertices[neighbor].Add(Puits);
-            }
-        }
-        newAdjVertices[Puits] = new HashSet<Vertex>();
+        List<Vertex> newVertices = new(AdjVertices.Keys);
         foreach (var sommet in newVertices)
         {
             if (sommet == Source)
@@ -270,9 +226,9 @@ public class FlowNetwork : Graph
                 {
                     matriceBuilder.Append(sumCapacity + ",");
                 }
-                else if (newAdjVertices[u].Contains(v))
+                else if (AdjVertices[u].Contains(v))
                 {
-                    var edgeValue = NewEdges[(u, v)];
+                    var edgeValue = Edges[(u, v)];
                     matriceBuilder.Append(edgeValue + ",");
                     if (u == Source)
                         sumCapacity += edgeValue;
@@ -301,6 +257,7 @@ public class FlowNetwork : Graph
     public override object Clone()
     {
         return new FlowNetwork(Edges.Select(x => (x.Key.Item1.Clone() as Vertex, x.Key.Item2.Clone() as Vertex, x.Value)),
-            Source.Clone() as Vertex, Puits.Clone() as Vertex, SourceNeighbors.Select(x => (x.Item1.Clone() as Vertex, x.Item2)), PuitsNeighbors.Select(x => (x.Item1.Clone() as Vertex, x.Item2)));
+            Source.Clone() as Vertex, Puits.Clone() as Vertex, SourceNeighbors.Select(x => (x.Item1.Clone() as Vertex, x.Item2)), PuitsNeighbors.Select(x => (x.Item1.Clone() as Vertex, x.Item2)),
+            AdjVertices.Keys);
     }
 }

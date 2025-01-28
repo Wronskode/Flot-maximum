@@ -13,7 +13,8 @@ Vertex p = new Vertex("p");
 
 // réseau de flot du TD de Bessy
 //FlowNetwork nf = new([
-//(a, b, 12), (a, c, 10), (d, b, 7), (b, c, 9), (c, a, 4), (c, d, 14)], s, p, [(a, 16), (c, 13)], [(b, 20), (d, 4)]);
+//(a, b, 12), (a, c, 10), (d, b, 7), (b, c, 9), (c, a, 4), (c, d, 14)], s, p, [(a, 16), (c, 13)], [(b, 20), (d, 4)],
+    //[a,b,c,d]);
 
 //FlowNetwork nf = new([
 //(a,d, 13), (a, b, 8), (a, c, 10), (b,c,26), (c,d,20),
@@ -32,18 +33,14 @@ foreach (var edge in val.Item1)
     i = val.Item2;
 }
 Console.WriteLine("Valeur du flot : " + i);*/
-
-RandomFlowNetwork randomFlow = new(100*10, 1000*50);
+//nf.CheminDfs();
+RandomFlowNetwork randomFlow = new(100, 2000);
 var nf = randomFlow.Generate();
 Console.WriteLine("Généré avec " + (nf.AdjVertices.Keys.Count + 2) + " sommets et " +
                   (nf.Edges.Count + nf.SourceNeighbors.Count + nf.PuitsNeighbors.Count) + " arêtes.");
 var startTime = Stopwatch.GetTimestamp();
 var val = nf.EdmondsKarp();
 Console.WriteLine("Elapsed : " + Stopwatch.GetElapsedTime(startTime));
-// foreach (var edge in val.Item1)
-// {
-//     Console.WriteLine(edge);
-// }
+//Console.WriteLine(nf);
 Console.WriteLine("Valeur du flot : " + val.Item2);
-//Console.WriteLine(nf.ToMiniZinc());
 nf.ToMiniZinc();

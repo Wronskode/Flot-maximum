@@ -2,7 +2,7 @@ namespace FlotMaximum;
 
 public class Vertex : ICloneable
 {
-    private string Id { get; }
+    public string Id { get; }
 
     public Vertex(string id)
     {

@@ -8,8 +8,6 @@ public class Graph : ICloneable
     public Graph(IEnumerable<(Vertex, Vertex, int)> neighbors, IEnumerable<Vertex> vertices) {
         HashSet<Vertex> vertexSet = new();
         foreach ((Vertex, Vertex, int) element in neighbors) {
-            vertexSet.Add(element.Item1);
-            vertexSet.Add(element.Item2);
             AddEdge((element.Item1, element.Item2), element.Item3);
         }
 
@@ -26,8 +24,6 @@ public class Graph : ICloneable
     public Graph(Dictionary<(Vertex, Vertex), int> neighbors, IEnumerable<Vertex> vertices) {
         HashSet<Vertex> vertexSet = new();
         foreach (var element in neighbors) {
-            vertexSet.Add(element.Key.Item1);
-            vertexSet.Add(element.Key.Item2);
             AddEdge((element.Key.Item1, element.Key.Item2), element.Value);
         }
 

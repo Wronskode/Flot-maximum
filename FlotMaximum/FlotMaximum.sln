@@ -2,6 +2,8 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FlotMaximum", "FlotMaximum\FlotMaximum.csproj", "{0AC1DDE0-5283-4EC5-9BF9-CA031C9273BE}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests", "Tests\Tests.csproj", "{F52B91B5-9085-450E-B7C5-B1477BAE7DD5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -12,5 +14,9 @@ Global
 		{0AC1DDE0-5283-4EC5-9BF9-CA031C9273BE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0AC1DDE0-5283-4EC5-9BF9-CA031C9273BE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0AC1DDE0-5283-4EC5-9BF9-CA031C9273BE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F52B91B5-9085-450E-B7C5-B1477BAE7DD5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F52B91B5-9085-450E-B7C5-B1477BAE7DD5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F52B91B5-9085-450E-B7C5-B1477BAE7DD5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F52B91B5-9085-450E-B7C5-B1477BAE7DD5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

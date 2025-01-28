@@ -1,9 +1,15 @@
 namespace FlotMaximum;
 
-public class Flow(Dictionary<(Vertex, Vertex), int> flowEdges, Vertex puits)
+public class Flow
 {
-    public Dictionary<(Vertex, Vertex), int> FlowEdges { get; } = flowEdges;
+    public Dictionary<(Vertex, Vertex), int> FlowEdges { get; }
+    private Vertex puits;
 
+    public Flow(Dictionary<(Vertex, Vertex), int> flowEdges, Vertex puits)
+    {
+       FlowEdges = new(flowEdges); 
+       this.puits = puits;
+    }
     public int Value
     {
         get

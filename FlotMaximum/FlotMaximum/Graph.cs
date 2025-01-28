@@ -2,8 +2,8 @@ namespace FlotMaximum;
 
 public class Graph : ICloneable
 {
-    public Dictionary<Vertex, HashSet<Vertex>> AdjVertices { get; } = new();
-    public Dictionary<(Vertex, Vertex), int> Edges { get; } = new ();
+    public Dictionary<Vertex, HashSet<Vertex>> AdjVertices { get; protected set; } = new();
+    public Dictionary<(Vertex, Vertex), int> Edges { get; protected set;  } = new ();
     
     public Graph(IEnumerable<(Vertex, Vertex, int)> neighbors, IEnumerable<Vertex> vertices) {
         HashSet<Vertex> vertexSet = new();
@@ -45,7 +45,6 @@ public class Graph : ICloneable
     {
         if (edge.Item1 == edge.Item2 || !Edges.TryAdd(edge, weight))
             return;
-        
         if (!AdjVertices.ContainsKey(edge.Item1))
         {
             AdjVertices.Add(edge.Item1, []);
@@ -53,6 +52,14 @@ public class Graph : ICloneable
 
         AdjVertices.TryAdd(edge.Item2, []);
         AdjVertices[edge.Item1].Add(edge.Item2);
+    }
+
+    public void RemoveEdge((Vertex, Vertex) edge)
+    {
+        if (Edges.Remove(edge))
+        {
+            AdjVertices[edge.Item1].Remove(edge.Item2);
+        }
     }
     
     public void AddVertex(Vertex v)

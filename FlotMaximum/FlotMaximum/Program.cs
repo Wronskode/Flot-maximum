@@ -14,7 +14,7 @@ Vertex p = new Vertex("p");
 // réseau de flot du TD de Bessy
 //FlowNetwork nf = new([
 //(a, b, 12), (a, c, 10), (d, b, 7), (b, c, 9), (c, a, 4), (c, d, 14)], s, p, [(a, 16), (c, 13)], [(b, 20), (d, 4)],
-    //[a,b,c,d]);
+//[a,b,c,d]);
 
 //FlowNetwork nf = new([
 //(a,d, 13), (a, b, 8), (a, c, 10), (b,c,26), (c,d,20),
@@ -34,13 +34,20 @@ foreach (var edge in val.Item1)
 }
 Console.WriteLine("Valeur du flot : " + i);*/
 //nf.CheminDfs();
-RandomFlowNetwork randomFlow = new(100, 2000);
-var nf = randomFlow.Generate();
-Console.WriteLine("Généré avec " + (nf.AdjVertices.Keys.Count + 2) + " sommets et " +
-                  (nf.Edges.Count + nf.SourceNeighbors.Count + nf.PuitsNeighbors.Count) + " arêtes.");
-var startTime = Stopwatch.GetTimestamp();
-var val = nf.EdmondsKarp();
-Console.WriteLine("Elapsed : " + Stopwatch.GetElapsedTime(startTime));
-//Console.WriteLine(nf);
-Console.WriteLine("Valeur du flot : " + val.Item2);
+    RandomFlowNetwork randomFlow;
+    FlowNetwork nf;
+    while (true)
+    {
+        randomFlow = new(100, 200);
+        nf = randomFlow.Generate();
+        Console.WriteLine("Généré avec " + (nf.AdjVertices.Keys.Count + 2) + " sommets et " +
+                          (nf.Edges.Count + nf.SourceNeighbors.Count + nf.PuitsNeighbors.Count) + " arêtes.");
+        //var startTime = Stopwatch.GetTimestamp();
+        var val = nf.FordFulkerson();
+        var val2 = nf.EdmondsKarp();
+        Console.WriteLine("Edmonds-Karp " + val2.Item2);
+        //Console.WriteLine("Elapsed : " + Stopwatch.GetElapsedTime(startTime));
+        Console.WriteLine("Ford-Fulkerson: " + val.Item2);
+        if (val.Item2 != val2.Item2) break;
+    }
 nf.ToMiniZinc();

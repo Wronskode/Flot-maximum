@@ -32,8 +32,11 @@ public class FlowNetwork : Graph
     private void InitFlowNetwork()
     {
         Dictionary<(Vertex, Vertex), int> newEdges = new(Edges);
-        Dictionary<Vertex, HashSet<Vertex>> newAdjVertices = new(AdjVertices.Select(x => new KeyValuePair<Vertex, HashSet<Vertex>>(x.Key, new(x.Value))));
-
+        Dictionary<Vertex, HashSet<Vertex>> newAdjVertices = [];
+        foreach (var vertex in AdjVertices)
+        {
+            newAdjVertices.Add(vertex.Key, vertex.Value);
+        }
         newAdjVertices.TryAdd(Source, []);
         newAdjVertices.TryAdd(Puits, []);
         foreach (var vertex in SourceNeighbors)
@@ -70,6 +73,7 @@ public class FlowNetwork : Graph
         while (chemin.Count > 0)
         {
             int delta = int.MaxValue;
+            HashSet<Vertex> test = new();
             for (int i = 0; i < chemin.Count - 1; i++)
             {
                 var edge = (chemin[i], chemin[i + 1]);
@@ -89,7 +93,7 @@ public class FlowNetwork : Graph
                 {
                     flot.IncreaseFlow(forwardEdge, delta);
                 }
-                else
+                else if (flot.FlowEdges.ContainsKey(backwardEdge))
                 {
                     flot.DecreaseFlow(backwardEdge, delta);
                 }
@@ -104,25 +108,29 @@ public class FlowNetwork : Graph
 
     public FlowNetwork GetResidualNetwork(Flow  flot)
     {
-        FlowNetwork residuel = new(Edges, Source, Puits, SourceNeighbors, PuitsNeighbors, AdjVertices.Keys);
-        Dictionary<(Vertex, Vertex), int> newEdgesNf = new(Edges);
+        Dictionary<(Vertex, Vertex), int> newEdgesNf = [];
         foreach (var edge in Edges)
         {
             int capacity = edge.Value;
             int currentFlow = flot.FlowEdges[(edge.Key.Item1, edge.Key.Item2)];
             int remainFlow = capacity - currentFlow;
-            newEdgesNf[(edge.Key.Item1, edge.Key.Item2)] = remainFlow;
-            if (currentFlow == 0 || edge.Key.Item2 == Puits || edge.Key.Item1 == Source) continue;
-            if (!newEdgesNf.TryAdd((edge.Key.Item2, edge.Key.Item1), currentFlow))
+            if (!newEdgesNf.TryAdd((edge.Key.Item1, edge.Key.Item2), remainFlow))
             {
-                newEdgesNf[(edge.Key.Item2, edge.Key.Item1)] += currentFlow;
+                newEdgesNf[(edge.Key.Item1, edge.Key.Item2)] += remainFlow;
+            }
+            if (currentFlow == 0 || edge.Key.Item2 == Puits || edge.Key.Item1 == Source) continue;
+            var reverseEdge = (edge.Key.Item2, edge.Key.Item1);
+            if (!newEdgesNf.TryAdd(reverseEdge, currentFlow))
+            {
+                newEdgesNf[reverseEdge] += currentFlow;
             }
         }
-        residuel.Edges = newEdgesNf.Where(x => x.Value > 0).ToDictionary();
+        newEdgesNf = newEdgesNf.Where(x => x.Value > 0).ToDictionary();
+        var residuel = new FlowNetwork(newEdgesNf, Source, Puits, [], [], AdjVertices.Keys);
         return residuel;
     }
-
-    // Non fonctionnel
+    
+    // Trouver chemin avec parcours en profondeur (Ford-Fulkerson)
     public List<Vertex> CheminDfs()
     {
         Stack<(Vertex, List<Vertex>)> pile = [];
@@ -140,7 +148,7 @@ public class FlowNetwork : Graph
                 marked.Add(s);
                 foreach (var t in AdjVertices[s])
                 {
-                    if (Edges.ContainsKey((s, t)))
+                    if (Edges.TryGetValue((s, t), out int capacity) && capacity > 0)
                     {
                         pile.Push((t, [..path, t]));
                     }
@@ -162,22 +170,16 @@ public class FlowNetwork : Graph
         {
             var current = queue.Dequeue();
 
-            foreach (var edge in Edges)
+            foreach (var t in AdjVertices[current])
             {
-                var start = edge.Key.Item1;
-                var end = edge.Key.Item2;
-                var capacity = edge.Value;
-                if (start == current && capacity > 0 && !visited.Contains(end))
+                if (Edges.TryGetValue((current, t), out int capacity) && capacity > 0 && !visited.Contains(t))
                 {
-                    queue.Enqueue(end);
-                    visited.Add(end);
-                    parents[end] = current;
-                    if (end == Puits)
-                    {
-                        break;
-                    }
+                    queue.Enqueue(t);
+                    visited.Add(t);
+                    parents[t] = current;
                 }
             }
+
         }
         if (!parents.ContainsKey(Puits))
         {

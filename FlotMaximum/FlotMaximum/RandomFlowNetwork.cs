@@ -22,7 +22,7 @@ public class RandomFlowNetwork
             var v = new Vertex(i.ToString());
             graph.AddVertex(v);
         }
-        List<Vertex> vertices = new(graph.AdjVertices.Keys);
+        List<Vertex> vertices = graph.AdjVertices.Keys.ToList();
         for (int i = 0; i < EdgeNumber; i++)
         {
             Vertex v1 = vertices[Random.Next(0, VertexNumber)];
@@ -31,7 +31,8 @@ public class RandomFlowNetwork
             {
                 v2 = vertices[Random.Next(0, VertexNumber)];
             }
-            graph.AddEdge((v1, v2), Random.Next(0, EdgeNumber));
+            //if (!graph.AdjVertices[v2].Contains(v1))
+                graph.AddEdge((v1, v2), Random.Next(0, EdgeNumber));
         }
 
         for (int i = 0; i < Math.Floor(Math.Sqrt(VertexNumber))+1; i++)
@@ -43,7 +44,6 @@ public class RandomFlowNetwork
         }
         List<(Vertex, int)> sourceVerticesList = new(sourceVertices.Select(v => (v, Random.Next(0, EdgeNumber))));
         List<(Vertex, int)> puitsVerticesList = new(puitsVertices.Select(v => (v, Random.Next(0, EdgeNumber))));
-        var edgesList = graph.Edges.Select(v => (v.Key.Item1, v.Key.Item2, v.Value));
-        return new FlowNetwork(edgesList, new Vertex("s"), new Vertex("p"), sourceVerticesList, puitsVerticesList, vertices);
+        return new FlowNetwork(graph.Edges, new Vertex("s"), new Vertex("p"), sourceVerticesList, puitsVerticesList, vertices);
     }
 }

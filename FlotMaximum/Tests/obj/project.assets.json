@@ -821,19 +821,19 @@
     ]
   },
   "packageFolders": {
-    "/Users/julien/.nuget/packages/": {}
+    "C:\\Users\\Marie\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/Users/Shared/Flot-maximum/FlotMaximum/Tests/Tests.csproj",
+      "projectUniqueName": "C:\\Users\\Marie\\Documents\\Algo - 1ère année - 2ème semestre\\TER\\Flot-maximum\\FlotMaximum\\Tests\\Tests.csproj",
       "projectName": "Tests",
-      "projectPath": "/Users/Shared/Flot-maximum/FlotMaximum/Tests/Tests.csproj",
-      "packagesPath": "/Users/julien/.nuget/packages/",
-      "outputPath": "/Users/Shared/Flot-maximum/FlotMaximum/Tests/obj/",
+      "projectPath": "C:\\Users\\Marie\\Documents\\Algo - 1ère année - 2ème semestre\\TER\\Flot-maximum\\FlotMaximum\\Tests\\Tests.csproj",
+      "packagesPath": "C:\\Users\\Marie\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\Marie\\Documents\\Algo - 1ère année - 2ème semestre\\TER\\Flot-maximum\\FlotMaximum\\Tests\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "/Users/julien/.nuget/NuGet/NuGet.Config"
+        "C:\\Users\\Marie\\AppData\\Roaming\\NuGet\\NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net9.0"
@@ -845,8 +845,8 @@
         "net9.0": {
           "targetAlias": "net9.0",
           "projectReferences": {
-            "/Users/Shared/Flot-maximum/FlotMaximum/FlotMaximum/FlotMaximum.csproj": {
-              "projectPath": "/Users/Shared/Flot-maximum/FlotMaximum/FlotMaximum/FlotMaximum.csproj"
+            "C:\\Users\\Marie\\Documents\\Algo - 1ère année - 2ème semestre\\TER\\Flot-maximum\\FlotMaximum\\FlotMaximum\\FlotMaximum.csproj": {
+              "projectPath": "C:\\Users\\Marie\\Documents\\Algo - 1ère année - 2ème semestre\\TER\\Flot-maximum\\FlotMaximum\\FlotMaximum\\FlotMaximum.csproj"
             }
           }
         }
@@ -904,7 +904,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/9.0.100/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Users\\Marie\\.dotnet\\sdk\\9.0.100/PortableRuntimeIdentifierGraph.json"
       }
     }
   }

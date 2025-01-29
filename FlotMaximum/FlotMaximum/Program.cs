@@ -19,35 +19,11 @@ Vertex p = new Vertex("p");
 //FlowNetwork nf = new([
 //(a,d, 13), (a, b, 8), (a, c, 10), (b,c,26), (c,d,20),
 //(c,e,8),(c,f,24),(d,e,1),(d,b,2)], s, p, [(a, 38), (b, 1), (f, 2)], [(d, 7), (e, 7), (c, 1), (f, 27)]);
-/*foreach (var edge in nf.Edges)
-{
-    Console.WriteLine(edge);
-}
-Console.WriteLine("\n");
-Console.WriteLine(nf);
-var val = nf.EdmondsKarp();
-int i = 0;
-foreach (var edge in val.Item1)
-{
-    Console.WriteLine(edge);
-    i = val.Item2;
-}
-Console.WriteLine("Valeur du flot : " + i);*/
-//nf.CheminDfs();
-    RandomFlowNetwork randomFlow;
-    FlowNetwork nf;
-    while (true)
-    {
-        randomFlow = new(100, 200);
-        nf = randomFlow.Generate();
-        Console.WriteLine("Généré avec " + (nf.AdjVertices.Keys.Count + 2) + " sommets et " +
-                          (nf.Edges.Count + nf.SourceNeighbors.Count + nf.PuitsNeighbors.Count) + " arêtes.");
-        //var startTime = Stopwatch.GetTimestamp();
-        var val = nf.FordFulkerson();
-        var val2 = nf.EdmondsKarp();
-        Console.WriteLine("Edmonds-Karp " + val2.Item2);
-        //Console.WriteLine("Elapsed : " + Stopwatch.GetElapsedTime(startTime));
-        Console.WriteLine("Ford-Fulkerson: " + val.Item2);
-        if (val.Item2 != val2.Item2) break;
-    }
-nf.ToMiniZinc();
+RandomFlowNetwork randomFlow = new(1000, 10000);
+FlowNetwork nf = randomFlow.Generate();
+Console.WriteLine("Généré avec " + nf.AdjVertices.Keys.Count + " sommets et " +
+                  (nf.Edges.Count + nf.SourceNeighbors.Count + nf.PuitsNeighbors.Count) + " arêtes.");
+var startTime = Stopwatch.GetTimestamp();
+var maxFlow = nf.EdmondsKarp();
+Console.WriteLine("Edmonds-Karp " + maxFlow.Value);
+Console.WriteLine("Elapsed : " + Stopwatch.GetElapsedTime(startTime));

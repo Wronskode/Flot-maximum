@@ -1,11 +1,10 @@
 using System.Text;
-
 namespace FlotMaximum;
 
 public class FlowNetwork : Graph
 {
-    private readonly Vertex Source;
-    private readonly Vertex Puits;
+    public Vertex Source { get; }
+    public Vertex Puits { get; }
     public List<(Vertex, int)> SourceNeighbors { get; }
     public List<(Vertex, int)> PuitsNeighbors { get; }
 
@@ -55,16 +54,16 @@ public class FlowNetwork : Graph
         AdjVertices = newAdjVertices;
     }
 
-    public (Dictionary<(Vertex, Vertex), int>, int) FordFulkerson()
+    public Flow FordFulkerson()
     {
         return GetMaxFlow((nf) => nf.CheminDfs());
     }
     
-    public (Dictionary<(Vertex, Vertex), int>, int) EdmondsKarp()
+    public Flow EdmondsKarp()
     {
         return GetMaxFlow((nf) => nf.CheminBfs());
     }
-    public (Dictionary<(Vertex, Vertex), int>, int) GetMaxFlow(Func<FlowNetwork, List<Vertex>> getPath)
+    public Flow GetMaxFlow(Func<FlowNetwork, List<Vertex>> getPath)
     {
         Flow flot = new(Edges.ToDictionary(edge => edge.Key, _ => 0), Puits);
         FlowNetwork nf = GetResidualNetwork(flot);
@@ -73,7 +72,6 @@ public class FlowNetwork : Graph
         while (chemin.Count > 0)
         {
             int delta = int.MaxValue;
-            HashSet<Vertex> test = new();
             for (int i = 0; i < chemin.Count - 1; i++)
             {
                 var edge = (chemin[i], chemin[i + 1]);
@@ -102,7 +100,7 @@ public class FlowNetwork : Graph
             nf = GetResidualNetwork(flot);
             chemin = getPath(nf);
         }
-        return (flot.FlowEdges, flot.Value);
+        return flot;
     }
 
 
@@ -126,7 +124,7 @@ public class FlowNetwork : Graph
             }
         }
         newEdgesNf = newEdgesNf.Where(x => x.Value > 0).ToDictionary();
-        var residuel = new FlowNetwork(newEdgesNf, Source, Puits, [], [], AdjVertices.Keys);
+        var residuel = new FlowNetwork(newEdgesNf, Source, Puits, [], [],[]);
         return residuel;
     }
     

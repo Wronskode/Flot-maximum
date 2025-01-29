@@ -27,14 +27,17 @@ public class RandomFlowNetwork
         {
             Vertex v1 = vertices[Random.Next(0, VertexNumber)];
             Vertex v2 = vertices[Random.Next(0, VertexNumber)];
-            while (v1 == v2)
+            if (VertexNumber > 1)
             {
-                v2 = vertices[Random.Next(0, VertexNumber)];
+                while (v1 == v2)
+                {
+                    v2 = vertices[Random.Next(0, VertexNumber)];
+                }
             }
-            //if (!graph.AdjVertices[v2].Contains(v1))
-                graph.AddEdge((v1, v2), Random.Next(0, EdgeNumber));
+            graph.AddEdge((v1, v2), Random.Next(0, EdgeNumber));
         }
-
+        
+        // Je mets un nombre d'arêtes au pif entre la source/puits et le reste du graphe (environ sqrt(n))
         for (int i = 0; i < Math.Floor(Math.Sqrt(VertexNumber))+1; i++)
         {
             Vertex v1 = vertices[Random.Next(0, VertexNumber)];

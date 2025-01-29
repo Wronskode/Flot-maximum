@@ -1,11 +1,10 @@
 using System.Text;
-
 namespace FlotMaximum;
 
 public class FlowNetwork : Graph
 {
-    private readonly Vertex Source;
-    private readonly Vertex Puits;
+    public Vertex Source { get; }
+    public Vertex Puits { get; }
     public List<(Vertex, int)> SourceNeighbors { get; }
     public List<(Vertex, int)> PuitsNeighbors { get; }
 
@@ -55,16 +54,16 @@ public class FlowNetwork : Graph
         AdjVertices = newAdjVertices;
     }
 
-    public (Dictionary<(Vertex, Vertex), int>, int) FordFulkerson()
+    public Flow FordFulkerson()
     {
         return GetMaxFlow((nf) => nf.CheminDfs());
     }
     
-    public (Dictionary<(Vertex, Vertex), int>, int) EdmondsKarp()
+    public Flow EdmondsKarp()
     {
         return GetMaxFlow((nf) => nf.CheminBfs());
     }
-    public (Dictionary<(Vertex, Vertex), int>, int) GetMaxFlow(Func<FlowNetwork, List<Vertex>> getPath)
+    public Flow GetMaxFlow(Func<FlowNetwork, List<Vertex>> getPath)
     {
         Flow flot = new(Edges.ToDictionary(edge => edge.Key, _ => 0), Puits);
         FlowNetwork nf = GetResidualNetwork(flot);
@@ -73,7 +72,6 @@ public class FlowNetwork : Graph
         while (chemin.Count > 0)
         {
             int delta = int.MaxValue;
-            HashSet<Vertex> test = new();
             for (int i = 0; i < chemin.Count - 1; i++)
             {
                 var edge = (chemin[i], chemin[i + 1]);
@@ -102,7 +100,7 @@ public class FlowNetwork : Graph
             nf = GetResidualNetwork(flot);
             chemin = getPath(nf);
         }
-        return (flot.FlowEdges, flot.Value);
+        return flot;
     }
 
 
@@ -126,7 +124,7 @@ public class FlowNetwork : Graph
             }
         }
         newEdgesNf = newEdgesNf.Where(x => x.Value > 0).ToDictionary();
-        var residuel = new FlowNetwork(newEdgesNf, Source, Puits, [], [], AdjVertices.Keys);
+        var residuel = new FlowNetwork(newEdgesNf, Source, Puits, [], [],[]);
         return residuel;
     }
     
@@ -195,66 +193,10 @@ public class FlowNetwork : Graph
         }
         return path;
     }
-
     public override string ToString()
     {
         Graph graph = new Graph(Edges.Select(x => (x.Key.Item1, x.Key.Item2, x.Value)), AdjVertices.Keys);
         return graph.ToString();
-    }
-
-    public string ToMiniZinc()
-    {
-        StringBuilder sommetsBuilder = new StringBuilder("enum SOMMET = {\n");
-        List<Vertex> newVertices = new(AdjVertices.Keys);
-        foreach (var sommet in newVertices)
-        {
-            if (sommet == Source)
-                sommetsBuilder.Append("s,");
-            else if (sommet == Puits)
-                sommetsBuilder.Append("p,");
-            else
-                sommetsBuilder.Append($"S{sommet},");
-        }
-        sommetsBuilder.Length--;
-        sommetsBuilder.Append("\n};");
-        StringBuilder matriceBuilder = new StringBuilder("array[SOMMET, SOMMET] of int: flots_max = \n[| ");
-        int sumCapacity = 0;
-
-        foreach (var u in newVertices)
-        {
-            foreach (var v in newVertices)
-            {
-                if (u == Puits && v == Source)
-                {
-                    matriceBuilder.Append(sumCapacity + ",");
-                }
-                else if (AdjVertices[u].Contains(v))
-                {
-                    var edgeValue = Edges[(u, v)];
-                    matriceBuilder.Append(edgeValue + ",");
-                    if (u == Source)
-                        sumCapacity += edgeValue;
-                }
-                else
-                {
-                    matriceBuilder.Append("0,");
-                }
-            }
-            matriceBuilder.Length--;
-            matriceBuilder.Append("\n | ");
-        }
-        matriceBuilder.Length -= 4;
-        matriceBuilder.Append(" |];\n");
-        matriceBuilder.Append("SOMMET: source = s;\nSOMMET: puits = p;");
-        string resultat = sommetsBuilder + "\n" + matriceBuilder
-            + "\narray[SOMMET,SOMMET] of var int: flots;" +
-            "\nconstraint forall(s1,s2 in SOMMET)(flots[s1,s2] >= 0 /\\" +
-            " flots[s1,s2] <= flots_max[s1,s2]);\nconstraint forall(x in SOMMET where x != source /\\" +
-            " x != puits)(\n  sum(s2 in SOMMET)(flots[x,s2]) = sum(s2 in SOMMET)(flots[s2,x])\n);" +
-            "\nvar int: flot_sortie;\nconstraint flot_sortie = sum(x in SOMMET)(flots[x,puits]);" +
-            "\nsolve maximize flot_sortie;";
-        File.WriteAllText("maxflow.mzn", resultat);
-        return resultat;
     }
     public override object Clone()
     {

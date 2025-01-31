@@ -254,6 +254,28 @@ public class FlowNetwork : Graph
         File.WriteAllText("maxflow.mzn", resultat);
         return resultat;
     }
+
+    public List<Vertex> getEntrant (Vertex vertex)
+    {
+        List<Vertex> entrant = new();
+        foreach (var edge in this.Edges)
+        {
+            var (u, v) = edge.Key;
+            if (v == vertex)
+            {
+                entrant.Add(u);
+            }
+        }
+
+        return entrant;
+    }
+
+    public List<Vertex> getSortant(Vertex vertex)
+    {
+        return this.AdjVertices[vertex].ToList();
+    }
+    
+    
     public override object Clone()
     {
         return new FlowNetwork(Edges.Select(x => (x.Key.Item1.Clone() as Vertex, x.Key.Item2.Clone() as Vertex, x.Value)),

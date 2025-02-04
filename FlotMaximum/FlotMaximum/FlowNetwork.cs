@@ -193,7 +193,113 @@ public class FlowNetwork : Graph
         }
         return path;
     }
+    //----------------------------------------------------------------------------Algo Dinic ----------------------------------------------------------------------------
+    public List<List<Vertex>> Bfs(Vertex source)
+    {
+        Dictionary<Vertex, bool> visited = new Dictionary<Vertex, bool>();  
+        Dictionary<Vertex, int> distances = new Dictionary<Vertex, int>(); 
+        List<List<Vertex>> result = new List<List<Vertex>>();  
+        Queue<Vertex> queue = new Queue<Vertex>(); 
 
+
+        foreach (var vertex in AdjVertices.Keys)
+        {
+            visited[vertex] = false;
+            distances[vertex] = -1; 
+        }
+
+
+        visited[source] = true;
+        distances[source] = 0;
+        queue.Enqueue(source);
+
+
+        while (queue.Count > 0)
+        {
+            Vertex current = queue.Dequeue();
+            int currentDistance = distances[current];
+            
+            if (result.Count <= currentDistance)
+                result.Add(new List<Vertex>());
+
+            result[currentDistance].Add(current);
+            
+            foreach (var neighbor in AdjVertices[current])
+            {
+                if (!visited[neighbor])
+                {
+                    visited[neighbor] = true;
+                    distances[neighbor] = currentDistance + 1;
+                    queue.Enqueue(neighbor);
+                }
+            }
+        }
+        return result;
+    }
+    
+    public void RemoveEdgesBetweenLists(List<List<Vertex>> bfsResult)
+    {
+
+        for (int i = 0; i < bfsResult.Count; i++)
+        {
+            RemoveEdgesWithinSublist(bfsResult[i]);
+            if (i > 0)
+            {
+                RemoveEdgesBetweenSubLists(bfsResult[i], bfsResult[i - 1]);
+            }
+        }
+    }
+
+    private void RemoveEdgesWithinSublist(List<Vertex> sublist)
+    {
+
+        for (int i = 0; i < sublist.Count; i++)
+        {
+            for (int j = i + 1; j < sublist.Count; j++)
+            {
+                Vertex u = sublist[i];
+                Vertex v = sublist[j];
+
+
+                if (AdjVertices.ContainsKey(u) && AdjVertices[u].Contains(v))
+                {
+                    RemoveEdge((u, v));
+                }
+                
+                if (AdjVertices.ContainsKey(v) && AdjVertices[v].Contains(u))
+                {
+                    RemoveEdge((v, u));
+                }
+            }
+        }
+    }
+
+    private void RemoveEdgesBetweenSubLists(List<Vertex> sublist1, List<Vertex> sublist2)
+    {
+        foreach (Vertex u in sublist1)
+        {
+            foreach (Vertex v in sublist2)
+            {
+
+                if (AdjVertices.ContainsKey(u) && AdjVertices[u].Contains(v))
+                {
+                    
+                    RemoveEdge((u, v));
+                }
+            }
+        }
+    }
+
+
+    public void RemoveEdge((Vertex, Vertex) edge)
+    {
+        if (Edges.ContainsKey(edge))
+        {
+            Edges.Remove(edge);
+            AdjVertices[edge.Item1].Remove(edge.Item2);
+        }
+    }
+    //--------------------------------------------------------------------------------------------------------------------------------------------------------
     public override string ToString()
     {
         Graph graph = new Graph(Edges.Select(x => (x.Key.Item1, x.Key.Item2, x.Value)), AdjVertices.Keys);

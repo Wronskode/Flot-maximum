@@ -9,14 +9,14 @@ public class RandomFlowNetwork
     {
         VertexNumber = vertexNumber;
         EdgeNumber = edgeNumber;
-        Random = new();
+        Random = new Random();
     }
 
     public FlowNetwork Generate()
     {
         Graph graph = new(new List<(Vertex, Vertex, int)>(), []);
-        HashSet<Vertex> sourceVertices = new();
-        HashSet<Vertex> puitsVertices = new();
+        HashSet<Vertex> sourceVertices = [];
+        HashSet<Vertex> puitsVertices = [];
         for (int i = 0; i < VertexNumber; i++)
         {
             var v = new Vertex(i.ToString());

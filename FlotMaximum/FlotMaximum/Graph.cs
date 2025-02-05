@@ -1,3 +1,5 @@
+using System.Text;
+
 namespace FlotMaximum;
 
 public class Graph : ICloneable
@@ -5,14 +7,16 @@ public class Graph : ICloneable
     public Dictionary<Vertex, HashSet<Vertex>> AdjVertices { get; protected set; } = new();
     public Dictionary<(Vertex, Vertex), int> Edges { get; protected set;  } = new ();
     
-    public Graph(IEnumerable<(Vertex, Vertex, int)> neighbors, IEnumerable<Vertex> vertices) {
-        HashSet<Vertex> vertexSet = new();
-        foreach ((Vertex, Vertex, int) element in neighbors) {
-            AddEdge((element.Item1, element.Item2), element.Item3);
+    public Graph(IEnumerable<(Vertex?, Vertex?, int Value)> neighbors, IEnumerable<Vertex?> vertices) {
+        HashSet<Vertex> vertexSet = [];
+        foreach (var (u, v, value) in neighbors) {
+            if (u is null || v is null) continue;
+            AddEdge((u, v), value);
         }
 
-        foreach (Vertex v in vertices)
+        foreach (Vertex? v in vertices)
         {
+            if (v is null) continue;
             vertexSet.Add(v);
         }
         foreach (Vertex v in vertexSet)
@@ -22,7 +26,7 @@ public class Graph : ICloneable
     }
     
     public Graph(Dictionary<(Vertex, Vertex), int> neighbors, IEnumerable<Vertex> vertices) {
-        HashSet<Vertex> vertexSet = new();
+        HashSet<Vertex> vertexSet = [];
         foreach (var element in neighbors) {
             AddEdge((element.Key.Item1, element.Key.Item2), element.Value);
         }
@@ -41,13 +45,14 @@ public class Graph : ICloneable
     {
         if (edge.Item1 == edge.Item2 || !Edges.TryAdd(edge, weight))
             return;
-        if (!AdjVertices.ContainsKey(edge.Item1))
+        if (!AdjVertices.TryGetValue(edge.Item1, out HashSet<Vertex>? value))
         {
-            AdjVertices.Add(edge.Item1, []);
+            value = [];
+            AdjVertices.Add(edge.Item1, value);
         }
 
         AdjVertices.TryAdd(edge.Item2, []);
-        AdjVertices[edge.Item1].Add(edge.Item2);
+        value.Add(edge.Item2);
     }
 
     public void RemoveEdge((Vertex, Vertex) edge)
@@ -60,28 +65,28 @@ public class Graph : ICloneable
     
     public void AddVertex(Vertex v)
     {
-        AdjVertices.TryAdd(v, new());
+        AdjVertices.TryAdd(v, []);
     }
 
     public override string ToString()
     {
-        string output = "";
+        StringBuilder output = new();
         foreach (Vertex vertex in AdjVertices.Keys)
         {
-            string txt = "";
+            StringBuilder txt = new();
             foreach (var edge in Edges)
             {
                 if (edge.Key.Item2 == vertex)
                 {
-                    txt += edge.Key.Item1 + ",";
+                    txt.Append(edge.Key.Item1 + ",");
                 }
             }
-            txt = txt.TrimEnd(',');
             if (txt.Length == 0) continue;
-            txt += " -> " + vertex;
-            output += txt + "\n";
+            txt.Length -= 1;
+            txt.Append(" -> " + vertex);
+            output.Append(txt + "\n");
         }
-        return output;
+        return output.ToString();
     }
 
     public String toString2()

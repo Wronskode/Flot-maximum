@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using BenchmarkDotNet.Running;
 using FlotMaximum;
 
 Vertex a = new Vertex("a");
@@ -19,25 +20,24 @@ Vertex p = new Vertex("p");
 //FlowNetwork nf = new([
 //(a,d, 13), (a, b, 8), (a, c, 10), (b,c,26), (c,d,20),
 //(c,e,8),(c,f,24),(d,e,1),(d,b,2)], s, p, [(a, 38), (b, 1), (f, 2)], [(d, 7), (e, 7), (c, 1), (f, 27)]);
-RandomFlowNetwork randomFlow = new(400, 6000);
+RandomFlowNetwork randomFlow = new(1000, 10000);
 FlowNetwork nf = randomFlow.Generate();
 Console.WriteLine("Généré avec " + nf.AdjVertices.Keys.Count + " sommets et " +
-                  (nf.Edges.Count) + " arêtes.");
-var startTime = Stopwatch.GetTimestamp();
+                  nf.Edges.Count + " arêtes.");
+Stopwatch sw = new();
+sw.Start();
 var maxFlow = nf.EdmondsKarp();
-Console.WriteLine("Edmonds-Karp " + maxFlow.Value);
-Console.WriteLine("Elapsed : " + Stopwatch.GetElapsedTime(startTime));
-
-Console.WriteLine("\n PL   : \n");
-//PL newPL = new PL(2, [[5,3],[2,3],[1,3]], ["<=","<=","<="], [30,24,18], [8,6], true);
-//newPL.Resoudre();
-
-//Console.WriteLine(nf.toString2());
-
+sw.Stop();
+Console.WriteLine("Edmonds-Karp " + maxFlow.Value + " in " + sw.Elapsed);
+sw.Reset();
+sw.Start();
+var gurobiValue = PL.SolveWithGurobi(nf);
+sw.Stop();
+Console.WriteLine("Gurobi-Solve " + gurobiValue + " in " + sw.Elapsed);
+sw.Reset();
+sw.Start();
 PL newPL = new PL(nf);
-//newPL.AfficherSysteme();
-//newPL.Resoudre();
-
-var startTime2 = Stopwatch.GetTimestamp();
-newPL.Resoudre();
-Console.WriteLine("Elapsed : " + Stopwatch.GetElapsedTime(startTime2));
+var orToolsValue = newPL.Resoudre();
+sw.Stop();
+Console.WriteLine("OrTools " + gurobiValue + " in " + sw.Elapsed);
+BenchmarkRunner.Run<Benchmarks>();

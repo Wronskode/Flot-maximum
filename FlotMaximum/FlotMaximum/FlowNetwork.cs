@@ -1,15 +1,13 @@
-using System.Text;
 namespace FlotMaximum;
 
 public class FlowNetwork : Graph
 {
     public Vertex Source { get; }
     public Vertex Puits { get; }
-    public List<(Vertex, int)> SourceNeighbors { get; }
-    public List<(Vertex, int)> PuitsNeighbors { get; }
+    public List<(Vertex?, int)> SourceNeighbors { get; }
+    public List<(Vertex?, int)> PuitsNeighbors { get; }
 
-    public FlowNetwork(IEnumerable<(Vertex, Vertex, int)> neighbors, Vertex source, Vertex puits, IEnumerable<
-        (Vertex, int)> sourceNeighbors, IEnumerable<(Vertex, int)> puitsNeighbors, IEnumerable<Vertex> vertices) : base(neighbors, vertices)
+    public FlowNetwork(IEnumerable<(Vertex?, Vertex?, int Value)> neighbors, Vertex source, Vertex puits, IEnumerable<(Vertex?, int)> sourceNeighbors, IEnumerable<(Vertex?, int)> puitsNeighbors, IEnumerable<Vertex> vertices) : base(neighbors, vertices)
     {
         Source = source;
         Puits = puits;
@@ -19,7 +17,7 @@ public class FlowNetwork : Graph
     }
     
     public FlowNetwork(Dictionary<(Vertex, Vertex), int> neighbors, Vertex source, Vertex puits, IEnumerable<
-        (Vertex, int)> sourceNeighbors, IEnumerable<(Vertex, int)> puitsNeighbors, IEnumerable<Vertex> vertices) : base(neighbors, vertices)
+        (Vertex?, int)> sourceNeighbors, IEnumerable<(Vertex?, int)> puitsNeighbors, IEnumerable<Vertex> vertices) : base(neighbors, vertices)
     {
         Source = source;
         Puits = puits;
@@ -38,16 +36,18 @@ public class FlowNetwork : Graph
         }
         newAdjVertices.TryAdd(Source, []);
         newAdjVertices.TryAdd(Puits, []);
-        foreach (var vertex in SourceNeighbors)
+        foreach (var (vertex, value) in SourceNeighbors)
         {
-            newEdges.TryAdd((Source, vertex.Item1), vertex.Item2);
-            newAdjVertices[Source].Add(vertex.Item1);
+            if (vertex is null) continue;
+            newEdges.TryAdd((Source, vertex), value);
+            newAdjVertices[Source].Add(vertex);
         }
         
-        foreach (var vertex in PuitsNeighbors)
+        foreach (var (vertex, value) in PuitsNeighbors)
         {
-            newEdges.TryAdd((vertex.Item1, Puits), vertex.Item2);
-            newAdjVertices[vertex.Item1].Add(Puits);
+            if (vertex is null) continue;
+            newEdges.TryAdd((vertex, Puits), value);
+            newAdjVertices[vertex].Add(Puits);
         }
 
         Edges = newEdges;
@@ -56,12 +56,12 @@ public class FlowNetwork : Graph
 
     public Flow FordFulkerson()
     {
-        return GetMaxFlow((nf) => nf.CheminDfs());
+        return GetMaxFlow(nf => nf.CheminDfs());
     }
     
     public Flow EdmondsKarp()
     {
-        return GetMaxFlow((nf) => nf.CheminBfs());
+        return GetMaxFlow(nf => nf.CheminBfs());
     }
     public Flow GetMaxFlow(Func<FlowNetwork, List<Vertex>> getPath)
     {
@@ -161,7 +161,7 @@ public class FlowNetwork : Graph
     {
         Dictionary<Vertex, Vertex> parents = new();
         Queue<Vertex> queue = new();
-        HashSet<Vertex> visited = new();
+        HashSet<Vertex> visited = [];
         queue.Enqueue(Source);
         visited.Add(Source);
         while (queue.Count > 0)
@@ -193,15 +193,13 @@ public class FlowNetwork : Graph
         }
         return path;
     }
-    public override string ToString()
-    {
-        Graph graph = new Graph(Edges.Select(x => (x.Key.Item1, x.Key.Item2, x.Value)), AdjVertices.Keys);
-        return graph.ToString();
-    }
+
+
     public override object Clone()
     {
         return new FlowNetwork(Edges.Select(x => (x.Key.Item1.Clone() as Vertex, x.Key.Item2.Clone() as Vertex, x.Value)),
-            Source.Clone() as Vertex, Puits.Clone() as Vertex, SourceNeighbors.Select(x => (x.Item1.Clone() as Vertex, x.Item2)), PuitsNeighbors.Select(x => (x.Item1.Clone() as Vertex, x.Item2)),
+            Source.Clone() as Vertex ?? throw new InvalidOperationException(), Puits.Clone() as Vertex ?? throw new InvalidOperationException(), 
+            SourceNeighbors.Select(x => (x.Item1?.Clone() as Vertex, x.Item2)), PuitsNeighbors.Select(x => (x.Item1?.Clone() as Vertex, x.Item2)),
             AdjVertices.Keys);
     }
     

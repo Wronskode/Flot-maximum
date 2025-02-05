@@ -68,7 +68,7 @@ public class PL
             Console.WriteLine("Solution optimale trouvée !");
             for (int i = 0; i < variables.Length; i++)
             {
-                Console.WriteLine($"{variables[i].Name()} = {variables[i].SolutionValue()}");
+                //Console.WriteLine($"{variables[i].Name()} = {variables[i].SolutionValue()}");
             }
             Console.WriteLine($"Valeur optimale de la fonction objectif : {solver.Objective().Value()}");
         }
@@ -114,7 +114,7 @@ public class PL
         
         foreach (Vertex v in flowNetwork.AdjVertices.Keys)
         {
-            if (v == flowNetwork.Puits)
+            if (v == flowNetwork.Puits || v == flowNetwork.Source)
             {
                 continue;
             }

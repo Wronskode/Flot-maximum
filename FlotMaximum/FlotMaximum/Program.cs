@@ -19,7 +19,7 @@ Vertex p = new Vertex("p");
 //FlowNetwork nf = new([
 //(a,d, 13), (a, b, 8), (a, c, 10), (b,c,26), (c,d,20),
 //(c,e,8),(c,f,24),(d,e,1),(d,b,2)], s, p, [(a, 38), (b, 1), (f, 2)], [(d, 7), (e, 7), (c, 1), (f, 27)]);
-RandomFlowNetwork randomFlow = new(2, 10);
+RandomFlowNetwork randomFlow = new(4, 6);
 FlowNetwork nf = randomFlow.Generate();
 Console.WriteLine("Généré avec " + nf.AdjVertices.Keys.Count + " sommets et " +
                   (nf.Edges.Count) + " arêtes.");
@@ -32,8 +32,12 @@ Console.WriteLine("\nOUAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIS   : \n");
 //PL newPL = new PL(2, [[5,3],[2,3],[1,3]], ["<=","<=","<="], [30,24,18], [8,6], true);
 //newPL.Resoudre();
 
-Console.WriteLine(nf.toString2());
+//Console.WriteLine(nf.toString2());
 
 PL newPL = new PL(nf);
-newPL.AfficherSysteme();
+//newPL.AfficherSysteme();
+//newPL.Resoudre();
+
+var startTime2 = Stopwatch.GetTimestamp();
 newPL.Resoudre();
+Console.WriteLine("Elapsed : " + Stopwatch.GetElapsedTime(startTime2));

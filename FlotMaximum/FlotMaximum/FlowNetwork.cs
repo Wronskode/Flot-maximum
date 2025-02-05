@@ -204,4 +204,24 @@ public class FlowNetwork : Graph
             Source.Clone() as Vertex, Puits.Clone() as Vertex, SourceNeighbors.Select(x => (x.Item1.Clone() as Vertex, x.Item2)), PuitsNeighbors.Select(x => (x.Item1.Clone() as Vertex, x.Item2)),
             AdjVertices.Keys);
     }
+    
+    public List<Vertex> getEntrant (Vertex vertex)
+    {
+        List<Vertex> entrant = new();
+        foreach (var edge in this.Edges)
+        {
+            var (u, v) = edge.Key;
+            if (v == vertex)
+            {
+                entrant.Add(u);
+            }
+        }
+
+        return entrant;
+    }
+
+    public List<Vertex> getSortant(Vertex vertex)
+    {
+        return this.AdjVertices[vertex].ToList();
+    }
 }

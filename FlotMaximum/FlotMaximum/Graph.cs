@@ -83,6 +83,19 @@ public class Graph : ICloneable
         }
         return output;
     }
+
+    public String toString2()
+    {
+        string output = "";
+        foreach (var ((u,v), i) in Edges)
+        {
+            output+=u+" -> "+v+"   poid : "+i+"\n";
+        }
+        return output;
+    }
+    
+    
+    
     public virtual object Clone()
     {
         return new Graph(Edges.Select(x => (x.Key.Item1.Clone() as Vertex, x.Key.Item2.Clone() as Vertex, x.Value)),

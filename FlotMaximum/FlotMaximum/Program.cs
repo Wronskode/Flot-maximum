@@ -34,12 +34,18 @@ var maxFlow = nf.EdmondsKarp();
 Console.WriteLine("Edmonds-Karp " + maxFlow.Value);
 Console.WriteLine("Elapsed : " + Stopwatch.GetElapsedTime(startTime));
 
-List<List<Vertex>> l = nf.Bfs(nf.Source);
-nf.RemoveEdgesBetweenLists(l);
+
 
 var startTime2 = Stopwatch.GetTimestamp();
-var maxFlow2 = nf.EdmondsKarp();
-Console.WriteLine("Dinic " + maxFlow2.Value);
+
+int maxFlow2 = nf.Dinic(nf);
+
+Console.WriteLine("Dinic " + maxFlow2);
 Console.WriteLine("Elapsed : " + Stopwatch.GetElapsedTime(startTime2));
+
+
+
+
+
 
 

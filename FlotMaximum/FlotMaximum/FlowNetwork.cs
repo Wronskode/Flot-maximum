@@ -63,6 +63,7 @@ public class FlowNetwork : Graph
     {
         return GetMaxFlow((nf) => nf.CheminBfs());
     }
+
     public Flow GetMaxFlow(Func<FlowNetwork, List<Vertex>> getPath)
     {
         Flow flot = new(Edges.ToDictionary(edge => edge.Key, _ => 0), Puits);
@@ -96,14 +97,13 @@ public class FlowNetwork : Graph
                     flot.DecreaseFlow(backwardEdge, delta);
                 }
             }
-            
+
             nf = GetResidualNetwork(flot);
             chemin = getPath(nf);
         }
         return flot;
     }
-
-
+    
     public FlowNetwork GetResidualNetwork(Flow  flot)
     {
         Dictionary<(Vertex, Vertex), int> newEdgesNf = [];
@@ -194,6 +194,12 @@ public class FlowNetwork : Graph
         return path;
     }
     //----------------------------------------------------------------------------Algo Dinic ----------------------------------------------------------------------------
+    
+    public (Flow,FlowNetwork) EdmondsKarpDinic()
+    {
+        return GetMaxFlowDinic((nf) => nf.CheminBfs());
+    }
+    
     public List<List<Vertex>> Bfs(Vertex source)
     {
         Dictionary<Vertex, bool> visited = new Dictionary<Vertex, bool>();  
@@ -239,16 +245,17 @@ public class FlowNetwork : Graph
     
     public void RemoveEdgesBetweenLists(List<List<Vertex>> bfsResult)
     {
-
         for (int i = 0; i < bfsResult.Count; i++)
         {
             RemoveEdgesWithinSublist(bfsResult[i]);
-            if (i > 0)
+            
+            for (int j = 0; j < i; j++)
             {
-                RemoveEdgesBetweenSubLists(bfsResult[i], bfsResult[i - 1]);
+                RemoveEdgesBetweenSubLists(bfsResult[i], bfsResult[j]);
             }
         }
     }
+
 
     private void RemoveEdgesWithinSublist(List<Vertex> sublist)
     {
@@ -289,8 +296,7 @@ public class FlowNetwork : Graph
             }
         }
     }
-
-
+    
     public void RemoveEdge((Vertex, Vertex) edge)
     {
         if (Edges.ContainsKey(edge))
@@ -299,6 +305,140 @@ public class FlowNetwork : Graph
             AdjVertices[edge.Item1].Remove(edge.Item2);
         }
     }
+    
+    public (Flow,FlowNetwork) GetMaxFlowDinic(Func<FlowNetwork, List<Vertex>> getPath)
+    {
+        Flow flot = new(Edges.ToDictionary(edge => edge.Key, _ => 0), Puits);
+        FlowNetwork nf = GetResidualNetwork(flot);
+        List<Vertex> chemin = getPath(nf);
+
+        while (chemin.Count > 0)
+        {
+            int delta = int.MaxValue;
+            for (int i = 0; i < chemin.Count - 1; i++)
+            {
+                var edge = (chemin[i], chemin[i + 1]);
+
+                if (nf.Edges.TryGetValue(edge, out int capacity))
+                {
+                    delta = Math.Min(delta, capacity);
+                }
+            }
+            
+            for (int i = 0; i < chemin.Count - 1; i++)
+            {
+                var forwardEdge = (chemin[i], chemin[i + 1]);
+                var backwardEdge = (chemin[i + 1], chemin[i]);
+
+                if (Edges.ContainsKey(forwardEdge))
+                {
+                    flot.IncreaseFlow(forwardEdge, delta);
+                }
+                else if (flot.FlowEdges.ContainsKey(backwardEdge))
+                {
+                    flot.DecreaseFlow(backwardEdge, delta);
+                }
+            }
+            
+            
+            nf = GetResidualNetwork(flot);
+            
+            //foreach (var edge in nf.Edges)
+            //{
+             //   Console.WriteLine($"Arête: ({edge.Key.Item1}) -> ({edge.Key.Item2}), Poids: {edge.Value}");
+            //}
+            
+            //Console.WriteLine("");
+            
+            //foreach (var edge in flot.FlowEdges)
+            //{
+            //    Console.WriteLine($"Arête: ({edge.Key.Item1}) -> ({edge.Key.Item2}), Poids: {edge.Value}");
+            //}
+            
+            //Console.WriteLine("");
+            
+            chemin = getPath(nf);
+        }
+        return (flot,nf);
+    }
+    
+    public FlowNetwork MergeFlowNetworks(FlowNetwork nf1, FlowNetwork nf2)
+    {
+        // Créer un nouveau FlowNetwork basé sur nf1
+        FlowNetwork nfRes = new FlowNetwork(
+            new Dictionary<(Vertex, Vertex), int>(nf1.Edges),
+            nf1.Source,
+            nf1.Puits,
+            new List<(Vertex, int)>(),
+            new List<(Vertex, int)>(),
+            new List<Vertex>(nf1.AdjVertices.Keys)
+        );
+        
+        foreach (var vertex in nf2.AdjVertices.Keys)
+        {
+            nfRes.AddVertex(vertex);
+        }
+        
+        foreach (var edge in nf2.Edges)
+        {
+            var (u, v) = edge.Key;
+            int weight = edge.Value;
+
+
+            if (nfRes.Edges.TryGetValue((v, u), out int reverseWeight) && reverseWeight == weight)
+            {
+                continue;
+            }
+
+
+            if (u == nfRes.Source || u == nfRes.Puits || v == nfRes.Source || v == nfRes.Puits)
+            {
+                continue; 
+            }
+
+
+            if (!nfRes.Edges.ContainsKey((u, v)))
+            {
+                nfRes.AddEdge((u, v), weight);
+            }
+        }
+        
+        
+        return nfRes;
+    }
+
+    public int Dinic(FlowNetwork nf)
+    {
+        List<Vertex> chemin = nf.CheminDfs();
+
+        int res = 0;
+        
+        while (chemin.Count > 0)
+        {
+            List<List<Vertex>> l = nf.Bfs(nf.Source);
+            
+            FlowNetwork nfcopy = new FlowNetwork(
+                new Dictionary<(Vertex, Vertex), int>(nf.Edges), 
+                nf.Source,
+                nf.Puits,
+                new List<(Vertex, int)>(),
+                new List<(Vertex, int)>(),
+                new List<Vertex>(nf.AdjVertices.Keys)
+            );
+
+            nfcopy.RemoveEdgesBetweenLists(l);
+            
+            (Flow,FlowNetwork) maxFlow = nfcopy.EdmondsKarpDinic();
+
+            FlowNetwork nfres = nf.MergeFlowNetworks(maxFlow.Item2, nf);
+
+            nf = nfres;
+            res += maxFlow.Item1.Value;
+            chemin = nf.CheminDfs();
+        }
+        return res;
+    }
+
     //--------------------------------------------------------------------------------------------------------------------------------------------------------
     public override string ToString()
     {

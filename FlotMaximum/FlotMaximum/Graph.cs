@@ -62,6 +62,13 @@ public class Graph : ICloneable
             AdjVertices[edge.Item1].Remove(edge.Item2);
         }
     }
+
+    public void RemoveVertex(Vertex v)
+    {
+        AdjVertices = AdjVertices.Where((uv, value) => uv.Key != v && !uv.Value.Contains(v)).ToDictionary();
+        Edges = Edges.Where((uv) => v != uv.Key.Item1 &&  v != uv.Key.Item2).ToDictionary();
+        
+    }
     
     public void AddVertex(Vertex v)
     {

@@ -84,7 +84,7 @@ public class Tests
     [Test]
     public void Capacite()
     {
-        for (int i = 0; i < 100; i++)
+        for (int i = 0; i < 1000; i++)
         {
             RandomFlowNetwork randomFlow = new(random.Next(2, 5000), random.Next(0, 10000));
             var nf = randomFlow.Generate();
@@ -104,7 +104,7 @@ public class Tests
             RandomFlowNetwork randomFlow = new(random.Next(2, 5000), random.Next(0, 10000));
             var nf = randomFlow.Generate();
             var val = nf.EdmondsKarp();
-            var guro = nf.SolveWithGurobi();
+            var guro = PL.SolveWithGurobi(nf);
             Assert.That(val.Value, Is.EqualTo(guro));
         }
     }

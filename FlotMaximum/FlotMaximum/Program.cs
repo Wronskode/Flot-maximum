@@ -20,7 +20,7 @@ Vertex p = new Vertex("p");
 //FlowNetwork nf = new([
 //(a,d, 13), (a, b, 8), (a, c, 10), (b,c,26), (c,d,20),
 //(c,e,8),(c,f,24),(d,e,1),(d,b,2)], s, p, [(a, 38), (b, 1), (f, 2)], [(d, 7), (e, 7), (c, 1), (f, 27)]);
-RandomFlowNetwork randomFlow = new(1000, 10000);
+RandomFlowNetwork randomFlow = new(1000, 0.5);
 FlowNetwork nf = randomFlow.Generate();
 Console.WriteLine("Généré avec " + nf.AdjVertices.Keys.Count + " sommets et " +
                   nf.Edges.Count + " arêtes.");
@@ -34,10 +34,8 @@ sw.Start();
 var gurobiValue = PL.SolveWithGurobi(nf);
 sw.Stop();
 Console.WriteLine("Gurobi-Solve " + gurobiValue + " in " + sw.Elapsed);
-sw.Reset();
-sw.Start();
-PL newPL = new PL(nf);
-var orToolsValue = newPL.Resoudre();
-sw.Stop();
-Console.WriteLine("OrTools " + gurobiValue + " in " + sw.Elapsed);
-BenchmarkRunner.Run<Benchmarks>();
+// sw.Reset();
+// sw.Start();
+// var plValue = (new PL(nf)).Resoudre();
+// Console.WriteLine("PL-Solve " + plValue + " in " + sw.Elapsed);
+//BenchmarkRunner.Run<Benchmarks>();

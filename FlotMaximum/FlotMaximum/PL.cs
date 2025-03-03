@@ -218,7 +218,7 @@ public class PL
         {
             if (vertex.Key == nf.Source || vertex.Key == nf.Puits) continue;
             GRBLinExpr lexpr = new GRBLinExpr(0);
-            foreach (var v in vertex.Value)
+            foreach (var v in vertex.Value) 
             {
                 lexpr.AddTerm(1.0, vars[(vertex.Key, v)]);
             }

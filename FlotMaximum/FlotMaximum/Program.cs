@@ -1,5 +1,7 @@
 ﻿using System.Diagnostics;
+using BenchmarkDotNet.Running;
 using FlotMaximum;
+using ScottPlot;
 
 Vertex a = new Vertex("a");
 Vertex b = new Vertex("b");
@@ -19,25 +21,50 @@ Vertex p = new Vertex("p");
 //FlowNetwork nf = new([
 //(a,d, 13), (a, b, 8), (a, c, 10), (b,c,26), (c,d,20),
 //(c,e,8),(c,f,24),(d,e,1),(d,b,2)], s, p, [(a, 38), (b, 1), (f, 2)], [(d, 7), (e, 7), (c, 1), (f, 27)]);
-RandomFlowNetwork randomFlow = new(400, 6000);
-FlowNetwork nf = randomFlow.Generate();
-Console.WriteLine("Généré avec " + nf.AdjVertices.Keys.Count + " sommets et " +
-                  (nf.Edges.Count) + " arêtes.");
-var startTime = Stopwatch.GetTimestamp();
-var maxFlow = nf.EdmondsKarp();
-Console.WriteLine("Edmonds-Karp " + maxFlow.Value);
-Console.WriteLine("Elapsed : " + Stopwatch.GetElapsedTime(startTime));
+List<int> xs = [];
+List<int> xss = [];
+List<int> ys = [];
+List<int> zs = [];
+Plot myPlot = new();
+for (int i = 0; i < 10; i++)
+{
+    RandomFlowNetwork randomFlow = new(50*(i+1), 0.5);
+    FlowNetwork nf = randomFlow.Generate();
+    Console.WriteLine("Généré avec " + nf.AdjVertices.Keys.Count + " sommets et " +
+                      nf.Edges.Count + " arêtes.");
+    Stopwatch sw = new();
+    sw.Start();
+    var maxFlow = nf.FordFulkerson();
+    sw.Stop();
+    xs.Add((50)*(i+1));
+    xss.Add(sw.Elapsed.Seconds);
+    Console.WriteLine("Ford-Fulkerson " + maxFlow.Value + " in " + sw.Elapsed);
+    sw.Reset();
+    sw.Start();
+    maxFlow = nf.EdmondsKarp();
+    sw.Stop();
+    ys.Add(sw.Elapsed.Seconds);
+    Console.WriteLine("Edmonds-Karp " + maxFlow.Value + " in " + sw.Elapsed);
+    sw.Reset();
+    sw.Start();
+    var gurobiValue = PL.SolveWithGurobi(nf);
+    sw.Stop();
+    zs.Add(sw.Elapsed.Seconds);
+    Console.WriteLine("Gurobi-Solve " + gurobiValue + " in " + sw.Elapsed);
+}
+var ek = myPlot.Add.Scatter(xs, ys);
+var gurobi = myPlot.Add.Scatter(xs, zs);
+var ff = myPlot.Add.Scatter(xs, xss);
+ek.LegendText = "Edmonds-Karp";
+gurobi.LegendText = "Gurobi";
+ff.LegendText = "Ford-Fulkerson";
 
-Console.WriteLine("\n PL   : \n");
-//PL newPL = new PL(2, [[5,3],[2,3],[1,3]], ["<=","<=","<="], [30,24,18], [8,6], true);
-//newPL.Resoudre();
-
-//Console.WriteLine(nf.toString2());
-
-PL newPL = new PL(nf);
-//newPL.AfficherSysteme();
-//newPL.Resoudre();
-
-var startTime2 = Stopwatch.GetTimestamp();
-newPL.Resoudre();
-Console.WriteLine("Elapsed : " + Stopwatch.GetElapsedTime(startTime2));
+myPlot.Axes.Bottom.Label.Text = "Number of nodes";
+myPlot.Axes.Left.Label.Text = "Seconds";
+myPlot.ShowLegend(Alignment.UpperLeft);
+myPlot.SavePng("quickstart.png", 800, 600);
+// sw.Reset();
+// sw.Start();
+// var plValue = (new PL(nf)).Resoudre();
+// Console.WriteLine("PL-Solve " + plValue + " in " + sw.Elapsed);
+//BenchmarkRunner.Run<Benchmarks>();

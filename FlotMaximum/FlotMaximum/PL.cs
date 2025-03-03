@@ -1,6 +1,5 @@
 using Google.OrTools.LinearSolver;
-using Google.Protobuf.WellKnownTypes;
-using OperationsResearch;
+using Gurobi;
 
 namespace FlotMaximum;
 
@@ -59,23 +58,10 @@ public class PL
         }
     }
     
-    public void Resoudre()
+    public double Resoudre()
     {
         Solver.ResultStatus statut = solver.Solve();
-
-        if (statut == Solver.ResultStatus.OPTIMAL)
-        {
-            Console.WriteLine("Solution optimale trouvée !");
-            for (int i = 0; i < variables.Length; i++)
-            {
-                //Console.WriteLine($"{variables[i].Name()} = {variables[i].SolutionValue()}");
-            }
-            Console.WriteLine($"Valeur optimale de la fonction objectif : {solver.Objective().Value()}");
-        }
-        else
-        {
-            Console.WriteLine("Pas de solution optimale trouvée.");
-        }
+        return solver.Objective().Value();
     }
 
     public PL(FlowNetwork flowNetwork)
@@ -208,5 +194,49 @@ public class PL
         Console.WriteLine("\n========================================\n");
     }
 
+    public static double SolveWithGurobi(FlowNetwork nf)
+    {
+        Dictionary<Vertex, HashSet<Vertex>> inEdges = new();
+        foreach (var edge in nf.Edges)
+        {
+            var u = edge.Key.Item1;
+            var v = edge.Key.Item2;
+            if (!inEdges.ContainsKey(v))
+                inEdges[v] = new();
+            inEdges[v].Add(u);
+        }
+        GRBEnv env = new GRBEnv(true);
+        env.Set("OutputFlag", "0");
+        env.Start();
+        GRBModel model = new GRBModel(env);
+        Dictionary<(Vertex, Vertex), GRBVar> vars = new();
+        foreach (var edge in nf.Edges)
+        {
+            vars[(edge.Key.Item1, edge.Key.Item2)] = model.AddVar(0.0, edge.Value, 0.0, GRB.CONTINUOUS, $"x{edge.Key.Item1}_{edge.Key.Item2}");
+        }
+        foreach (var vertex in nf.AdjVertices)
+        {
+            if (vertex.Key == nf.Source || vertex.Key == nf.Puits) continue;
+            GRBLinExpr lexpr = new GRBLinExpr(0);
+            foreach (var v in vertex.Value) 
+            {
+                lexpr.AddTerm(1.0, vars[(vertex.Key, v)]);
+            }
+            if (inEdges.TryGetValue(vertex.Key, out var edge))
+                foreach (var v in edge)
+                {
+                    lexpr.AddTerm(-1.0, vars[(v, vertex.Key)]);
+                }
+            model.AddConstr(lexpr, GRB.EQUAL, 0.0, "c");
+        }
 
+        GRBLinExpr expr = new GRBLinExpr(0);
+        foreach (var v in nf.AdjVertices[nf.Source])
+        {
+            expr.AddTerm(1.0, vars[(nf.Source, v)]);
+        }
+        model.SetObjective(expr, GRB.MAXIMIZE);
+        model.Optimize();
+        return model.ObjVal;
+    }
 }

@@ -5,48 +5,80 @@ public class RandomFlowNetwork
     private int VertexNumber;
     private int EdgeNumber;
     private Random Random;
+    public double density { get; }
     public RandomFlowNetwork(int vertexNumber, int edgeNumber)
     {
         VertexNumber = vertexNumber;
         EdgeNumber = edgeNumber;
-        Random = new();
+        Random = new Random();
+        density = 0;
+    }
+    
+    public RandomFlowNetwork(int vertexNumber, double density)
+    {
+        VertexNumber = vertexNumber;
+        EdgeNumber = 0;
+        Random = new Random();
+        this.density = density;
     }
 
     public FlowNetwork Generate()
     {
         Graph graph = new(new List<(Vertex, Vertex, int)>(), []);
-        HashSet<Vertex> sourceVertices = new();
-        HashSet<Vertex> puitsVertices = new();
         for (int i = 0; i < VertexNumber; i++)
         {
             var v = new Vertex(i.ToString());
             graph.AddVertex(v);
         }
         List<Vertex> vertices = graph.AdjVertices.Keys.ToList();
-        for (int i = 0; i < EdgeNumber; i++)
-        {
-            Vertex v1 = vertices[Random.Next(0, VertexNumber)];
-            Vertex v2 = vertices[Random.Next(0, VertexNumber)];
-            if (VertexNumber > 1)
-            {
-                while (v1 == v2)
-                {
-                    v2 = vertices[Random.Next(0, VertexNumber)];
-                }
-            }
-            graph.AddEdge((v1, v2), Random.Next(0, EdgeNumber));
-        }
         
-        // Je mets un nombre d'arêtes au pif entre la source/puits et le reste du graphe (environ sqrt(n))
-        for (int i = 0; i < Math.Floor(Math.Sqrt(VertexNumber))+1; i++)
+        if (EdgeNumber > 0)
         {
-            Vertex v1 = vertices[Random.Next(0, VertexNumber)];
-            Vertex v2 = vertices[Random.Next(0, VertexNumber)];
-            sourceVertices.Add(v1);
-            puitsVertices.Add(v2);
+            int min = Math.Min(EdgeNumber, VertexNumber*(VertexNumber + 1)/2);
+            while (graph.Edges.Count < min)
+            {
+                Vertex v1 = vertices[Random.Next(0, VertexNumber)];
+                Vertex v2 = vertices[Random.Next(0, VertexNumber)];
+                if (VertexNumber > 1)
+                {
+                    while (v1 == v2)
+                    {
+                        v2 = vertices[Random.Next(0, VertexNumber)];
+                    }
+                }
+                graph.AddEdge((v1, v2), Random.Next(0, EdgeNumber));
+            }
         }
-        List<(Vertex, int)> sourceVerticesList = new(sourceVertices.Select(v => (v, Random.Next(0, EdgeNumber))));
-        List<(Vertex, int)> puitsVerticesList = new(puitsVertices.Select(v => (v, Random.Next(0, EdgeNumber))));
-        return new FlowNetwork(graph.Edges, new Vertex("s"), new Vertex("p"), sourceVerticesList, puitsVerticesList, vertices);
+        else
+        {
+            int edges = (int) (density * (VertexNumber * (VertexNumber + 1) / 2));
+            while (graph.Edges.Count < edges)
+            {
+                Vertex v = vertices[Random.Next(0, VertexNumber)];
+                Vertex u = vertices[Random.Next(0, VertexNumber)];
+                if (VertexNumber > 1)
+                {
+                    while (v == u)
+                    {
+                        u = vertices[Random.Next(0, VertexNumber)];
+                    }
+                }
+                graph.AddEdge((u, v), Random.Next(0, graph.Edges.Count));
+            }
+        }
+        Vertex source = vertices[Random.Next(0, VertexNumber)];
+        Vertex puits = vertices[Random.Next(0, VertexNumber)];
+        if (vertices.Count > 1)
+        {
+            while (source == puits)
+            {
+                puits = vertices[Random.Next(0, VertexNumber)];
+            }
+        }
+        List<(Vertex, int)> sourceVerticesList = graph.AdjVertices[source].Select(v => (v, Random.Next(0, VertexNumber))).ToList();
+        List<(Vertex, int)> puitsVerticesList = graph.AdjVertices.Keys.Where(v => graph.AdjVertices[v].Contains(puits)).Select(v => (v, Random.Next(0, VertexNumber))).ToList();
+        graph.RemoveVertex(source);
+        graph.RemoveVertex(puits);
+        return new FlowNetwork(graph.Edges, source, puits, sourceVerticesList, puitsVerticesList, vertices);
     }
 }

@@ -14,10 +14,16 @@ using ScottPlot;
 //(c,e,8),(c,f,24),(d,e,1),(d,b,2)], s, p, [(a, 38), (b, 1), (f, 2)], [(d, 7), (e, 7), (c, 1), (f, 27)]);
 
 
-RandomFlowNetwork randomFlow = new(5, 0.5);
+RandomFlowNetwork randomFlow = new(1000, 0.5);
 FlowNetwork nf = randomFlow.Generate();
 Console.WriteLine(nf);
-Console.WriteLine("\n"+nf.IsConnected());
+bool res = nf.IsConnected();
+Console.WriteLine("\n"+res);
+if (res)
+{
+    nf.CreateGraphFile("/home/e20210005981/Bureau/TER/test.txt");
+    Console.WriteLine("Le fichier a été créé avec succès.");
+}
 // sw.Reset();
 // sw.Start();
 // var plValue = (new PL(nf)).Resoudre();

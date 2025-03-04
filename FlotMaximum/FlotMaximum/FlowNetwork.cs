@@ -331,12 +331,55 @@ public class FlowNetwork : Graph
             {
                 special = "(s)";
             }
-            if (txt.Length == 0) continue;
+
+            if (txt.Length == 0)
+            {
+                continue;
+            }
             txt.Length -= 1;
             txt.Append(" -> " + vertex+special);
             output.Append(txt + "\n");
         }
         return output.ToString();
     }
-    
+
+    public void CreateGraphFile(string filePath)
+    {
+        // Ouvre ou crée le fichier en écriture
+        using (StreamWriter writer = new StreamWriter(filePath))
+        {
+            // Écrit la source
+            writer.WriteLine(Source);
+
+            // Écrit le puit
+            writer.WriteLine(Puits);
+
+            // Écrit les sommets et leurs voisins
+            foreach (var vertex in AdjVertices.Keys)
+            {
+                if (vertex == Puits)
+                {
+                    continue;
+                }
+                writer.Write($"{vertex}: "); // Affiche le sommet suivi de ": "
+
+                // Récupère les voisins du sommet
+                var neighbors = AdjVertices[vertex];
+
+                // Si le sommet a des voisins, les afficher séparés par des virgules
+                if (neighbors.Count > 0)
+                {
+                    writer.WriteLine(string.Join(", ", neighbors));
+                }
+                else
+                {
+                    // Si le sommet n'a pas de voisins, afficher "aucun"
+                    writer.WriteLine("aucun");
+                }
+            }
+        }
+    }
+
+
+
 }

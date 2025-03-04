@@ -35,11 +35,11 @@ jobs:
     - name: Setup MSBuild.exe
       uses: microsoft/setup-msbuild@v2
 
-    - name: Install Gurobi
+    - name: Install Gurobi 12.0.1
       run: |
-        Invoke-WebRequest -Uri https://packages.gurobi.com/10.0/gurobi10.0.2_win64.zip -OutFile gurobi.zip
+        Invoke-WebRequest -Uri https://packages.gurobi.com/12.0/gurobi12.0.1_win64.zip -OutFile gurobi.zip
         Expand-Archive -Path gurobi.zip -DestinationPath C:\gurobi
-        echo "GUROBI_HOME=C:\gurobi\gurobi1002\win64" | Out-File -FilePath $env:GITHUB_ENV -Append
+        echo "GUROBI_HOME=C:\gurobi\gurobi1201\win64" | Out-File -FilePath $env:GITHUB_ENV -Append
         echo "Path=$env:GUROBI_HOME\bin;$env:Path" | Out-File -FilePath $env:GITHUB_ENV -Append
         echo "GRB_LICENSE_FILE=@wlslicense" | Out-File -FilePath $env:GITHUB_ENV -Append
 

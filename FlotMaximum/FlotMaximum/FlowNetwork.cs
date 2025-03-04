@@ -1,4 +1,6 @@
 namespace FlotMaximum;
+using System.Text;
+
 
 public class FlowNetwork : Graph
 {
@@ -222,4 +224,119 @@ public class FlowNetwork : Graph
     {
         return this.AdjVertices[vertex].ToList();
     }
+    
+    
+    public bool IsConnected() {
+        if (AdjVertices.Count == 0) return true; // Un graphe vide est considéré comme connexe
+
+        var startVertex = Source;
+        var visited = new HashSet<Vertex>();
+        var queue = new Queue<Vertex>();
+
+        // On démarre le BFS à partir du premier sommet
+        queue.Enqueue(startVertex);
+        visited.Add(startVertex);
+
+        while (queue.Count > 0) {
+            var vertex = queue.Dequeue();
+            if (AdjVertices.TryGetValue(vertex, out var neighbors)) {
+                foreach (var neighbor in neighbors) {
+                    if (!visited.Contains(neighbor)) {
+                        visited.Add(neighbor);
+                        queue.Enqueue(neighbor);
+                    }
+                }
+            }
+        }
+
+        // Vérifier si tous les sommets ont été visités
+        if (visited.Count != AdjVertices.Count)
+        {
+            var allVertices = AdjVertices.Keys.ToList();  // Récupère tous les sommets du graphe
+            var unvisited = allVertices.Except(visited).ToList();  // Récupère ceux qui ne sont pas dans 'visited'
+            Console.WriteLine("Source non connectée à tout les sommets");
+            Console.WriteLine("Exemple : [{0}]", string.Join(", ", unvisited.Select(v => v.ToString())));
+            return false;
+        };
+        
+        var goToPuits = new HashSet<Vertex>();
+        goToPuits.Add(Puits);
+        foreach (Vertex v in AdjVertices.Keys.ToList())
+        {
+            bool check = false;
+            startVertex = v;
+            visited = new HashSet<Vertex>();
+            queue = new Queue<Vertex>();
+
+            queue.Enqueue(startVertex);
+            visited.Add(startVertex);
+            
+            while (queue.Count > 0) {
+                var vertex = queue.Dequeue();
+                if (goToPuits.Contains(vertex))
+                {
+                    check = true;
+                }
+                if (AdjVertices.TryGetValue(vertex, out var neighbors)) {
+                    foreach (var neighbor in neighbors) {
+                        if (!visited.Contains(neighbor)) {
+                            visited.Add(neighbor);
+                            queue.Enqueue(neighbor);
+                        }
+                    }
+                }
+            }
+
+            if (check == false)
+            {
+                Console.WriteLine(startVertex+" non connecté au puits");
+                return false;
+            }
+        }
+        
+        return true;
+    }
+
+    
+    public override string ToString()
+    {
+        String special = "";
+        StringBuilder output = new();
+        output.Append("source : "+Source+", puits : "+Puits+"\n");
+        foreach (Vertex vertex in AdjVertices.Keys)
+        {
+            special = "";
+            StringBuilder txt = new();
+            foreach (var edge in Edges)
+            {
+                special = "";
+                if (edge.Key.Item2 == vertex)
+                {
+                    if (edge.Key.Item1 == Puits)
+                    {
+                        special = "(p)";
+                    }
+                    if (edge.Key.Item1 == Source)
+                    {
+                        special = "(s)";
+                    }
+                    txt.Append(edge.Key.Item1 + special + ",");
+                }
+            }
+            if (vertex == Puits)
+            {
+                special = "(p)";
+            }
+            if (vertex == Source)
+            {
+                special = "(s)";
+            }
+            if (txt.Length == 0) continue;
+            txt.Length -= 1;
+            txt.Append(" -> " + vertex+special);
+            output.Append(txt + "\n");
+        }
+        return output.ToString();
+    }
+    
 }

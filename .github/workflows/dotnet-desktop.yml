@@ -37,8 +37,8 @@ jobs:
 
     - name: Install Gurobi 12.0.1
       run: |
-        Invoke-WebRequest -Uri https://packages.gurobi.com/12.0/gurobi12.0.1_win64.zip -OutFile gurobi.zip
-        Expand-Archive -Path gurobi.zip -DestinationPath C:\gurobi
+        Invoke-WebRequest -Uri https://packages.gurobi.com/12.0/Gurobi-12.0.1-win64.msi -OutFile gurobi.msi
+        Start-Process msiexec.exe -ArgumentList '/i', 'gurobi.msi', '/quiet', '/norestart' -NoNewWindow -Wait
         echo "GUROBI_HOME=C:\gurobi\gurobi1201\win64" | Out-File -FilePath $env:GITHUB_ENV -Append
         echo "Path=$env:GUROBI_HOME\bin;$env:Path" | Out-File -FilePath $env:GITHUB_ENV -Append
         echo "GRB_LICENSE_FILE=@wlslicense" | Out-File -FilePath $env:GITHUB_ENV -Append

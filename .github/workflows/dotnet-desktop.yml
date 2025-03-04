@@ -38,11 +38,19 @@ jobs:
       run: |
         Invoke-WebRequest -Uri https://packages.gurobi.com/12.0/Gurobi-12.0.1-win64.msi -OutFile gurobi.msi
         Start-Process msiexec.exe -ArgumentList '/i', 'gurobi.msi', '/quiet', '/norestart' -NoNewWindow -Wait
+    
+        # Créer le répertoire d'installation s'il n'existe pas
+        $gurobiPath = "C:\gurobi\gurobi1201\win64"
+        if (-not (Test-Path -Path $gurobiPath)) {
+          New-Item -Path $gurobiPath -ItemType Directory -Force
+        }
+    
+        # Créer le fichier de licence à partir du secret
+        echo "${{ secrets.GUROBI_LICENSE }}" | Out-File -FilePath "$gurobiPath\gurobi.lic"
+    
+        # Configurer les variables d'environnement
         echo "GUROBI_HOME=C:\gurobi\gurobi1201\win64" | Out-File -FilePath $env:GITHUB_ENV -Append
         echo "Path=$env:GUROBI_HOME\bin;$env:Path" | Out-File -FilePath $env:GITHUB_ENV -Append
-        
-        # Créer le fichier de licence à partir du secret
-        echo "${{ secrets.GUROBI_LICENSE }}" | Out-File -FilePath "C:\gurobi\gurobi1201\win64\gurobi.lic"
 
     - name: Execute unit tests
       run: dotnet test $env:Test_Project_Path

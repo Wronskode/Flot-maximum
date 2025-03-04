@@ -17,7 +17,6 @@ jobs:
     env:
       Solution_Name: FlotMaximum/FlotMaximum.sln
       Test_Project_Path: FlotMaximum/Tests/Tests.csproj
-      GRB_LICENSE_FILE: "@wlslicense"
       GUROBI_WLS_ACCESS_ID: ${{ secrets.GUROBI_WLS_ACCESS_ID }}
       GUROBI_WLS_SECRET_KEY: ${{ secrets.GUROBI_WLS_SECRET_KEY }}
 
@@ -41,7 +40,9 @@ jobs:
         Start-Process msiexec.exe -ArgumentList '/i', 'gurobi.msi', '/quiet', '/norestart' -NoNewWindow -Wait
         echo "GUROBI_HOME=C:\gurobi\gurobi1201\win64" | Out-File -FilePath $env:GITHUB_ENV -Append
         echo "Path=$env:GUROBI_HOME\bin;$env:Path" | Out-File -FilePath $env:GITHUB_ENV -Append
-        echo "GRB_LICENSE_FILE=@wlslicense" | Out-File -FilePath $env:GITHUB_ENV -Append
+        
+        # Créer le fichier de licence à partir du secret
+        echo "${{ secrets.GUROBI_LICENSE }}" | Out-File -FilePath "C:\gurobi\gurobi1201\win64\gurobi.lic"
 
     - name: Execute unit tests
       run: dotnet test $env:Test_Project_Path

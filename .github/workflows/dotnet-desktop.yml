@@ -17,6 +17,9 @@ jobs:
     env:
       Solution_Name: FlotMaximum/FlotMaximum.sln
       Test_Project_Path: FlotMaximum/Tests/Tests.csproj
+      GRB_LICENSE_FILE: "@wlslicense"
+      GUROBI_WLS_ACCESS_ID: ${{ secrets.GUROBI_WLS_ACCESS_ID }}
+      GUROBI_WLS_SECRET_KEY: ${{ secrets.GUROBI_WLS_SECRET_KEY }}
 
     steps:
     - name: Checkout
@@ -31,6 +34,14 @@ jobs:
 
     - name: Setup MSBuild.exe
       uses: microsoft/setup-msbuild@v2
+
+    - name: Install Gurobi
+      run: |
+        Invoke-WebRequest -Uri https://packages.gurobi.com/10.0/gurobi10.0.2_win64.zip -OutFile gurobi.zip
+        Expand-Archive -Path gurobi.zip -DestinationPath C:\gurobi
+        echo "GUROBI_HOME=C:\gurobi\gurobi1002\win64" | Out-File -FilePath $env:GITHUB_ENV -Append
+        echo "Path=$env:GUROBI_HOME\bin;$env:Path" | Out-File -FilePath $env:GITHUB_ENV -Append
+        echo "GRB_LICENSE_FILE=@wlslicense" | Out-File -FilePath $env:GITHUB_ENV -Append
 
     - name: Execute unit tests
       run: dotnet test $env:Test_Project_Path

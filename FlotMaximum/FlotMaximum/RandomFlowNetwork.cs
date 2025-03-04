@@ -16,13 +16,14 @@ public class RandomFlowNetwork
     
     public RandomFlowNetwork(int vertexNumber, double density)
     {
+        if (vertexNumber <= 1) throw new ArgumentOutOfRangeException(nameof(vertexNumber));
         VertexNumber = vertexNumber;
         EdgeNumber = 0;
         Random = new Random();
         this.density = density;
     }
 
-    public FlowNetwork Generate()
+    public FlowNetwork Generate(int lowerBound = 0, int upperBound = 100)
     {
         Graph graph = new(new List<(Vertex, Vertex, int)>(), []);
         for (int i = 0; i < VertexNumber; i++)
@@ -34,7 +35,7 @@ public class RandomFlowNetwork
         
         if (EdgeNumber > 0)
         {
-            int min = Math.Min(EdgeNumber, VertexNumber*(VertexNumber + 1)/2);
+            int min = Math.Min(EdgeNumber, VertexNumber*(VertexNumber - 1)/2);
             while (graph.Edges.Count < min)
             {
                 Vertex v1 = vertices[Random.Next(0, VertexNumber)];
@@ -46,12 +47,12 @@ public class RandomFlowNetwork
                         v2 = vertices[Random.Next(0, VertexNumber)];
                     }
                 }
-                graph.AddEdge((v1, v2), Random.Next(0, EdgeNumber));
+                graph.AddEdge((v1, v2), Random.Next(lowerBound, upperBound+1));
             }
         }
         else
         {
-            int edges = (int) (density * (VertexNumber * (VertexNumber + 1) / 2));
+            int edges = (int) (density * (VertexNumber * (VertexNumber - 1) / 2));
             while (graph.Edges.Count < edges)
             {
                 Vertex v = vertices[Random.Next(0, VertexNumber)];
@@ -63,7 +64,7 @@ public class RandomFlowNetwork
                         u = vertices[Random.Next(0, VertexNumber)];
                     }
                 }
-                graph.AddEdge((u, v), Random.Next(0, graph.Edges.Count));
+                graph.AddEdge((u, v), Random.Next(lowerBound, upperBound + 1));
             }
         }
         Vertex source = vertices[Random.Next(0, VertexNumber)];
@@ -75,8 +76,8 @@ public class RandomFlowNetwork
                 puits = vertices[Random.Next(0, VertexNumber)];
             }
         }
-        List<(Vertex, int)> sourceVerticesList = graph.AdjVertices[source].Select(v => (v, Random.Next(0, VertexNumber))).ToList();
-        List<(Vertex, int)> puitsVerticesList = graph.AdjVertices.Keys.Where(v => graph.AdjVertices[v].Contains(puits)).Select(v => (v, Random.Next(0, VertexNumber))).ToList();
+        List<(Vertex, int)> sourceVerticesList = graph.AdjVertices[source].Select(v => (v, Random.Next(lowerBound, upperBound+1))).ToList();
+        List<(Vertex, int)> puitsVerticesList = graph.AdjVertices.Keys.Where(v => graph.AdjVertices[v].Contains(puits)).Select(v => (v, Random.Next(lowerBound, upperBound+1))).ToList();
         graph.RemoveVertex(source);
         graph.RemoveVertex(puits);
         return new FlowNetwork(graph.Edges, source, puits, sourceVerticesList, puitsVerticesList, vertices);

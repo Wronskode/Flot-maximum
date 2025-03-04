@@ -379,6 +379,30 @@ public class FlowNetwork : Graph
             }
         }
     }
+    
+    public void CreateGraphWeightFile(string filePath)
+    {
+        // Ouvre ou crée le fichier en écriture
+        using (StreamWriter writer = new StreamWriter(filePath))
+        {
+            // Écrit la source
+            writer.WriteLine(Source);
+
+            // Écrit le puit
+            writer.WriteLine(Puits);
+
+            // Écrit les sommets et leurs voisins
+            foreach (var edge in Edges)
+            {
+                
+                var (v1, v2) = edge.Key;
+                var weight = edge.Value;
+
+                // Affiche "v1 v2 p" si l'arête existe
+                writer.WriteLine($"{v1} {v2} {weight}");
+            }
+        }
+    }
 
 
 

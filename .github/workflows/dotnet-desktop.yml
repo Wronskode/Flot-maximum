@@ -48,10 +48,13 @@ jobs:
         # Créer le fichier de licence à partir du secret
         echo "${{ secrets.GUROBI_LICENSE }}" | Out-File -FilePath "$gurobiPath\gurobi.lic"
     
-        # Configurer les variables d'environnement
+        # Définir la variable d'environnement GRB_LICENSE_FILE
+        echo "GRB_LICENSE_FILE=$gurobiPath\gurobi.lic" | Out-File -FilePath $env:GITHUB_ENV -Append
+    
+        # Configurer les variables d'environnement pour Gurobi
         echo "GUROBI_HOME=C:\gurobi\gurobi1201\win64" | Out-File -FilePath $env:GITHUB_ENV -Append
         echo "Path=$env:GUROBI_HOME\bin;$env:Path" | Out-File -FilePath $env:GITHUB_ENV -Append
-
+        
     - name: Execute unit tests
       run: dotnet test $env:Test_Project_Path
 

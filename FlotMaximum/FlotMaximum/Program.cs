@@ -21,50 +21,18 @@ Vertex p = new Vertex("p");
 //FlowNetwork nf = new([
 //(a,d, 13), (a, b, 8), (a, c, 10), (b,c,26), (c,d,20),
 //(c,e,8),(c,f,24),(d,e,1),(d,b,2)], s, p, [(a, 38), (b, 1), (f, 2)], [(d, 7), (e, 7), (c, 1), (f, 27)]);
-List<int> xs = [];
-List<int> xss = [];
-List<int> ys = [];
-List<int> zs = [];
-Plot myPlot = new();
-for (int i = 0; i < 10; i++)
+double de = 0.1;
+while (de <= 1.0)
 {
-    RandomFlowNetwork randomFlow = new(50*(i+1), 0.5);
-    FlowNetwork nf = randomFlow.Generate();
-    Console.WriteLine("Généré avec " + nf.AdjVertices.Keys.Count + " sommets et " +
-                      nf.Edges.Count + " arêtes.");
-    Stopwatch sw = new();
-    sw.Start();
-    var maxFlow = nf.FordFulkerson();
-    sw.Stop();
-    xs.Add((50)*(i+1));
-    xss.Add(sw.Elapsed.Seconds);
-    Console.WriteLine("Ford-Fulkerson " + maxFlow.Value + " in " + sw.Elapsed);
-    sw.Reset();
-    sw.Start();
-    maxFlow = nf.EdmondsKarp();
-    sw.Stop();
-    ys.Add(sw.Elapsed.Seconds);
-    Console.WriteLine("Edmonds-Karp " + maxFlow.Value + " in " + sw.Elapsed);
-    sw.Reset();
-    sw.Start();
-    var gurobiValue = PL.SolveWithGurobi(nf);
-    sw.Stop();
-    zs.Add(sw.Elapsed.Seconds);
-    Console.WriteLine("Gurobi-Solve " + gurobiValue + " in " + sw.Elapsed);
+    Curve.CreateCurves(
+        density: de, lowerBound: 1, upperBound: 10, step: 10, minNodes: 10, maxNodes: 500,
+        solvers: new List<(string, Func<FlowNetwork, double>)>
+        {
+            ("Ford-Fulkerson", nf => nf.FordFulkerson().Value),
+            ("Edmonds-Karp", nf => nf.EdmondsKarp().Value),
+            ("Gurobi", nf => PL.SolveWithGurobi(nf)),
+            ("OrTools", nf => (new PL(nf)).Resoudre())  
+        }
+    );
+    de += 0.1;
 }
-var ek = myPlot.Add.Scatter(xs, ys);
-var gurobi = myPlot.Add.Scatter(xs, zs);
-var ff = myPlot.Add.Scatter(xs, xss);
-ek.LegendText = "Edmonds-Karp";
-gurobi.LegendText = "Gurobi";
-ff.LegendText = "Ford-Fulkerson";
-
-myPlot.Axes.Bottom.Label.Text = "Number of nodes";
-myPlot.Axes.Left.Label.Text = "Seconds";
-myPlot.ShowLegend(Alignment.UpperLeft);
-myPlot.SavePng("quickstart.png", 800, 600);
-// sw.Reset();
-// sw.Start();
-// var plValue = (new PL(nf)).Resoudre();
-// Console.WriteLine("PL-Solve " + plValue + " in " + sw.Elapsed);
-//BenchmarkRunner.Run<Benchmarks>();

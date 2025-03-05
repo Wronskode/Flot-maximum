@@ -6,6 +6,8 @@ public class FlowNetwork : Graph
     public Vertex Puits { get; }
     public List<(Vertex?, int)> SourceNeighbors { get; }
     public List<(Vertex?, int)> PuitsNeighbors { get; }
+    
+    public Dictionary<Vertex, HashSet<Vertex>> InEdges { get; } = new();
 
     public FlowNetwork(IEnumerable<(Vertex?, Vertex?, int Value)> neighbors, Vertex source, Vertex puits, IEnumerable<(Vertex?, int)> sourceNeighbors, IEnumerable<(Vertex?, int)> puitsNeighbors, IEnumerable<Vertex> vertices) : base(neighbors, vertices)
     {
@@ -52,6 +54,15 @@ public class FlowNetwork : Graph
 
         Edges = newEdges;
         AdjVertices = newAdjVertices;
+        
+        foreach (var edge in Edges)
+        {
+            var u = edge.Key.Item1;
+            var v = edge.Key.Item2;
+            if (!InEdges.ContainsKey(v))
+                InEdges[v] = new();
+            InEdges[v].Add(u);
+        }
     }
 
     public Flow FordFulkerson()
@@ -203,7 +214,7 @@ public class FlowNetwork : Graph
             AdjVertices.Keys);
     }
     
-    public List<Vertex> getEntrant (Vertex vertex)
+    public List<Vertex> GetEntrant (Vertex vertex)
     {
         List<Vertex> entrant = new();
         foreach (var edge in this.Edges)
@@ -218,8 +229,8 @@ public class FlowNetwork : Graph
         return entrant;
     }
 
-    public List<Vertex> getSortant(Vertex vertex)
+    public HashSet<Vertex> GetSortant(Vertex vertex)
     {
-        return this.AdjVertices[vertex].ToList();
+        return this.AdjVertices[vertex];
     }
 }

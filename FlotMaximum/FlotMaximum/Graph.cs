@@ -96,7 +96,7 @@ public class Graph : ICloneable
         return output.ToString();
     }
 
-    public String toString2()
+    public String ToString2()
     {
         string output = "";
         foreach (var ((u,v), i) in Edges)

@@ -1,4 +1,6 @@
 namespace FlotMaximum;
+using System.Text;
+
 
 public class FlowNetwork : Graph
 {
@@ -25,6 +27,15 @@ public class FlowNetwork : Graph
         Puits = puits;
         SourceNeighbors = sourceNeighbors.ToList();
         PuitsNeighbors = puitsNeighbors.ToList();
+        InitFlowNetwork();
+    }
+    
+    public FlowNetwork (Dictionary<(Vertex, Vertex), int> neighbors, Vertex source, Vertex puits, IEnumerable<Vertex> vertices) : base(neighbors, vertices)
+    {
+        Source = source;
+        Puits = puits;
+        SourceNeighbors = this.neighborsRight(Source);
+        PuitsNeighbors = this.neighborsLeft(Puits);
         InitFlowNetwork();
     }
 
@@ -233,4 +244,186 @@ public class FlowNetwork : Graph
     {
         return this.AdjVertices[vertex];
     }
+    
+    
+    public bool IsConnected() {
+        if (AdjVertices.Count == 0) return true; // Un graphe vide est considéré comme connexe
+
+        var startVertex = Source;
+        var visited = new HashSet<Vertex>();
+        var queue = new Queue<Vertex>();
+
+        // On démarre le BFS à partir du premier sommet
+        queue.Enqueue(startVertex);
+        visited.Add(startVertex);
+
+        while (queue.Count > 0) {
+            var vertex = queue.Dequeue();
+            if (AdjVertices.TryGetValue(vertex, out var neighbors)) {
+                foreach (var neighbor in neighbors) {
+                    if (!visited.Contains(neighbor)) {
+                        visited.Add(neighbor);
+                        queue.Enqueue(neighbor);
+                    }
+                }
+            }
+        }
+
+        // Vérifier si tous les sommets ont été visités
+        if (visited.Count != AdjVertices.Count)
+        {
+            var allVertices = AdjVertices.Keys.ToList();  // Récupère tous les sommets du graphe
+            var unvisited = allVertices.Except(visited).ToList();  // Récupère ceux qui ne sont pas dans 'visited'
+            //Console.WriteLine("Source non connectée à tout les sommets");
+            //Console.WriteLine("Exemple : [{0}]", string.Join(", ", unvisited.Select(v => v.ToString())));
+            return false;
+        };
+        
+        var goToPuits = new HashSet<Vertex>();
+        goToPuits.Add(Puits);
+        foreach (Vertex v in AdjVertices.Keys.ToList())
+        {
+            bool check = false;
+            startVertex = v;
+            visited = new HashSet<Vertex>();
+            queue = new Queue<Vertex>();
+
+            queue.Enqueue(startVertex);
+            visited.Add(startVertex);
+            
+            while (queue.Count > 0) {
+                var vertex = queue.Dequeue();
+                if (goToPuits.Contains(vertex))
+                {
+                    check = true;
+                }
+                if (AdjVertices.TryGetValue(vertex, out var neighbors)) {
+                    foreach (var neighbor in neighbors) {
+                        if (!visited.Contains(neighbor)) {
+                            visited.Add(neighbor);
+                            queue.Enqueue(neighbor);
+                        }
+                    }
+                }
+            }
+
+            if (check == false)
+            {
+                Console.WriteLine(startVertex+" non connecté au puits");
+                return false;
+            }
+        }
+        
+        return true;
+    }
+
+    
+    public override string ToString()
+    {
+        String special = "";
+        StringBuilder output = new();
+        output.Append("source : "+Source+", puits : "+Puits+"\n");
+        foreach (Vertex vertex in AdjVertices.Keys)
+        {
+            special = "";
+            StringBuilder txt = new();
+            foreach (var edge in Edges)
+            {
+                special = "";
+                if (edge.Key.Item2 == vertex)
+                {
+                    if (edge.Key.Item1 == Puits)
+                    {
+                        special = "(p)";
+                    }
+                    if (edge.Key.Item1 == Source)
+                    {
+                        special = "(s)";
+                    }
+                    txt.Append(edge.Key.Item1 + special + ",");
+                }
+            }
+            if (vertex == Puits)
+            {
+                special = "(p)";
+            }
+            if (vertex == Source)
+            {
+                special = "(s)";
+            }
+
+            if (txt.Length == 0)
+            {
+                continue;
+            }
+            txt.Length -= 1;
+            txt.Append(" -> " + vertex+special);
+            output.Append(txt + "\n");
+        }
+        return output.ToString();
+    }
+
+    public void CreateGraphFile(string filePath)
+    {
+        // Ouvre ou crée le fichier en écriture
+        using (StreamWriter writer = new StreamWriter(filePath))
+        {
+            // Écrit la source
+            writer.WriteLine(Source);
+
+            // Écrit le puit
+            writer.WriteLine(Puits);
+
+            // Écrit les sommets et leurs voisins
+            foreach (var vertex in AdjVertices.Keys)
+            {
+                if (vertex == Puits)
+                {
+                    continue;
+                }
+                writer.Write($"{vertex}: "); // Affiche le sommet suivi de ": "
+
+                // Récupère les voisins du sommet
+                var neighbors = AdjVertices[vertex];
+
+                // Si le sommet a des voisins, les afficher séparés par des virgules
+                if (neighbors.Count > 0)
+                {
+                    writer.WriteLine(string.Join(", ", neighbors));
+                }
+                else
+                {
+                    // Si le sommet n'a pas de voisins, afficher "aucun"
+                    writer.WriteLine("aucun");
+                }
+            }
+        }
+    }
+    
+    public void CreateGraphWeightFile(string filePath)
+    {
+        // Ouvre ou crée le fichier en écriture
+        using (StreamWriter writer = new StreamWriter(filePath))
+        {
+            // Écrit la source
+            writer.WriteLine(Source);
+
+            // Écrit le puit
+            writer.WriteLine(Puits);
+
+            // Écrit les sommets et leurs voisins
+            foreach (var edge in Edges)
+            {
+                
+                var (v1, v2) = edge.Key;
+                var weight = edge.Value;
+
+                // Affiche "v1 v2 p" si l'arête existe
+                writer.WriteLine($"{v1} {v2} {weight}");
+            }
+        }
+    }
+
+
+
 }

@@ -96,7 +96,7 @@ public class Graph : ICloneable
         return output.ToString();
     }
 
-    public String toString2()
+    public String ToString2()
     {
         string output = "";
         foreach (var ((u,v), i) in Edges)
@@ -105,8 +105,32 @@ public class Graph : ICloneable
         }
         return output;
     }
+
+    public List<(Vertex, int)> neighborsRight (Vertex vertex)
+    {
+        List<(Vertex, int)> res = new List<(Vertex, int)>();
+        foreach (var edge in Edges)
+        {
+            if (edge.Key.Item1 == vertex)
+            {
+                res.Add((edge.Key.Item2,edge.Value));
+            }
+        }
+        return res;
+    }
     
-    
+    public List<(Vertex, int)> neighborsLeft (Vertex vertex)
+    {
+        List<(Vertex, int)> res = new List<(Vertex, int)>();
+        foreach (var edge in Edges)
+        {
+            if (edge.Key.Item2 == vertex)
+            {
+                res.Add((edge.Key.Item1,edge.Value));
+            }
+        }
+        return res;
+    }
     
     public virtual object Clone()
     {

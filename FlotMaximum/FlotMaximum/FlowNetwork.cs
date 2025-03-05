@@ -27,6 +27,15 @@ public class FlowNetwork : Graph
         PuitsNeighbors = puitsNeighbors.ToList();
         InitFlowNetwork();
     }
+    
+    public FlowNetwork (Dictionary<(Vertex, Vertex), int> neighbors, Vertex source, Vertex puits, IEnumerable<Vertex> vertices) : base(neighbors, vertices)
+    {
+        Source = source;
+        Puits = puits;
+        SourceNeighbors = this.neighborsRight(Source);
+        PuitsNeighbors = this.neighborsLeft(Puits);
+        InitFlowNetwork();
+    }
 
     private void InitFlowNetwork()
     {

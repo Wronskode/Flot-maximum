@@ -13,21 +13,29 @@ using ScottPlot;
 //(a,d, 13), (a, b, 8), (a, c, 10), (b,c,26), (c,d,20),
 //(c,e,8),(c,f,24),(d,e,1),(d,b,2)], s, p, [(a, 38), (b, 1), (f, 2)], [(d, 7), (e, 7), (c, 1), (f, 27)]);
 int i = 1;
-int n = 10;
-while(i<=1) {
+int n = 5;
+while(i<=0) {
     RandomFlowNetwork randomFlow = new(n, 0.5);
     FlowNetwork nf = randomFlow.Generate();
     Console.WriteLine(nf);
     bool res = nf.IsConnected();
-    Console.WriteLine("\n" + res);
+    Console.WriteLine(res);
     if (res)
     {
-        string fileName = $"/home/e20210005981/Bureau/TER/inst{n}_{i}.txt";
+        string fileName = $"C:\\Users\\adrie\\Desktop\\Master\\S8\\TER\\Instances\\inst{n}_{i}.txt";
         nf.CreateGraphWeightFile(fileName);
         Console.WriteLine("Le fichier a été créé avec succès.");
         i += 1;
     }
+    Console.WriteLine("\n");
 }
+
+string fileName2 = $"C:\\Users\\adrie\\Desktop\\Master\\S8\\TER\\Instances\\inst5_1.txt";
+FileFlowNetwork ffn = new(fileName2);
+FlowNetwork flotAvecFile = ffn.Generate();
+Console.WriteLine("Flot reconstruit par le fichier : ");
+Console.WriteLine(flotAvecFile);
+
 // sw.Reset();
 // sw.Start();
 // var plValue = (new PL(nf)).Resoudre();

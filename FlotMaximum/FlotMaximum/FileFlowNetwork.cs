@@ -1,3 +1,5 @@
+using System.Runtime.Intrinsics;
+
 namespace FlotMaximum;
 
 public class FileFlowNetwork
@@ -9,50 +11,59 @@ public class FileFlowNetwork
         this.fileName = fileName;
     }
     
-    public Graph Generate ()
+    public FlowNetwork Generate ()
     {
+        Vertex s;
+        Vertex p;
+        List<Vertex> vertices = new List<Vertex>();
+        
         Graph graph = new(new List<(Vertex, Vertex, int)>(), []);
-        graph.AdjVertices = new Dictionary<Vertex, HashSet<Vertex>>();
-        graph.Edges = new Dictionary<(Vertex, Vertex), int>();
-
-        try
+        using (StreamReader reader = new StreamReader(fileName))
         {
-            using (StreamReader reader = new StreamReader(fileName))
+            // Lire la source
+            s = new Vertex(reader.ReadLine().Trim()); // Source
+            // Lire le puits
+            p = new Vertex(reader.ReadLine().Trim()); // Puits
+            
+            vertices.Add(s);
+            vertices.Add(p);
+            
+            // Lire les arêtes et leur poids
+            string line;
+            while ((line = reader.ReadLine()) != null)
             {
-                // Lire la source
-                Vertex source = new Vertex(reader.ReadLine().Trim()); // Source
+                // Ignorer les lignes vides
+                if (string.IsNullOrWhiteSpace(line)) continue;
 
-                // Lire le puits
-                Vertex puits = new Vertex(reader.ReadLine().Trim()); // Puits
-
-                // Lire les arêtes et leur poids
-                string line;
-                while ((line = reader.ReadLine()) != null)
+                // Séparer le sommet et ses voisins
+                var parts = line.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                if (parts.Length == 3)
                 {
-                    // Ignorer les lignes vides
-                    if (string.IsNullOrWhiteSpace(line)) continue;
-
-                    // Séparer le sommet et ses voisins
-                    var parts = line.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
-                    if (parts.Length == 3)
+                    Vertex v1 = vertices.FirstOrDefault(v => v.Id == parts[0]);
+                    Vertex v2 = vertices.FirstOrDefault(v => v.Id == parts[1]);
+                    if (v1 == null)
                     {
-                        Vertex v1 = new Vertex(parts[0]);
-                        Vertex v2 = new Vertex(parts[1]);
-                        int weight = int.Parse(parts[2]);
-
-                        // Ajouter l'arête avec son poids
-                        graph.AddEdge((v1, v2), weight);
+                        v1 = new Vertex(parts[0]);
+                        vertices.Add(v1);
                     }
+                    if (v2 == null)
+                    {
+                        v2 = new Vertex(parts[1]);
+                        vertices.Add(v2);
+                    }
+                    int weight = int.Parse(parts[2]);
+                    // Ajouter l'arête avec son poids
+                    graph.AddEdge((v1, v2), weight);
                 }
             }
-
-            Console.WriteLine("Graph successfully loaded from file.");
-            return new FlowNetwork(graph.Edges, source, puits, sourceVerticesList, puitsVerticesList, vertices);;
         }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error loading graph from file: {ex.Message}");
-        }
+            
+        Console.WriteLine("Graph successfully loaded from file.");
+        int VertexNumber = graph.AdjVertices.Count;
+        Random r = new Random();
+        List < (Vertex, int) > sourceVerticesList = graph.neighborsRight(s);
+        List<(Vertex, int)> puitsVerticesList = graph.neighborsLeft(p);
+        return new FlowNetwork(graph.Edges, s, p, vertices);;
     }
     
 }

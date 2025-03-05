@@ -50,4 +50,71 @@ public static class Curve
             myPlot = new Plot();
         }
     }
+
+    public static void CreateCurves(double density, string directoryPath, List<(string name, Func<FlowNetwork, double> solver)> solvers)
+    {
+        var di = new DirectoryInfo(directoryPath);
+        Dictionary<int, Dictionary<string, List<double>>> timingData = new();
+        List<FlowNetwork> networks = new();
+        List<double> xs = new();
+        
+        foreach (FileInfo file in di.GetFiles())
+        {
+            string fileName = file.Name;
+            string densityStr = "";
+            int i = 1;
+            while (fileName[fileName.IndexOf('_') + i] != '_')
+            {
+                densityStr += fileName[fileName.IndexOf('_') + i];
+                i++;
+            }
+            double dens = Convert.ToDouble(densityStr);
+            if (dens == density)
+            {
+                FileFlowNetwork ffn = new(directoryPath + fileName);
+                FlowNetwork nf = ffn.Generate();
+                networks.Add(nf);
+            }
+        }
+        
+        networks = networks.OrderBy(x => x.AdjVertices.Count).ToList();
+        
+        foreach (var nf in networks)
+        {
+            int nodeCount = nf.AdjVertices.Count;
+            if (!timingData.ContainsKey(nodeCount))
+            {
+                timingData[nodeCount] = new Dictionary<string, List<double>>();
+                foreach (var (name, _) in solvers)
+                {
+                    timingData[nodeCount][name] = new List<double>();
+                }
+                xs.Add(nodeCount);
+            }
+            
+            foreach (var (name, solver) in solvers)
+            {
+                Stopwatch sw = Stopwatch.StartNew();
+                var result = solver(nf);
+                sw.Stop();
+                timingData[nodeCount][name].Add(sw.Elapsed.TotalSeconds);
+                Console.WriteLine($"{name} {result} in {sw.Elapsed.TotalSeconds}s for {nodeCount} nodes");
+            }
+            
+            Plot myPlot = new Plot();
+            foreach (var (name, _) in solvers)
+            {
+                List<double> avgTimes = timingData.Keys.Select(nodeCount => timingData[nodeCount][name].Average()).ToList();
+                var curve = myPlot.Add.Scatter(xs, avgTimes);
+                curve.LegendText = name;
+            }
+            
+            myPlot.Axes.Bottom.Label.Text = "Number of nodes";
+            myPlot.Axes.Left.Label.Text = "Seconds";
+            myPlot.ShowLegend(Alignment.UpperLeft);
+            myPlot.Legend.FontSize = 20;
+            myPlot.SavePng("../../../../courbes/benchmark" + Math.Round(density, 2) + ".png", 1500, 1000);
+
+        }
+    }
 }

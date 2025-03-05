@@ -12,32 +12,31 @@ using ScottPlot;
 //FlowNetwork nf = new([
 //(a,d, 13), (a, b, 8), (a, c, 10), (b,c,26), (c,d,20),
 //(c,e,8),(c,f,24),(d,e,1),(d,b,2)], s, p, [(a, 38), (b, 1), (f, 2)], [(d, 7), (e, 7), (c, 1), (f, 27)]);
-var directoryPath = "../../../../Instances/";
-var di = new DirectoryInfo(directoryPath);
+
+var instancesPath = "../../../../Instances/";
+List<double> densities = new List<double> {0.3};
+/*var di = new DirectoryInfo(instancesPath);
 foreach (FileInfo file in di.GetFiles())
 {
     file.Delete(); 
 }
-int i = 1;
+int i;
 
 List<int> tailles = new List<int> {5, 10, 100};
-List<double> densitites = new List<double> {0.3, 0.4, 0.5, 0.6};
 
-foreach (int n in tailles)
+for (int n = 10; n <= 300; n+=10)
 {
-    foreach (double d in densitites)
+    foreach (double d in densities)
     {
         i = 1;
         while (i <= 10)
         {
             RandomFlowNetwork randomFlow = new(n, d);
             FlowNetwork nf = randomFlow.Generate();
-            //Console.WriteLine(nf);
             bool res = nf.IsConnected();
-            //Console.WriteLine(res);
             if (res)
             {
-                string fileName = directoryPath + $"inst{n}_{d}_{i}.txt";
+                string fileName = instancesPath + $"inst{n}_{d}_{i}.txt";
                 nf.CreateGraphWeightFile(fileName);
                 Console.WriteLine("Le fichier a été créé avec succès.");
                 i += 1;
@@ -46,16 +45,18 @@ foreach (int n in tailles)
             Console.WriteLine("\n");
         }
     }
+}*/
+
+
+var solvers = new List<(string, Func<FlowNetwork, double>)>
+{
+    ("Ford-Fulkerson", nf => nf.FordFulkerson().Value),
+    ("Edmonds-Karp", nf => nf.EdmondsKarp().Value),
+    ("Gurobi", nf => PL.SolveWithGurobi(nf)),
+    ("OrTools", nf => (new PL(nf)).Resoudre())
+};
+
+foreach (var density in densities)
+{
+    Curve.CreateCurves(density, instancesPath, solvers);
 }
-
-string fileName2 = directoryPath+"inst5_0,4_1.txt";
-FileFlowNetwork ffn = new(fileName2);
-FlowNetwork flotAvecFile = ffn.Generate();
-Console.WriteLine("Flot reconstruit par le fichier : ");
-Console.WriteLine(flotAvecFile);
-
-// sw.Reset();
-// sw.Start();
-// var plValue = (new PL(nf)).Resoudre();
-// Console.WriteLine("PL-Solve " + plValue + " in " + sw.Elapsed);
-//BenchmarkRunner.Run<Benchmarks>();

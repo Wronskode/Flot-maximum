@@ -21,13 +21,18 @@ Vertex p = new Vertex("p");
 //FlowNetwork nf = new([
 //(a,d, 13), (a, b, 8), (a, c, 10), (b,c,26), (c,d,20),
 //(c,e,8),(c,f,24),(d,e,1),(d,b,2)], s, p, [(a, 38), (b, 1), (f, 2)], [(d, 7), (e, 7), (c, 1), (f, 27)]);
-Curve.CreateCurves(
-    density: 0.3, lowerBound: 1, upperBound: 10, nbIter: 800,
-    solvers: new List<(string, Func<FlowNetwork, double>)>
-    {
-        ("Ford-Fulkerson", nf => nf.FordFulkerson().Value),
-        ("Edmonds-Karp", nf => nf.EdmondsKarp().Value),
-        ("Gurobi", nf => PL.SolveWithGurobi(nf)),
-        ("OrTools", nf => (new PL(nf)).Resoudre())  
-    }
-);
+double de = 0.1;
+while (de <= 1.0)
+{
+    Curve.CreateCurves(
+        density: de, lowerBound: 1, upperBound: 10, step: 10, minNodes: 10, maxNodes: 500,
+        solvers: new List<(string, Func<FlowNetwork, double>)>
+        {
+            ("Ford-Fulkerson", nf => nf.FordFulkerson().Value),
+            ("Edmonds-Karp", nf => nf.EdmondsKarp().Value),
+            ("Gurobi", nf => PL.SolveWithGurobi(nf)),
+            ("OrTools", nf => (new PL(nf)).Resoudre())  
+        }
+    );
+    de += 0.1;
+}

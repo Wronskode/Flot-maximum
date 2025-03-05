@@ -6,7 +6,7 @@ namespace FlotMaximum;
 public static class Curve
 {
     public static void CreateCurves(
-        double density, int lowerBound, int upperBound, int nbIter,
+        double density, int lowerBound, int upperBound, int step, int minNodes, int maxNodes,
         List<(string name, Func<FlowNetwork, double> solver)> solvers)
     {
         List<double> xs = [];
@@ -18,7 +18,7 @@ public static class Curve
 
         Plot myPlot = new();
 
-        for (int i = 10; i < nbIter; i+=10)
+        for (int i = minNodes; i <= maxNodes; i+=step)
         {
             Console.WriteLine("i = " + i);
             RandomFlowNetwork randomFlow = new(i, density);
@@ -33,7 +33,7 @@ public static class Curve
                 var result = solver(nf);
                 sw.Stop();
                 timings[name].Add(sw.Elapsed.TotalSeconds);
-                Console.WriteLine($"{name} {result} in {sw.Elapsed.TotalSeconds} s");
+                Console.WriteLine($"{name} {result} in {sw.Elapsed.TotalSeconds}s");
             }
             
             foreach (var (name2, values) in timings)
@@ -41,11 +41,12 @@ public static class Curve
                 var curve = myPlot.Add.Scatter(xs, values);
                 curve.LegendText = name2;
             }
-
+            
             myPlot.Axes.Bottom.Label.Text = "Number of nodes";
             myPlot.Axes.Left.Label.Text = "Seconds";
             myPlot.ShowLegend(Alignment.UpperLeft);
-            myPlot.SavePng("benchmark.png", 800, 600);
+            myPlot.Legend.FontSize = 20;
+            myPlot.SavePng("../../../../courbes/benchmark"+Math.Round(density, 2)+".png", 1500, 1000);
             myPlot = new Plot();
         }
     }

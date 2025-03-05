@@ -16,7 +16,7 @@ public class RandomFlowNetwork
     
     public RandomFlowNetwork(int vertexNumber, double density)
     {
-        if (vertexNumber <= 1) throw new ArgumentOutOfRangeException(nameof(vertexNumber));
+        if (vertexNumber <= 1) throw new ArgumentOutOfRangeException(nameof(vertexNumber), vertexNumber, "Vertex number must be greater than 1.");
         VertexNumber = vertexNumber;
         EdgeNumber = 0;
         Random = new Random();
@@ -32,10 +32,10 @@ public class RandomFlowNetwork
             graph.AddVertex(v);
         }
         List<Vertex> vertices = graph.AdjVertices.Keys.ToList();
-        
+        int maxEdges = VertexNumber * (VertexNumber - 1) / 2;
         if (EdgeNumber > 0)
         {
-            int min = Math.Min(EdgeNumber, VertexNumber*(VertexNumber - 1)/2);
+            int min = Math.Min(EdgeNumber, maxEdges);
             while (graph.Edges.Count < min)
             {
                 Vertex v1 = vertices[Random.Next(0, VertexNumber)];
@@ -52,7 +52,7 @@ public class RandomFlowNetwork
         }
         else
         {
-            int edges = (int) (density * (VertexNumber * (VertexNumber - 1) / 2));
+            int edges = (int) (density * maxEdges);
             while (graph.Edges.Count < edges)
             {
                 Vertex v = vertices[Random.Next(0, VertexNumber)];

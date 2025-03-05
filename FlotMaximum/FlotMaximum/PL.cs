@@ -104,17 +104,19 @@ public class PL
             {
                 continue;
             }
-            List<Vertex> entrant = flowNetwork.getEntrant(v);
-            List<Vertex> sortant = flowNetwork.getSortant(v);
-
+            
             // Création de la contrainte somme x_av - somme x_vb = 0
             Constraint constraint = solver.MakeConstraint(0, 0); 
 
-            // Ajout des flux entrants (x_av, a ∈ entrant) avec coefficient +1
-            foreach (Vertex a in entrant)
+            if (flowNetwork.InEdges.TryGetValue(v, out var entrant))
             {
-                constraint.SetCoefficient(variablesDic[(a, v)], 1);
+                // Ajout des flux entrants (x_av, a ∈ entrant) avec coefficient +1
+                foreach (Vertex a in entrant)
+                {
+                    constraint.SetCoefficient(variablesDic[(a, v)], 1);
+                }
             }
+           var sortant = flowNetwork.GetSortant(v);
 
             // Ajout des flux sortants (x_vb, b ∈ sortant) avec coefficient -1
             foreach (Vertex b in sortant)
@@ -128,7 +130,7 @@ public class PL
         
         Objective objectif = solver.Objective();
         
-        foreach (Vertex a in flowNetwork.getSortant(flowNetwork.Source))
+        foreach (Vertex a in flowNetwork.GetSortant(flowNetwork.Source))
         {
             objectif.SetCoefficient(variablesDic[(flowNetwork.Source,a)], 1);
         }
@@ -196,15 +198,6 @@ public class PL
 
     public static double SolveWithGurobi(FlowNetwork nf)
     {
-        Dictionary<Vertex, HashSet<Vertex>> inEdges = new();
-        foreach (var edge in nf.Edges)
-        {
-            var u = edge.Key.Item1;
-            var v = edge.Key.Item2;
-            if (!inEdges.ContainsKey(v))
-                inEdges[v] = new();
-            inEdges[v].Add(u);
-        }
         GRBEnv env = new GRBEnv(true);
         env.Set("OutputFlag", "0");
         env.Start();
@@ -222,7 +215,7 @@ public class PL
             {
                 lexpr.AddTerm(1.0, vars[(vertex.Key, v)]);
             }
-            if (inEdges.TryGetValue(vertex.Key, out var edge))
+            if (nf.InEdges.TryGetValue(vertex.Key, out var edge))
                 foreach (var v in edge)
                 {
                     lexpr.AddTerm(-1.0, vars[(v, vertex.Key)]);

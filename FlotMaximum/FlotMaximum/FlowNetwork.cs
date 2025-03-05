@@ -263,8 +263,8 @@ public class FlowNetwork : Graph
         {
             var allVertices = AdjVertices.Keys.ToList();  // Récupère tous les sommets du graphe
             var unvisited = allVertices.Except(visited).ToList();  // Récupère ceux qui ne sont pas dans 'visited'
-            Console.WriteLine("Source non connectée à tout les sommets");
-            Console.WriteLine("Exemple : [{0}]", string.Join(", ", unvisited.Select(v => v.ToString())));
+            //Console.WriteLine("Source non connectée à tout les sommets");
+            //Console.WriteLine("Exemple : [{0}]", string.Join(", ", unvisited.Select(v => v.ToString())));
             return false;
         };
         

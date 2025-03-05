@@ -19,24 +19,36 @@ foreach (FileInfo file in di.GetFiles())
     file.Delete(); 
 }
 int i = 1;
-int n = 5;
-while(i<=1) {
-    RandomFlowNetwork randomFlow = new(n, 0.5);
-    FlowNetwork nf = randomFlow.Generate();
-    Console.WriteLine(nf);
-    bool res = nf.IsConnected();
-    Console.WriteLine(res);
-    if (res)
+
+List<int> tailles = new List<int> {5, 10, 100};
+List<double> densitites = new List<double> {0.3, 0.4, 0.5, 0.6};
+
+foreach (int n in tailles)
+{
+    foreach (double d in densitites)
     {
-        string fileName = directoryPath+$"inst{n}_{i}.txt";
-        nf.CreateGraphWeightFile(fileName);
-        Console.WriteLine("Le fichier a été créé avec succès.");
-        i += 1;
+        i = 1;
+        while (i <= 10)
+        {
+            RandomFlowNetwork randomFlow = new(n, d);
+            FlowNetwork nf = randomFlow.Generate();
+            //Console.WriteLine(nf);
+            bool res = nf.IsConnected();
+            //Console.WriteLine(res);
+            if (res)
+            {
+                string fileName = directoryPath + $"inst{n}_{d}_{i}.txt";
+                nf.CreateGraphWeightFile(fileName);
+                Console.WriteLine("Le fichier a été créé avec succès.");
+                i += 1;
+            }
+
+            Console.WriteLine("\n");
+        }
     }
-    Console.WriteLine("\n");
 }
 
-string fileName2 = directoryPath+"inst5_1.txt";
+string fileName2 = directoryPath+"inst5_0,4_1.txt";
 FileFlowNetwork ffn = new(fileName2);
 FlowNetwork flotAvecFile = ffn.Generate();
 Console.WriteLine("Flot reconstruit par le fichier : ");

@@ -39,8 +39,8 @@ public class FileFlowNetwork
                 var parts = line.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
                 if (parts.Length == 3)
                 {
-                    Vertex v1 = vertices.FirstOrDefault(v => v.Id == parts[0]);
-                    Vertex v2 = vertices.FirstOrDefault(v => v.Id == parts[1]);
+                    Vertex? v1 = vertices.FirstOrDefault(v => v.Id == parts[0]);
+                    Vertex? v2 = vertices.FirstOrDefault(v => v.Id == parts[1]);
                     if (v1 == null)
                     {
                         v1 = new Vertex(parts[0]);

@@ -14,7 +14,7 @@ using ScottPlot;
 //(c,e,8),(c,f,24),(d,e,1),(d,b,2)], s, p, [(a, 38), (b, 1), (f, 2)], [(d, 7), (e, 7), (c, 1), (f, 27)]);
 int i = 1;
 int n = 5;
-while(i<=0) {
+while(i<=1) {
     RandomFlowNetwork randomFlow = new(n, 0.5);
     FlowNetwork nf = randomFlow.Generate();
     Console.WriteLine(nf);
@@ -22,7 +22,7 @@ while(i<=0) {
     Console.WriteLine(res);
     if (res)
     {
-        string fileName = $"C:\\Users\\adrie\\Desktop\\Master\\S8\\TER\\Instances\\inst{n}_{i}.txt";
+        string fileName = $"../../../../Instances/inst{n}_{i}.txt";
         nf.CreateGraphWeightFile(fileName);
         Console.WriteLine("Le fichier a été créé avec succès.");
         i += 1;
@@ -30,7 +30,7 @@ while(i<=0) {
     Console.WriteLine("\n");
 }
 
-string fileName2 = $"C:\\Users\\adrie\\Desktop\\Master\\S8\\TER\\Instances\\inst5_1.txt";
+string fileName2 = $"../../../../Instances/inst5_1.txt";
 FileFlowNetwork ffn = new(fileName2);
 FlowNetwork flotAvecFile = ffn.Generate();
 Console.WriteLine("Flot reconstruit par le fichier : ");

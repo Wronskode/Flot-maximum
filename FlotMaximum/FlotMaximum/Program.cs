@@ -1,7 +1,4 @@
-﻿using System.Diagnostics;
-using BenchmarkDotNet.Running;
-using FlotMaximum;
-using ScottPlot;
+﻿using FlotMaximum;
 
 
 // réseau de flot du TD de Bessy
@@ -14,26 +11,27 @@ using ScottPlot;
 //(c,e,8),(c,f,24),(d,e,1),(d,b,2)], s, p, [(a, 38), (b, 1), (f, 2)], [(d, 7), (e, 7), (c, 1), (f, 27)]);
 
 var instancesPath = "../../../../Instances/";
-List<double> densities = new List<double> {0.3};
-/*var di = new DirectoryInfo(instancesPath);
+
+List<double> densities = new List<double> {0.1, 0.5, 0.9};
+var di = new DirectoryInfo(instancesPath);
 foreach (FileInfo file in di.GetFiles())
 {
     file.Delete(); 
 }
 int i;
 
-List<int> tailles = new List<int> {5, 10, 100};
+List<int> tailles = new List<int> {10, 20, 50, 100, 200, 500, 1000};
 
-for (int n = 10; n <= 300; n+=10)
+for (int n = 10; n < 250; n+=10)
 {
     foreach (double d in densities)
     {
         i = 1;
-        while (i <= 10)
+        while (i <= 3)
         {
             RandomFlowNetwork randomFlow = new(n, d);
             FlowNetwork nf = randomFlow.Generate();
-            bool res = nf.IsConnected();
+            bool res = true;
             if (res)
             {
                 string fileName = instancesPath + $"inst{n}_{d}_{i}.txt";
@@ -45,7 +43,8 @@ for (int n = 10; n <= 300; n+=10)
             Console.WriteLine("\n");
         }
     }
-}*/
+}
+
 
 
 var solvers = new List<(string, Func<FlowNetwork, double>)>

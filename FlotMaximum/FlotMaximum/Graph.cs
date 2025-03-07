@@ -45,14 +45,14 @@ public class Graph : ICloneable
     {
         if (edge.Item1 == edge.Item2 || !Edges.TryAdd(edge, weight))
             return;
-        if (!AdjVertices.TryGetValue(edge.Item1, out HashSet<Vertex>? value))
-        {
-            value = [];
-            AdjVertices.Add(edge.Item1, value);
-        }
 
-        AdjVertices.TryAdd(edge.Item2, []);
-        value.Add(edge.Item2);
+        if (!AdjVertices.ContainsKey(edge.Item1))
+            AdjVertices[edge.Item1] = [];
+
+        if (!AdjVertices.ContainsKey(edge.Item2))
+            AdjVertices[edge.Item2] = [];
+
+        AdjVertices[edge.Item1].Add(edge.Item2);
     }
 
     public void RemoveEdge((Vertex, Vertex) edge)
@@ -65,9 +65,12 @@ public class Graph : ICloneable
 
     public void RemoveVertex(Vertex v)
     {
-        AdjVertices = AdjVertices.Where((uv, value) => uv.Key != v && !uv.Value.Contains(v)).ToDictionary();
-        Edges = Edges.Where((uv) => v != uv.Key.Item1 &&  v != uv.Key.Item2).ToDictionary();
-        
+        AdjVertices.Remove(v);
+        foreach (var neighbors in AdjVertices.Values)
+        {
+            neighbors.Remove(v);
+        }
+        Edges = Edges.Where(uv => v != uv.Key.Item1 && v != uv.Key.Item2).ToDictionary();
     }
     
     public void AddVertex(Vertex v)

@@ -23,7 +23,7 @@ public class RandomFlowNetwork
         this.density = density;
     }
 
-    public FlowNetwork Generate(int lowerBound = 0, int upperBound = 100)
+    public FlowNetwork Generate(int lowerBound = 1, int upperBound = 100)
     {
         Graph graph = new(new List<(Vertex, Vertex, int)>(), []);
         for (int i = 0; i < VertexNumber; i++)
@@ -32,7 +32,7 @@ public class RandomFlowNetwork
             graph.AddVertex(v);
         }
         List<Vertex> vertices = graph.AdjVertices.Keys.ToList();
-        int maxEdges = VertexNumber * (VertexNumber - 1) / 2;
+        int maxEdges = VertexNumber * (VertexNumber - 1);
         if (EdgeNumber > 0)
         {
             int min = Math.Min(EdgeNumber, maxEdges);

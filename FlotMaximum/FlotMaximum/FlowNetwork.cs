@@ -71,7 +71,7 @@ public class FlowNetwork : Graph
             var u = edge.Key.Item1;
             var v = edge.Key.Item2;
             if (!InEdges.ContainsKey(v))
-                InEdges[v] = new();
+                InEdges[v] = [];
             InEdges[v].Add(u);
         }
     }

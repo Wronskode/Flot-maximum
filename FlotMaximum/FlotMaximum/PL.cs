@@ -5,42 +5,23 @@ namespace FlotMaximum;
 
 public class PL
 {
-    public Solver solver;
-    public Variable[] variables;
-    public Constraint[] constraints;
-
-    public PL(FlowNetwork flowNetwork)
+    public static double SolveWithOrTools(FlowNetwork flowNetwork, string solverName)
     {
-        solver = Solver.CreateSolver("SCIP");
-        
-        int nbVariables = flowNetwork.Edges.Count;
-        int nbContraintes = nbVariables+flowNetwork.AdjVertices.Count;
-        variables = new Variable[nbVariables];
-        constraints = new Constraint[nbContraintes];
-        
+        Solver solver = Solver.CreateSolver(solverName);
         Dictionary<(Vertex, Vertex), Variable> variablesDic = new Dictionary<(Vertex, Vertex), Variable>();
-        
-
-        int var_i = 0;
         foreach (var edge in flowNetwork.Edges)
         {
             var (u, v) = edge.Key; // u et v sont les sommets
-            int poids = edge.Value;
             Variable var = solver.MakeNumVar(0.0, double.PositiveInfinity, $"x_{u.ToString()}_{v.ToString()}");
             variablesDic[(u, v)] = var;
-            variables[var_i] = var;
-            var_i += 1;
         }
         
-        var_i = 0;
         foreach (var edge in flowNetwork.Edges)
         {
             var (u, v) = edge.Key; // u et v sont les sommets
             int poids = edge.Value;
             Constraint constraint = solver.MakeConstraint(0, poids);
             constraint.SetCoefficient(variablesDic[(u, v)], 1);
-            constraints[var_i] = constraint;
-            var_i += 1;
         }
         
         foreach (Vertex v in flowNetwork.AdjVertices.Keys)
@@ -49,28 +30,28 @@ public class PL
             {
                 continue;
             }
-            
-            // Création de la contrainte somme x_av - somme x_vb = 0
-            Constraint constraint = solver.MakeConstraint(0, 0); 
+    
+            Constraint constraint = solver.MakeConstraint(0, 0);
 
             if (flowNetwork.InEdges.TryGetValue(v, out var entrant))
             {
-                // Ajout des flux entrants (x_av, a ∈ entrant) avec coefficient +1
                 foreach (Vertex a in entrant)
                 {
-                    constraint.SetCoefficient(variablesDic[(a, v)], 1);
+                    if (variablesDic.TryGetValue((a, v), out var varAv))
+                    {
+                        constraint.SetCoefficient(varAv, 1);
+                    }
                 }
             }
-           var sortant = flowNetwork.GetSortant(v);
-
-            // Ajout des flux sortants (x_vb, b ∈ sortant) avec coefficient -1
+    
+            var sortant = flowNetwork.GetSortant(v);
             foreach (Vertex b in sortant)
             {
-                    constraint.SetCoefficient(variablesDic[(v, b)], -1);
+                if (variablesDic.TryGetValue((v, b), out var varVb))
+                {
+                    constraint.SetCoefficient(varVb, -1);
+                }
             }
-            
-            constraints[var_i] = constraint;
-            var_i += 1;
         }
         
         Objective objectif = solver.Objective();
@@ -80,17 +61,12 @@ public class PL
             objectif.SetCoefficient(variablesDic[(flowNetwork.Source,a)], 1);
         }
         objectif.SetMaximization();
-        
-    }
-    
-    public double Resoudre()
-    {
-        Solver.ResultStatus statut = solver.Solve();
+        solver.Solve();
         return solver.Objective().Value();
     }
     
     
-    public void AfficherSysteme()
+    public void AfficherSysteme(Solver solver)
     {
         Console.WriteLine("=== Système de Programmation Linéaire ===\n");
 

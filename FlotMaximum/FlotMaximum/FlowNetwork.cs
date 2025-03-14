@@ -1,3 +1,4 @@
+using System.Runtime.InteropServices;
 using System.Text;
 
 namespace FlotMaximum;
@@ -128,6 +129,11 @@ public class FlowNetwork : Graph
         newEdgesNf = newEdgesNf.Where(x => x.Value > 0).ToDictionary();
         var residuel = new FlowNetwork(newEdgesNf, Source, Puits, [], [], AdjVertices.Keys);
         return residuel;
+    }
+
+    public int GetResidualEdge(Flow flot, (Vertex, Vertex) edge)
+    {
+        return Edges[edge] - flot.FlowEdges[(edge.Item1, edge.Item2)];
     }
     
     // Trouver chemin avec parcours en profondeur (Ford-Fulkerson)
@@ -261,5 +267,79 @@ public class FlowNetwork : Graph
         return new FlowNetwork(Edges.Select(x => (x.Key.Item1.Clone() as Vertex, x.Key.Item2.Clone() as Vertex, x.Value)),
             Source.Clone() as Vertex, Puits.Clone() as Vertex, SourceNeighbors.Select(x => (x.Item1.Clone() as Vertex, x.Item2)), PuitsNeighbors.Select(x => (x.Item1.Clone() as Vertex, x.Item2)),
             AdjVertices.Keys);
+    }
+
+    // Poussage-réétiquatage
+    public void ReLabel(Vertex u, Dictionary<Vertex, int> hauteur, Flow flot)
+    {
+        var m = -1;
+        foreach (var t in AdjVertices[u])
+        {
+            if (GetResidualEdge(flot, (u, t)) > 0)
+            {
+                if (m < 0)
+                {
+                    m = hauteur[t];
+                } 
+                m = Math.Min(hauteur[t], m);
+            }
+        }
+        hauteur[u] = m + 1;
+    }
+    
+    public void Push(Vertex u, Vertex v, Dictionary<Vertex, int> excedent, Flow flot)
+    {
+        var m = Math.Min(GetResidualEdge(flot, (u, v)), excedent[u]);
+        excedent[u] -= m;
+        excedent[v] += m;
+        flot.IncreaseFlow((u,v),m);
+        flot.DecreaseFlow((v,u),m);
+    }
+
+    public (Dictionary<(Vertex, Vertex), int>, int) Push_Label()
+    {
+        // Initialisation
+        Dictionary<Vertex, int> hauteur = new();
+        Dictionary<Vertex, int> excedent = new();
+        Queue<Vertex> sommet_actifs = [];
+        Flow flot = new(Edges.ToDictionary(edge => edge.Key, _ => 0), Puits);
+        foreach (var (s,t) in AdjVertices)
+        {
+            hauteur.Add(s,0);
+            excedent.Add(s,0);
+            if (s == Source)
+            {
+                hauteur[Source]=AdjVertices.Count;
+            }
+        }
+        foreach (var s in AdjVertices[Source])
+        {
+            excedent[s] = Edges[(Source,s)];
+            sommet_actifs.Enqueue(s);
+            flot.IncreaseFlow((Source,s),Edges[(Source,s)]);
+        }
+        
+        // Corps de la fonction
+        while (sommet_actifs.Count > 0)
+        {
+            var s = sommet_actifs.Dequeue();
+            foreach (var t in AdjVertices[s])
+            {
+                if (hauteur[t] - hauteur[s] == 1 && GetResidualEdge(flot, (s, t))>0)
+                {
+                    Push(s,t, excedent, flot);
+                    if (excedent[t] > 0)
+                    {
+                        sommet_actifs.Enqueue(t);
+                    }
+                }
+            }
+            if (excedent[s] > 0)
+            {
+                ReLabel(s, hauteur, flot);
+                sommet_actifs.Enqueue(s); 
+            }
+        }
+        return (flot.FlowEdges, flot.Value);
     }
 }

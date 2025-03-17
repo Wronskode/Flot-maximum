@@ -1,0 +1,9 @@
+[0] Config.pm:308> INFO - This is Biber 2.20
+[0] Config.pm:311> INFO - Logfile is 'modeleRapportLatex.blg'
+[52] biber-darwin:340> INFO - === Mon Mar 17, 2025, 23:31:40
+[63] Biber.pm:420> INFO - Reading 'modeleRapportLatex.bcf'
+[123] Biber.pm:994> INFO - Found 0 citekeys in bib section 0
+[133] bbl.pm:676> INFO - Writing 'modeleRapportLatex.bbl' with encoding 'UTF-8'
+[133] bbl.pm:779> INFO - Output to modeleRapportLatex.bbl
+[133] Biber.pm:131> WARN - The file 'modeleRapportLatex.bcf' does not contain any citations!
+[133] Biber.pm:133> INFO - WARNINGS: 1

@@ -58,7 +58,7 @@ public class Tests
             var val = nf.FordFulkerson();
             var val2 = nf.EdmondsKarp();
             var val3 = PL.SolveWithGurobi(nf);
-            var val4 = (new PL(nf)).Resoudre();
+            var val4 = PL.SolveWithOrTools(nf, "GLOP");
             Assert.That(val.Value, Is.EqualTo(val2.Value));
             Assert.That(Math.Abs(val2.Value-val3), Is.LessThan(1e-5));
             Assert.That(Math.Abs(val3-val4), Is.LessThan(1e-5));

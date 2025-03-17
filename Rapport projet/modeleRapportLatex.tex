@@ -1,0 +1,782 @@
+\documentclass[a4paper]{article}
+
+% Options possibles : 10pt, 11pt, 12pt (taille de la fonte)
+%                     oneside, twoside (recto simple, recto-verso)
+%                     draft, final (stade de développement)
+
+\usepackage[utf8]{inputenc}   % LaTeX, comprends les accents !
+\usepackage[T1]{fontenc}      % Police contenant les caractères français
+\usepackage{fontspec} % Pour les accents de Tomáš Kaiser
+\usepackage[french]{babel}  
+\usepackage{tikz}
+\usetikzlibrary{arrows,shapes,positioning}
+\usepackage{titling}
+\usepackage{tikz-uml}
+\usepackage{pgf-umlsd}
+\usepackage{tikz}
+\definecolor{myblue}{RGB}{85,114,193}
+\tikzset{Dotted/.style={
+    line width=1pt,
+    dash pattern=on 0.01\pgflinewidth off #1\pgflinewidth,line cap=round,
+    shorten >=0.3em,shorten <=0.3em},
+    Dotted/.default=5}
+\usetikzlibrary{arrows.meta,calc,positioning,shapes,arrows}
+%\usepackage{pdflscape}
+\usepackage{geometry}
+\usepackage{biblatex}
+\usepackage{graphicx} % Required for inserting images
+\usepackage[colorlinks=true ,urlcolor=blue,urlbordercolor={0 1 1}]{hyperref}
+\usepackage{float}
+\usepackage{amssymb}
+\usepackage{amsthm} 
+\usepackage{datetime}
+\usepackage{numprint}
+%\usepackage{fullpage}
+\addbibresource{sample.bib}
+%\usepackage{minitoc}
+\makeatletter
+\makeatother
+\newdate{frontpagedate}{30}{01}{2025} 
+\begin{document}
+\pagenumbering{gobble} 
+\begin{center}
+\vspace{2cm}
+%\textsc{ Oregon State University}\\[1.5cm]
+\includegraphics[width=0.4\textwidth]{UM1.jpg}~\\[1cm]
+\vspace{2cm}
+
+% Title
+\hrule
+\vspace{.5cm}
+{\huge\bfseries{Résolution du problème du flot maximum\par}} % title of the report
+\vspace{.5cm}
+
+\hrule
+\vspace{1.5cm}
+
+\textsc{\textbf{Auteurs}}\\
+\vspace{.5cm}
+\centering
+
+% add your name here
+Cédric Audie\\
+Marie Dalenc\\
+Julien Lahoz\\
+Adrien Martinelli
+
+
+\vspace{1cm}
+
+\textsc{\textbf{Encadrant}}\\
+\vspace{.5cm}
+\centering
+
+% add your name here
+Rodolphe Giroudeau
+
+\vspace{4cm}
+
+\centering \displaydate{frontpagedate} % Dags dato
+\end{center}
+\newpage
+{\hypersetup{hidelinks}
+\tableofcontents
+}
+\pagenumbering{arabic}  
+\newpage
+
+\section{Définitions générales}
+\subsection{Réseau résiduel}
+
+Soit $G$ un graphe avec $s$, $p$ et $c$ respectivement la source, le puits et la fonction de capacité associés au graphe $G$. Notons $N = (G,s,p,c)$ un réseau de transport dans $G$ avec un flot $f$.\\
+Le réseau résiduel de $N$ et d'un flot $f$, noté $N_f$, est construit de la manière suivante :\\
+Pour chaque arc $xy$ de $G$ :
+\begin{itemize}
+	\item
+    Si $f(xy)<c(xy)$, on crée un arc $xy$ dans $G'$ avec la quantité restante disponible de la capacité: $c'(xy) = c(xy) - f(xy)$.
+    \item 
+    Si $f(xy)>0$ avec $x\ne s$ et $y\ne p$, on crée un arc $yx$ dans $G'$ avec la capacité qu'on peut ré-aiguiller : $c'(yx) = f(xy)$.
+\end{itemize}
+Ceci nous donne $N_f = (G',s,p,c')$.\\
+\subsection{Chemin et flot améliorants}
+\begin{itemize}
+	\item
+    Un chemin améliorant pour $N$ et $f$ est un chemin de $s$ à $p$ dans la réseau résiduel $N_f$.
+    \item
+    Soit $C = x_0,x_1,...,x_k$ un chemin améliorant dans $N_f$, le flot améliorant correspondant est :
+$f'(xy) = \left\{
+    \begin{array}{ll}
+        \gamma & \mbox{si } xy \mbox{ est un arc de C} \\
+        0 & \mbox{sinon.}
+    \end{array}
+\right.$
+avec $\gamma = \min \{c'(x_ix_{i+1}); i \in [\![0;k-1]\!]\}$\\
+\end{itemize}
+\section{Différents algorithmes et exemple}
+Nous prendrons l'exemple suivant pour illustrer les différents algorithmes :
+\begin{center}
+\begin{tikzpicture}[
+	every node/.style={circle, draw, fill=blue!30, inner sep=2pt},
+	every edge/.style={draw, ->, thick}, % Ajout de flèches
+	->,>=stealth % Style explicite de flèches (stealth' pour une tête nette)
+	]
+
+	% Les sommets
+    \node (S) at (0.5, 1) {S};
+    \node (A) at (2, 2) {A};
+	\node (B) at (4, 2) {B};
+	\node (C) at (2, 0) {C};
+	\node (D) at (4, 0) {D};
+	\node (P) at (5.5, 1) {P};
+		
+	% Les arêtes orientées
+	%\draw[->, bend left=15] (A) to (B);
+    \draw[->] (S) to node[midway, rectangle, fill=white, above left] {4} (A);
+    \draw[->] (S) to node[midway, rectangle, fill=white, below left] {3} (C);
+	\draw[->] (A) to node[midway, rectangle, fill=white, above] {3} (B);
+	\draw[->] (A) to node[midway, rectangle, fill=white, left] {2} (C);
+    \draw[->] (B) to node[midway, rectangle, fill=white, right] {3} (D);
+	\draw[->] (B) to node[midway, rectangle, fill=white, above right] {2} (P);
+	\draw[->] (C) to node[midway, rectangle, fill=white, below] {2} (D);
+    \draw[->] (D) to node[midway, rectangle, fill=white, below left] {1} (A);
+    \draw[->] (D) to node[midway, rectangle, fill=white, below right] {4} (P);
+\end{tikzpicture}\end{center}
+
+
+\subsection{L'algorithme de Ford-Fulkerson}
+
+\subsubsection{Fonctionnement général}
+L'algorithme de Ford-Fulkerson est le plus connu d'entre tous. Celui-ci consiste à trouver un chemin améliorant entre la source et le puits afin d'augmenter la valeur du flot. Pour cela nous aurons besoin du graphe résiduel de $G$ et $f$ qui nous permettra de savoir les capacités restantes disponibles.\\
+
+\subsubsection{Algorithme}
+Pour tout arc $xy$ du graphe $G$: on initialise la valeur du flot de $xy$ à $0$.\\
+Tant qu'il existe un chemin améliorant $C$ dans le graphe résiduel de $G$ et $f$:
+\begin{itemize}
+	\item
+    Calculer le flot améliorant $f'$ correspondant.
+    \item 
+    Augmenter $f$ par $f'$
+\end{itemize}
+Retourner $f$.\\
+
+\subsubsection{Complexité}
+
+\subsubsection{Avantages/inconvénients}
+
+\subsubsection{Application sur l'exemple}
+Tout d'abord, on a le chemin améliorant : $SABP$ avec une valeur de flot améliorant égal à $2$.\\
+On obtient donc à droite le réseau résiduel $N_f$ :
+\begin{center}
+\begin{tikzpicture}[
+	every node/.style={circle, draw, fill=red!20, inner sep=2pt},
+	every edge/.style={draw, ->, thick}, % Ajout de flèches
+	->,>=stealth % Style explicite de flèches (stealth' pour une tête nette)
+	]
+
+	% Les sommets
+    \node (S) at (0.5, 1) {S};
+    \node (A) at (2, 2) {A};
+	\node (B) at (4, 2) {B};
+	\node (C) at (2, 0) {C};
+	\node (D) at (4, 0) {D};
+	\node (P) at (5.5, 1) {P};
+		
+	% Les arêtes orientées
+	%\draw[->, bend left=15] (A) to (B);
+    \draw[->] (S) to node[midway, rectangle, fill=white, above left] {2/4} (A);
+    \draw[->] (S) to node[midway, rectangle, fill=white, below left] {3} (C);
+	\draw[->] (A) to node[midway, rectangle, fill=white, above] {2/3} (B);
+	\draw[->] (A) to node[midway, rectangle, fill=white, left] {2} (C);
+    \draw[->] (B) to node[midway, rectangle, fill=white, right] {3} (D);
+	\draw[->] (B) to node[midway, rectangle, fill=white, above right] {2/2} (P);
+	\draw[->] (C) to node[midway, rectangle, fill=white, below] {2} (D);
+    \draw[->] (D) to node[midway, rectangle, fill=white, below left] {1} (A);
+    \draw[->] (D) to node[midway, rectangle, fill=white, below right] {4} (P);
+\end{tikzpicture}
+\begin{tikzpicture}[
+	every node/.style={circle, draw, fill=red!20, inner sep=2pt},
+	every edge/.style={draw, ->, thick}, % Ajout de flèches
+	->,>=stealth % Style explicite de flèches (stealth' pour une tête nette)
+	]
+
+	% Les sommets
+    \node (S) at (0.5, 1) {S};
+    \node (A) at (2, 2) {A};
+	\node (B) at (4, 2) {B};
+	\node (C) at (2, 0) {C};
+	\node (D) at (4, 0) {D};
+	\node (P) at (5.5, 1) {P};
+		
+	% Les arêtes orientées
+	%\draw[->, bend left=15] (A) to (B);
+    \draw[->] (S) to node[midway, rectangle, fill=white, above left] {2} (A);
+    \draw[->] (S) to node[midway, rectangle, fill=white, below left] {3} (C);
+	\draw[->, bend left=15] (A) to node[midway, rectangle, fill=white, above] {1} (B);
+	\draw[->] (A) to node[midway, rectangle, fill=white, left] {2} (C);
+	\draw[->, bend left=15] (B) to node[midway, rectangle, fill=white, below] {2} (A);
+    \draw[->] (B) to node[midway, rectangle, fill=white, right] {3} (D);
+	\draw[->] (C) to node[midway, rectangle, fill=white, below] {2} (D);
+    \draw[->] (D) to node[midway, rectangle, fill=white, below left] {1} (A);
+    \draw[->] (D) to node[midway, rectangle, fill=white, below right] {4} (P);
+\end{tikzpicture}\end{center}
+On voit qu'il y a le chemin améliorant $SACDP$ avec un flot améliorant égal à $2$.\\
+On obtient à droite le nouveau réseau résiduel $N_f$ :
+\begin{center}
+\begin{tikzpicture}[
+	every node/.style={circle, draw, fill=red!20, inner sep=2pt},
+	every edge/.style={draw, ->, thick}, % Ajout de flèches
+	->,>=stealth % Style explicite de flèches (stealth' pour une tête nette)
+	]
+
+	% Les sommets
+    \node (S) at (0.5, 1) {S};
+    \node (A) at (2, 2) {A};
+	\node (B) at (4, 2) {B};
+	\node (C) at (2, 0) {C};
+	\node (D) at (4, 0) {D};
+	\node (P) at (5.5, 1) {P};
+		
+	% Les arêtes orientées
+	%\draw[->, bend left=15] (A) to (B);
+    \draw[->] (S) to node[midway, rectangle, fill=white, above left] {4/4} (A);
+    \draw[->] (S) to node[midway, rectangle, fill=white, below left] {3} (C);
+	\draw[->] (A) to node[midway, rectangle, fill=white, above] {2/3} (B);
+	\draw[->] (A) to node[midway, rectangle, fill=white, left] {2/2} (C);
+    \draw[->] (B) to node[midway, rectangle, fill=white, right] {3} (D);
+	\draw[->] (B) to node[midway, rectangle, fill=white, above right] {2/2} (P);
+	\draw[->] (C) to node[midway, rectangle, fill=white, below] {2/2} (D);
+    \draw[->] (D) to node[midway, rectangle, fill=white, below left] {1} (A);
+    \draw[->] (D) to node[midway, rectangle, fill=white, below right] {2/4} (P);
+\end{tikzpicture}
+\begin{tikzpicture}[
+	every node/.style={circle, draw, fill=red!20, inner sep=2pt},
+	every edge/.style={draw, ->, thick}, % Ajout de flèches
+	->,>=stealth % Style explicite de flèches (stealth' pour une tête nette)
+	]
+
+	% Les sommets
+    \node (S) at (0.5, 1) {S};
+    \node (A) at (2, 2) {A};
+	\node (B) at (4, 2) {B};
+	\node (C) at (2, 0) {C};
+	\node (D) at (4, 0) {D};
+	\node (P) at (5.5, 1) {P};
+		
+	% Les arêtes orientées
+	%\draw[->, bend left=15] (A) to (B);
+    \draw[->] (S) to node[midway, rectangle, fill=white, below left] {3} (C);
+	\draw[->, bend left=15] (A) to node[midway, rectangle, fill=white, above] {1} (B);
+	\draw[->, bend left=15] (B) to node[midway, rectangle, fill=white, below] {2} (A);
+    \draw[->] (B) to node[midway, rectangle, fill=white, right] {3} (D);
+	\draw[->] (C) to node[midway, rectangle, fill=white, right] {2} (A);
+    \draw[->] (D) to node[midway, rectangle, fill=white, below left] {1} (A);
+	\draw[->] (D) to node[midway, rectangle, fill=white, above] {2} (C);
+    \draw[->] (D) to node[midway, rectangle, fill=white, below right] {2} (P);
+\end{tikzpicture}\end{center}
+On voit qu'il y a le chemin améliorant $SCABDP$ avec un flot améliorant égal à $1$.\\
+On obtient à droite le nouveau réseau résiduel $N_f$ :
+\begin{center}
+\begin{tikzpicture}[
+	every node/.style={circle, draw, fill=red!20, inner sep=2pt},
+	every edge/.style={draw, ->, thick}, % Ajout de flèches
+	->,>=stealth % Style explicite de flèches (stealth' pour une tête nette)
+	]
+
+	% Les sommets
+    \node (S) at (0.5, 1) {S};
+    \node (A) at (2, 2) {A};
+	\node (B) at (4, 2) {B};
+	\node (C) at (2, 0) {C};
+	\node (D) at (4, 0) {D};
+	\node (P) at (5.5, 1) {P};
+		
+	% Les arêtes orientées
+	%\draw[->, bend left=15] (A) to (B);
+    \draw[->] (S) to node[midway, rectangle, fill=white, above left] {4/4} (A);
+    \draw[->] (S) to node[midway, rectangle, fill=white, below left] {1/3} (C);
+	\draw[->] (A) to node[midway, rectangle, fill=white, above] {3/3} (B);
+	\draw[->] (A) to node[midway, rectangle, fill=white, left] {1/2} (C);
+    \draw[->] (B) to node[midway, rectangle, fill=white, right] {1/3} (D);
+	\draw[->] (B) to node[midway, rectangle, fill=white, above right] {2/2} (P);
+	\draw[->] (C) to node[midway, rectangle, fill=white, below] {2/2} (D);
+    \draw[->] (D) to node[midway, rectangle, fill=white, below left] {1} (A);
+    \draw[->] (D) to node[midway, rectangle, fill=white, below right] {3/4} (P);
+\end{tikzpicture}
+\begin{tikzpicture}[
+	every node/.style={circle, draw, fill=red!20, inner sep=2pt},
+	every edge/.style={draw, ->, thick}, % Ajout de flèches
+	->,>=stealth % Style explicite de flèches (stealth' pour une tête nette)
+	]
+
+	% Les sommets
+    \node (S) at (0.5, 1) {S};
+    \node (A) at (2, 2) {A};
+	\node (B) at (4, 2) {B};
+	\node (C) at (2, 0) {C};
+	\node (D) at (4, 0) {D};
+	\node (P) at (5.5, 1) {P};
+		
+	% Les arêtes orientées
+	%\draw[->, bend left=15] (A) to (B);
+    \draw[->] (S) to node[midway, rectangle, fill=white, below left] {2} (C);
+	\draw[->, bend right=15] (A) to node[midway, rectangle, fill=white, left] {1} (C);
+	\draw[->] (B) to node[midway, rectangle, fill=white, below] {3} (A);
+    \draw[->, bend left=15] (B) to node[midway, rectangle, fill=white, right] {2} (D);
+	\draw[->, bend right=15] (C) to node[midway, rectangle, fill=white, right] {1} (A);
+    \draw[->] (D) to node[midway, rectangle, fill=white, below left] {1} (A);
+    \draw[->, bend left=15] (D) to node[midway, rectangle, fill=white, left] {1} (B);
+	\draw[->] (D) to node[midway, rectangle, fill=white, above] {2} (C);
+    \draw[->] (D) to node[midway, rectangle, fill=white, below right] {1} (P);
+\end{tikzpicture}\end{center}
+Dans ce dernier réseau résiduel, si nous partons de la source $S$ nous ne pouvons atteindre que les sommets $A$ et $C$. Comme nous ne pouvons plus atteindre le puits $P$, cela signifie que le flot obtenu est maximal.\\
+Finalement la coupe minimale de ce réseau est l'ensemble $\{S,A,C\}$ et son flot maximal est de valeur $5$.\\
+
+\subsection{L'algorithme d'Edmonds-Karp}
+
+\subsubsection{Fonctionnement général}
+L'algorithme d'Edmonds-Karp est une spécificité de celui de Ford-Fulkerson. Celui-ci consiste à trouver le plus court chemin améliorant entre la source et le puits afin d'augmenter la valeur du flot. Pour le trouver, il suffira d'utiliser un parcours en largeur.\\
+
+\subsubsection{Algorithme}
+Pour tout arc $xy$ du graphe $G$: on initialise la valeur du flot de $xy$ à $0$.\\
+Tant qu'il existe un plus court chemin améliorant $C$ dans le graphe résiduel de $G$ et $f$:
+\begin{itemize}
+	\item
+    Calculer le flot améliorant $f'$ correspondant.
+    \item 
+    Augmenter $f$ par $f'$
+\end{itemize}
+Retourner $f$.\\
+
+\subsubsection{Complexité}
+
+\subsubsection{Avantages/inconvénients}
+
+\subsubsection{Application sur l'exemple}
+Tout d'abord, on a le chemin améliorant : $SABP$ de taille $4$ avec une valeur de flot améliorant égal à $2$.\\
+On obtient donc à droite le réseau résiduel $N_f$ :
+\begin{center}
+\begin{tikzpicture}[
+	every node/.style={circle, draw, fill=red!20, inner sep=2pt},
+	every edge/.style={draw, ->, thick}, % Ajout de flèches
+	->,>=stealth % Style explicite de flèches (stealth' pour une tête nette)
+	]
+
+	% Les sommets
+    \node (S) at (0.5, 1) {S};
+    \node (A) at (2, 2) {A};
+	\node (B) at (4, 2) {B};
+	\node (C) at (2, 0) {C};
+	\node (D) at (4, 0) {D};
+	\node (P) at (5.5, 1) {P};
+		
+	% Les arêtes orientées
+	%\draw[->, bend left=15] (A) to (B);
+    \draw[->] (S) to node[midway, rectangle, fill=white, above left] {2/4} (A);
+    \draw[->] (S) to node[midway, rectangle, fill=white, below left] {3} (C);
+	\draw[->] (A) to node[midway, rectangle, fill=white, above] {2/3} (B);
+	\draw[->] (A) to node[midway, rectangle, fill=white, left] {2} (C);
+    \draw[->] (B) to node[midway, rectangle, fill=white, right] {3} (D);
+	\draw[->] (B) to node[midway, rectangle, fill=white, above right] {2/2} (P);
+	\draw[->] (C) to node[midway, rectangle, fill=white, below] {2} (D);
+    \draw[->] (D) to node[midway, rectangle, fill=white, below left] {1} (A);
+    \draw[->] (D) to node[midway, rectangle, fill=white, below right] {4} (P);
+\end{tikzpicture}
+\begin{tikzpicture}[
+	every node/.style={circle, draw, fill=red!20, inner sep=2pt},
+	every edge/.style={draw, ->, thick}, % Ajout de flèches
+	->,>=stealth % Style explicite de flèches (stealth' pour une tête nette)
+	]
+
+	% Les sommets
+    \node (S) at (0.5, 1) {S};
+    \node (A) at (2, 2) {A};
+	\node (B) at (4, 2) {B};
+	\node (C) at (2, 0) {C};
+	\node (D) at (4, 0) {D};
+	\node (P) at (5.5, 1) {P};
+		
+	% Les arêtes orientées
+	%\draw[->, bend left=15] (A) to (B);
+    \draw[->] (S) to node[midway, rectangle, fill=white, above left] {2} (A);
+    \draw[->] (S) to node[midway, rectangle, fill=white, below left] {3} (C);
+	\draw[->, bend left=15] (A) to node[midway, rectangle, fill=white, above] {1} (B);
+	\draw[->] (A) to node[midway, rectangle, fill=white, left] {2} (C);
+	\draw[->, bend left=15] (B) to node[midway, rectangle, fill=white, below] {2} (A);
+    \draw[->] (B) to node[midway, rectangle, fill=white, right] {3} (D);
+	\draw[->] (C) to node[midway, rectangle, fill=white, below] {2} (D);
+    \draw[->] (D) to node[midway, rectangle, fill=white, below left] {1} (A);
+    \draw[->] (D) to node[midway, rectangle, fill=white, below right] {4} (P);
+\end{tikzpicture}\end{center}
+On voit qu'il y a le chemin améliorant $SACDP$ de taille $5$ avec un flot améliorant égal à $2$. Regardons si on trouve un chemin améliorant plus petit, le chemin $SCDP$ est un autre chemin améliorant de taille $4$ avec un flot améliorant égal à $2$. C'est ce chemin que nous choisissons.\\
+On obtient à droite le nouveau réseau résiduel $N_f$ :
+\begin{center}
+\begin{tikzpicture}[
+	every node/.style={circle, draw, fill=red!20, inner sep=2pt},
+	every edge/.style={draw, ->, thick}, % Ajout de flèches
+	->,>=stealth % Style explicite de flèches (stealth' pour une tête nette)
+	]
+
+	% Les sommets
+    \node (S) at (0.5, 1) {S};
+    \node (A) at (2, 2) {A};
+	\node (B) at (4, 2) {B};
+	\node (C) at (2, 0) {C};
+	\node (D) at (4, 0) {D};
+	\node (P) at (5.5, 1) {P};
+		
+	% Les arêtes orientées
+	%\draw[->, bend left=15] (A) to (B);
+    \draw[->] (S) to node[midway, rectangle, fill=white, above left] {2/4} (A);
+    \draw[->] (S) to node[midway, rectangle, fill=white, below left] {2/3} (C);
+	\draw[->] (A) to node[midway, rectangle, fill=white, above] {2/3} (B);
+	\draw[->] (A) to node[midway, rectangle, fill=white, left] {2} (C);
+    \draw[->] (B) to node[midway, rectangle, fill=white, right] {3} (D);
+	\draw[->] (B) to node[midway, rectangle, fill=white, above right] {2/2} (P);
+	\draw[->] (C) to node[midway, rectangle, fill=white, below] {2/2} (D);
+    \draw[->] (D) to node[midway, rectangle, fill=white, below left] {1} (A);
+    \draw[->] (D) to node[midway, rectangle, fill=white, below right] {2/4} (P);
+\end{tikzpicture}
+\begin{tikzpicture}[
+	every node/.style={circle, draw, fill=red!20, inner sep=2pt},
+	every edge/.style={draw, ->, thick}, % Ajout de flèches
+	->,>=stealth % Style explicite de flèches (stealth' pour une tête nette)
+	]
+
+	% Les sommets
+    \node (S) at (0.5, 1) {S};
+    \node (A) at (2, 2) {A};
+	\node (B) at (4, 2) {B};
+	\node (C) at (2, 0) {C};
+	\node (D) at (4, 0) {D};
+	\node (P) at (5.5, 1) {P};
+		
+	% Les arêtes orientées
+	%\draw[->, bend left=15] (A) to (B);
+    \draw[->] (S) to node[midway, rectangle, fill=white, above left] {2} (A);
+    \draw[->] (S) to node[midway, rectangle, fill=white, below left] {1} (C);
+	\draw[->, bend left=15] (A) to node[midway, rectangle, fill=white, above] {1} (B);
+	\draw[->] (A) to node[midway, rectangle, fill=white, left] {2} (C);
+	\draw[->, bend left=15] (B) to node[midway, rectangle, fill=white, below] {2} (A);
+    \draw[->] (B) to node[midway, rectangle, fill=white, right] {3} (D);
+    \draw[->] (D) to node[midway, rectangle, fill=white, below left] {1} (A);
+	\draw[->] (D) to node[midway, rectangle, fill=white, above] {2} (C);
+    \draw[->] (D) to node[midway, rectangle, fill=white, below right] {2} (P);
+\end{tikzpicture}\end{center}
+Il n'y a plus de chemin améliorant de taille $4$ allant de $S$ à $P$. On va choisir un chemin améliorant de taille $5$ : $SABDP$ avec un flot améliorant égal à $1$.\\
+Nous obtenons à droite le nouveau réseau résiduel $N_f$ :
+\begin{center}
+\begin{tikzpicture}[
+	every node/.style={circle, draw, fill=red!20, inner sep=2pt},
+	every edge/.style={draw, ->, thick}, % Ajout de flèches
+	->,>=stealth % Style explicite de flèches (stealth' pour une tête nette)
+	]
+
+	% Les sommets
+    \node (S) at (0.5, 1) {S};
+    \node (A) at (2, 2) {A};
+	\node (B) at (4, 2) {B};
+	\node (C) at (2, 0) {C};
+	\node (D) at (4, 0) {D};
+	\node (P) at (5.5, 1) {P};
+		
+	% Les arêtes orientées
+	%\draw[->, bend left=15] (A) to (B);
+    \draw[->] (S) to node[midway, rectangle, fill=white, above left] {3/4} (A);
+    \draw[->] (S) to node[midway, rectangle, fill=white, below left] {2/3} (C);
+	\draw[->] (A) to node[midway, rectangle, fill=white, above] {3/3} (B);
+	\draw[->] (A) to node[midway, rectangle, fill=white, left] {2} (C);
+    \draw[->] (B) to node[midway, rectangle, fill=white, right] {1/3} (D);
+	\draw[->] (B) to node[midway, rectangle, fill=white, above right] {2/2} (P);
+	\draw[->] (C) to node[midway, rectangle, fill=white, below] {2/2} (D);
+    \draw[->] (D) to node[midway, rectangle, fill=white, below left] {1} (A);
+    \draw[->] (D) to node[midway, rectangle, fill=white, below right] {3/4} (P);
+\end{tikzpicture}
+\begin{tikzpicture}[
+	every node/.style={circle, draw, fill=red!20, inner sep=2pt},
+	every edge/.style={draw, ->, thick}, % Ajout de flèches
+	->,>=stealth % Style explicite de flèches (stealth' pour une tête nette)
+	]
+
+	% Les sommets
+    \node (S) at (0.5, 1) {S};
+    \node (A) at (2, 2) {A};
+	\node (B) at (4, 2) {B};
+	\node (C) at (2, 0) {C};
+	\node (D) at (4, 0) {D};
+	\node (P) at (5.5, 1) {P};
+		
+	% Les arêtes orientées
+	%\draw[->, bend left=15] (A) to (B);
+    \draw[->] (S) to node[midway, rectangle, fill=white, above left] {1} (A);
+    \draw[->] (S) to node[midway, rectangle, fill=white, below left] {1} (C);
+	\draw[->] (A) to node[midway, rectangle, fill=white, left] {2} (C);
+	\draw[->] (B) to node[midway, rectangle, fill=white, below] {3} (A);
+    \draw[->, bend left=15] (B) to node[midway, rectangle, fill=white, right] {2} (D);
+    \draw[->] (D) to node[midway, rectangle, fill=white, below left] {1} (A);
+    \draw[->, bend left=15] (D) to node[midway, rectangle, fill=white, left] {1} (B);
+	\draw[->] (D) to node[midway, rectangle, fill=white, above] {2} (C);
+    \draw[->] (D) to node[midway, rectangle, fill=white, below right] {1} (P);
+\end{tikzpicture}\end{center}
+Dans ce dernier réseau résiduel, si nous partons de la source $S$ nous ne pouvons atteindre que les sommets $A$ et $C$. Comme nous ne pouvons plus atteindre le puits $P$, cela signifie que le flot obtenu est maximal.\\
+Finalement la coupe minimale de ce réseau est l'ensemble $\{S,A,C\}$ et son flot maximal est de valeur $5$.\\
+
+\subsection{L'algorithme de Dinic}
+
+\subsubsection{Fonctionnement général}
+L'algorithme de Dinic est semblable à celui d'Edmonds-Karp. Comme lui, il utilise des plus courts chemins améliorants entre la source et le puits afin d'augmenter la valeur du flot. \\Pour les trouver, il faudra renommer les sommets en fonction de leur distance par rapport à la source et garder les arcs qui relient un sommet à un sommet de distance immédiatement supérieure. Ceci nous donnera le réseau de niveau $N_L$ obtenu à partir du réseau résiduel $N_f$.\\
+Nous aurons également besoin du flot bloquant. Il est défini comme suit : un flot est bloquant si $\forall C$ chemin entre la source et le puits, $\exists xy$ un arc dans $C$ où $f(xy)=c(xy)$.\\
+
+\subsubsection{Algorithme}
+Pour tout arc $xy$ du graphe $G$: on initialise la valeur du flot de $xy$ à $0$.\\
+Tant qu'il existe un plus court chemin améliorant $C$ dans le graphe résiduel de $G$ et $f$:
+\begin{itemize}
+    \item 
+	On détermine le réseau de niveau $N_L$ de $N_f$.
+    \item
+    Calculer le flot bloquant $f'$ correspondant.
+    \item 
+    Augmenter $f$ par $f'$
+\end{itemize}
+Retourner $f$.\\
+
+\subsubsection{Complexité}
+
+\subsubsection{Avantages/inconvénients}
+
+\subsubsection{Application sur l'exemple}
+Au début le flot est nul, le réseau résiduel $N_f$ à droite est donc le même que le réseau de transport $N$.\\
+Nous avons aussi en dessous, le réseau de niveau $N_L$ :
+\begin{center}
+\begin{tikzpicture}[
+	every node/.style={circle, draw, fill=red!20, inner sep=2pt},
+	every edge/.style={draw, ->, thick}, % Ajout de flèches
+	->,>=stealth % Style explicite de flèches (stealth' pour une tête nette)
+	]
+
+	% Les sommets
+    \node (S) at (0.5, 1) {S};
+    \node (A) at (2, 2) {A};
+	\node (B) at (4, 2) {B};
+	\node (C) at (2, 0) {C};
+	\node (D) at (4, 0) {D};
+	\node (P) at (5.5, 1) {P};
+		
+	% Les arêtes orientées
+	%\draw[->, bend left=15] (A) to (B);
+    \draw[->] (S) to node[midway, rectangle, fill=white, above left] {4} (A);
+    \draw[->] (S) to node[midway, rectangle, fill=white, below left] {3} (C);
+	\draw[->] (A) to node[midway, rectangle, fill=white, above] {3} (B);
+	\draw[->] (A) to node[midway, rectangle, fill=white, left] {2} (C);
+    \draw[->] (B) to node[midway, rectangle, fill=white, right] {3} (D);
+	\draw[->] (B) to node[midway, rectangle, fill=white, above right] {2} (P);
+	\draw[->] (C) to node[midway, rectangle, fill=white, below] {2} (D);
+    \draw[->] (D) to node[midway, rectangle, fill=white, below left] {1} (A);
+    \draw[->] (D) to node[midway, rectangle, fill=white, below right] {4} (P);
+\end{tikzpicture}
+\begin{tikzpicture}[
+	every node/.style={circle, draw, fill=red!20, inner sep=2pt},
+	every edge/.style={draw, ->, thick}, % Ajout de flèches
+	->,>=stealth % Style explicite de flèches (stealth' pour une tête nette)
+	]
+
+	% Les sommets
+    \node (S) at (0.5, 1) {S};
+    \node (A) at (2, 2) {A};
+	\node (B) at (4, 2) {B};
+	\node (C) at (2, 0) {C};
+	\node (D) at (4, 0) {D};
+	\node (P) at (5.5, 1) {P};
+		
+	% Les arêtes orientées
+	%\draw[->, bend left=15] (A) to (B);
+    \draw[->] (S) to node[midway, rectangle, fill=white, above left] {4} (A);
+    \draw[->] (S) to node[midway, rectangle, fill=white, below left] {3} (C);
+	\draw[->] (A) to node[midway, rectangle, fill=white, above] {3} (B);
+	\draw[->] (A) to node[midway, rectangle, fill=white, left] {2} (C);
+    \draw[->] (B) to node[midway, rectangle, fill=white, right] {3} (D);
+	\draw[->] (B) to node[midway, rectangle, fill=white, above right] {2} (P);
+	\draw[->] (C) to node[midway, rectangle, fill=white, below] {2} (D);
+    \draw[->] (D) to node[midway, rectangle, fill=white, below left] {1} (A);
+    \draw[->] (D) to node[midway, rectangle, fill=white, below right] {4} (P);
+\end{tikzpicture}
+\begin{tikzpicture}[
+	every node/.style={circle, draw, fill=red!20, inner sep=2pt},
+	every edge/.style={draw, ->, thick}, % Ajout de flèches
+	->,>=stealth % Style explicite de flèches (stealth' pour une tête nette)
+	]
+
+	% Les sommets
+    \node (S) at (0.5, 1) {S:0};
+    \node (A) at (2, 2) {A:1};
+	\node (B) at (4, 2) {B:2};
+	\node (C) at (2, 0) {C:1};
+	\node (D) at (4, 0) {D:2};
+	\node (P) at (5.5, 1) {P:3};
+		
+	% Les arêtes orientées
+	%\draw[->, bend left=15] (A) to (B);
+    \draw[->] (S) to node[midway, rectangle, fill=white, above left] {4} (A);
+    \draw[->] (S) to node[midway, rectangle, fill=white, below left] {3} (C);
+	\draw[->] (A) to node[midway, rectangle, fill=white, above] {3} (B);
+    \draw[->] (B) to node[midway, rectangle, fill=white, right] {2} (P);
+	\draw[->] (C) to node[midway, rectangle, fill=white, below] {2} (D);
+    \draw[->] (D) to node[midway, rectangle, fill=white, below right] {4} (P);
+\end{tikzpicture}\end{center}
+On a donc un chemin améliorant $SABP$ de valeur $2$ ainsi qu'un chemin améliorant $SCDP$ de valeur $2$.
+\begin{center}
+\begin{tikzpicture}[
+	every node/.style={circle, draw, fill=red!20, inner sep=2pt},
+	every edge/.style={draw, ->, thick}, % Ajout de flèches
+	->,>=stealth % Style explicite de flèches (stealth' pour une tête nette)
+	]
+
+	% Les sommets
+    \node (S) at (0.5, 1) {S};
+    \node (A) at (2, 2) {A};
+	\node (B) at (4, 2) {B};
+	\node (C) at (2, 0) {C};
+	\node (D) at (4, 0) {D};
+	\node (P) at (5.5, 1) {P};
+		
+	% Les arêtes orientées
+	%\draw[->, bend left=15] (A) to (B);
+    \draw[->] (S) to node[midway, rectangle, fill=white, above left] {2/4} (A);
+    \draw[->] (S) to node[midway, rectangle, fill=white, below left] {2/3} (C);
+	\draw[->] (A) to node[midway, rectangle, fill=white, above] {2/3} (B);
+	\draw[->] (A) to node[midway, rectangle, fill=white, left] {2} (C);
+    \draw[->] (B) to node[midway, rectangle, fill=white, right] {3} (D);
+	\draw[->] (B) to node[midway, rectangle, fill=white, above right] {2/2} (P);
+	\draw[->] (C) to node[midway, rectangle, fill=white, below] {2/2} (D);
+    \draw[->] (D) to node[midway, rectangle, fill=white, below left] {1} (A);
+    \draw[->] (D) to node[midway, rectangle, fill=white, below right] {2/4} (P);
+\end{tikzpicture}
+\begin{tikzpicture}[
+	every node/.style={circle, draw, fill=red!20, inner sep=2pt},
+	every edge/.style={draw, ->, thick}, % Ajout de flèches
+	->,>=stealth % Style explicite de flèches (stealth' pour une tête nette)
+	]
+
+	% Les sommets
+    \node (S) at (0.5, 1) {S};
+    \node (A) at (2, 2) {A};
+	\node (B) at (4, 2) {B};
+	\node (C) at (2, 0) {C};
+	\node (D) at (4, 0) {D};
+	\node (P) at (5.5, 1) {P};
+		
+	% Les arêtes orientées
+	%\draw[->, bend left=15] (A) to (B);
+    \draw[->] (S) to node[midway, rectangle, fill=white, above left] {2} (A);
+    \draw[->] (S) to node[midway, rectangle, fill=white, below left] {1} (C);
+	\draw[->, bend left=15] (A) to node[midway, rectangle, fill=white, above] {1} (B);
+	\draw[->] (A) to node[midway, rectangle, fill=white, left] {2} (C);
+    \draw[->, bend left=15] (B) to node[midway, rectangle, fill=white, below] {2} (A);
+    \draw[->] (B) to node[midway, rectangle, fill=white, right] {3} (D);
+	\draw[->] (D) to node[midway, rectangle, fill=white, above] {2} (C);
+    \draw[->] (D) to node[midway, rectangle, fill=white, below left] {1} (A);
+    \draw[->] (D) to node[midway, rectangle, fill=white, below right] {2} (P);
+\end{tikzpicture}
+\begin{tikzpicture}[
+	every node/.style={circle, draw, fill=red!20, inner sep=2pt},
+	every edge/.style={draw, ->, thick}, % Ajout de flèches
+	->,>=stealth % Style explicite de flèches (stealth' pour une tête nette)
+	]
+
+	% Les sommets
+    \node (S) at (0.5, 1) {S:0};
+    \node (A) at (2, 2) {A:1};
+	\node (B) at (4, 2) {B:2};
+	\node (C) at (2, 0) {C:1};
+	\node (D) at (4, 0) {D:3};
+	\node (P) at (5.5, 1) {P:4};
+		
+	% Les arêtes orientées
+	%\draw[->, bend left=15] (A) to (B);
+    \draw[->] (S) to node[midway, rectangle, fill=white, above left] {2} (A);
+    \draw[->] (S) to node[midway, rectangle, fill=white, below left] {1} (C);
+	\draw[->] (A) to node[midway, rectangle, fill=white, above] {1} (B);
+    \draw[->] (B) to node[midway, rectangle, fill=white, right] {3} (D);
+    \draw[->] (D) to node[midway, rectangle, fill=white, below right] {2} (P);
+\end{tikzpicture}\end{center}
+Nous avons un chemin améliorant $SABDP$ de valeur $1$.
+\begin{center}
+\begin{tikzpicture}[
+	every node/.style={circle, draw, fill=red!20, inner sep=2pt},
+	every edge/.style={draw, ->, thick}, % Ajout de flèches
+	->,>=stealth % Style explicite de flèches (stealth' pour une tête nette)
+	]
+
+	% Les sommets
+    \node (S) at (0.5, 1) {S};
+    \node (A) at (2, 2) {A};
+	\node (B) at (4, 2) {B};
+	\node (C) at (2, 0) {C};
+	\node (D) at (4, 0) {D};
+	\node (P) at (5.5, 1) {P};
+		
+	% Les arêtes orientées
+	%\draw[->, bend left=15] (A) to (B);
+    \draw[->] (S) to node[midway, rectangle, fill=white, above left] {3/4} (A);
+    \draw[->] (S) to node[midway, rectangle, fill=white, below left] {2/3} (C);
+	\draw[->] (A) to node[midway, rectangle, fill=white, above] {3/3} (B);
+	\draw[->] (A) to node[midway, rectangle, fill=white, left] {2} (C);
+    \draw[->] (B) to node[midway, rectangle, fill=white, right] {1/3} (D);
+	\draw[->] (B) to node[midway, rectangle, fill=white, above right] {2/2} (P);
+	\draw[->] (C) to node[midway, rectangle, fill=white, below] {2/2} (D);
+    \draw[->] (D) to node[midway, rectangle, fill=white, below left] {1} (A);
+    \draw[->] (D) to node[midway, rectangle, fill=white, below right] {3/4} (P);
+\end{tikzpicture}
+\begin{tikzpicture}[
+	every node/.style={circle, draw, fill=red!20, inner sep=2pt},
+	every edge/.style={draw, ->, thick}, % Ajout de flèches
+	->,>=stealth % Style explicite de flèches (stealth' pour une tête nette)
+	]
+
+	% Les sommets
+    \node (S) at (0.5, 1) {S};
+    \node (A) at (2, 2) {A};
+	\node (B) at (4, 2) {B};
+	\node (C) at (2, 0) {C};
+	\node (D) at (4, 0) {D};
+	\node (P) at (5.5, 1) {P};
+		
+	% Les arêtes orientées
+	%\draw[->, bend left=15] (A) to (B);
+    \draw[->] (S) to node[midway, rectangle, fill=white, above left] {1} (A);
+    \draw[->] (S) to node[midway, rectangle, fill=white, below left] {1} (C);
+	\draw[->] (A) to node[midway, rectangle, fill=white, left] {2} (C);
+    \draw[->] (B) to node[midway, rectangle, fill=white, below] {3} (A);
+    \draw[->, bend left=15] (B) to node[midway, rectangle, fill=white, right] {2} (D);
+    \draw[->, bend left=15] (D) to node[midway, rectangle, fill=white, left] {1} (B);
+	\draw[->] (D) to node[midway, rectangle, fill=white, above] {2} (C);
+    \draw[->] (D) to node[midway, rectangle, fill=white, below left] {1} (A);
+    \draw[->] (D) to node[midway, rectangle, fill=white, below right] {1} (P);
+\end{tikzpicture}
+\begin{tikzpicture}[
+	every node/.style={circle, draw, fill=red!20, inner sep=2pt},
+	every edge/.style={draw, ->, thick}, % Ajout de flèches
+	->,>=stealth % Style explicite de flèches (stealth' pour une tête nette)
+	]
+
+	% Les sommets
+    \node (S) at (0.5, 1) {S:0};
+    \node (A) at (2, 2) {A:1};
+	\node (B) at (4, 2) {B:\infty};
+	\node (C) at (2, 0) {C:1};
+	\node (D) at (4, 0) {D:\infty};
+	\node (P) at (5.5, 1) {P:\infty};
+		
+	% Les arêtes orientées
+	%\draw[->, bend left=15] (A) to (B);
+    \draw[->] (S) to node[midway, rectangle, fill=white, above left] {1} (A);
+    \draw[->] (S) to node[midway, rectangle, fill=white, below left] {1} (C);
+\end{tikzpicture}\end{center}
+Le puits $P$ n'est plus atteignable, l'algorithme se termine.\\
+Finalement la coupe minimale de ce réseau est l'ensemble $\{S,A,C\}$ et son flot maximal est de valeur $5$.\\
+
+
+%Expliquer pour chaque algo, ce qu'il fait, sa complexité, les avantages/inconvénients et faire un exemple (prendre le même pour tous les algos)
+%Faire un graphique qui montre la courbe du temps de calculs de chaque algo en fonction du nombre de sommet
+
+\end{document}
+

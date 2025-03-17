@@ -44,7 +44,6 @@ void CreateInstances(string instancesPath, List<double> densities)
                     Console.WriteLine("Le fichier a été créé avec succès.");
                     i += 1;
                 }
-
                 Console.WriteLine("\n");
             }
         }
@@ -62,7 +61,7 @@ var solvers = new List<(string, Func<FlowNetwork, double>)>
     //("CP-SAT", nf => PL.SolveWithOrTools(nf, "CP-SAT")),
 };
 
-foreach (var density in densities)
+foreach (var density in (double[])[0.1])
 {
     Curve.CreateCurves(density, instancesPath, solvers);
 }

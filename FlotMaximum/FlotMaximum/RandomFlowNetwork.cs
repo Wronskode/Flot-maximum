@@ -25,7 +25,7 @@ public class RandomFlowNetwork
 
     public FlowNetwork Generate(int lowerBound = 1, int upperBound = 100)
     {
-        Graph graph = new(new List<(Vertex, Vertex, int)>(), []);
+        Graph graph = new(new List<(Vertex?, Vertex?, int)>(), []);
         for (int i = 0; i < VertexNumber; i++)
         {
             var v = new Vertex(i.ToString());

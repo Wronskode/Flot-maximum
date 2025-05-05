@@ -1,3 +1,5 @@
+using System.Collections.Concurrent;
+
 namespace FlotMaximum;
 using System.Text;
 
@@ -124,7 +126,146 @@ public class FlowNetwork : Graph
         }
         return flot;
     }
+    
+    public Flow Dinic()
+{
+    Flow flot = new Flow(Edges.ToDictionary(edge => edge.Key, _ => 0), Puits);
+    while (true)
+    {
+        FlowNetwork nf = GetResidualNetwork(flot);
+        Dictionary<Vertex, int> levels = nf.BFS_GetLevels();
+        if (!levels.ContainsKey(Puits))
+        {
+            break;
+        }
+        while (true)
+        {
+            List<Vertex> chemin = DFS_GetPathInLevelGraph(levels, nf);
+            
+            if (chemin.Count == 0)
+            {
+                break;
+            }
+            int delta = int.MaxValue;
+            for (int i = 0; i < chemin.Count - 1; i++)
+            {
+                var edge = (chemin[i], chemin[i + 1]);
+                if (nf.Edges.TryGetValue(edge, out int capacity))
+                {
+                    delta = Math.Min(delta, capacity);
+                }
+                else
+                {
+                    delta = 0;
+                    Console.Error.WriteLine("Erreur: Arête du chemin non trouvée dans le graphe résiduel pendant le calcul de delta.");
+                    break;
+                }
+            }
+            if (delta == 0) { 
+                Console.Error.WriteLine("Erreur: Delta calculé à 0, arrêt de la phase de flot bloquant.");
+                break;
+            }
+            for (int i = 0; i < chemin.Count - 1; i++)
+            {
+                var u = chemin[i];
+                var v = chemin[i + 1];
+                var forwardEdge = (u, v);
+                var backwardEdge = (v, u);
+                
+                if (Edges.ContainsKey(forwardEdge))
+                {
+                    flot.IncreaseFlow(forwardEdge, delta);
+                }
+                else if (Edges.ContainsKey(backwardEdge))
+                {
+                    flot.DecreaseFlow(backwardEdge, delta);
+                }
+                else
+                {
+                    Console.Error.WriteLine($"Erreur: Ni l'arête {forwardEdge} ni l'arête inverse {backwardEdge} n'existent dans le graphe original.");
+                }
+            }
+            for (int i = 0; i < chemin.Count - 1; i++)
+            {
+                var u = chemin[i];
+                var v = chemin[i + 1];
+                var forwardEdge = (u, v);
+                var backwardEdge = (v, u);
+                nf.Edges[forwardEdge] -= delta;
+                if (nf.Edges.TryAdd(backwardEdge, 0))
+                {
+                    if (nf.AdjVertices.TryGetValue(v, out HashSet<Vertex>? value)) { value.Add(u); } else { nf.AdjVertices[v] = new HashSet<Vertex>{ u }; }
+                }
+                nf.Edges[backwardEdge] += delta;
+            }
+        }
 
+    } 
+    return flot;
+}
+    
+    private List<Vertex> DFS_GetPathInLevelGraph(Dictionary<Vertex, int> levels, FlowNetwork currentResidualNetwork)
+{
+    Stack<(Vertex current, List<Vertex> path)> stack = new();
+    HashSet<Vertex> visitedOnPath = new HashSet<Vertex>();
+    
+    var initialPath = new List<Vertex> { Source };
+    stack.Push((Source, initialPath));
+    visitedOnPath.Add(Source);
+    while (stack.Count > 0)
+    {
+        var (u, currentPath) = stack.Pop();
+        if (u.Equals(Puits))
+        {
+            return currentPath;
+        }
+        foreach (var edge in currentResidualNetwork.Edges.Where(kvp => kvp.Key.Item1.Equals(u) && kvp.Value > 0))
+        {
+            Vertex v = edge.Key.Item2;
+            if (levels.TryGetValue(v, out int value) && value == levels[u] + 1 && !visitedOnPath.Contains(v))
+            {
+                var newPath = new List<Vertex>(currentPath);
+                newPath.Add(v);
+                stack.Push((v, newPath));
+                visitedOnPath.Add(v);
+                 if (levels.TryGetValue(v, out int value2) && value2 == levels[u] + 1 && !currentPath.Contains(v))
+                 {
+                    var newPath2 = new List<Vertex>(currentPath);
+                    newPath2.Add(v);
+                    stack.Push((v, newPath2));
+                 }
+            }
+        }
+    }
+    return new List<Vertex>();
+}
+    
+    public Dictionary<Vertex, int> BFS_GetLevels()
+    {
+        Dictionary<Vertex, int> levels = new Dictionary<Vertex, int>();
+        Queue<Vertex> queue = new Queue<Vertex>();
+
+        levels[Source] = 0;
+        queue.Enqueue(Source);
+
+        while (queue.Count > 0)
+        {
+            Vertex u = queue.Dequeue();
+            
+            if (AdjVertices.TryGetValue(u, out var neighbors))
+            {
+                foreach (Vertex v in neighbors)
+                {
+                    if (!levels.ContainsKey(v))
+                    {
+                        levels[v] = levels[u] + 1;
+                        queue.Enqueue(v);
+                    }
+                }
+            }
+        }
+        return levels;
+    }
 
     public FlowNetwork GetResidualNetwork(Flow  flot)
     {
@@ -153,25 +294,36 @@ public class FlowNetwork : Graph
     // Trouver chemin avec parcours en profondeur (Ford-Fulkerson)
     public List<Vertex> CheminDfs()
     {
-        Stack<(Vertex, List<Vertex>)> pile = [];
-        pile.Push((Source, [Source]));
+        Stack<Vertex> pile = [];
+        Dictionary<Vertex, Vertex?> parent = [];
         HashSet<Vertex> marked = [];
+
+        pile.Push(Source);
+        marked.Add(Source);
+        parent[Source] = null;
+
         while (pile.Count > 0)
         {
-            var (s, path) = pile.Pop();
-            if (!marked.Contains(s))
+            var s = pile.Pop();
+            if (s == Puits)
             {
-                if (s == Puits)
+                List<Vertex> path = [];
+                for (var v = s; v != null; v = parent[v])
                 {
-                    return path;
+                    path.Add(v);
                 }
-                marked.Add(s);
-                foreach (var t in AdjVertices[s])
+                path.Reverse();
+                return path;
+            }
+
+            foreach (var t in AdjVertices[s])
+            {
+                if (!marked.Contains(t) &&
+                    Edges.TryGetValue((s, t), out int capacity) && capacity > 0)
                 {
-                    if (Edges.TryGetValue((s, t), out int capacity) && capacity > 0)
-                    {
-                        pile.Push((t, [..path, t]));
-                    }
+                    pile.Push(t);
+                    marked.Add(t);
+                    parent[t] = s;
                 }
             }
         }
@@ -181,40 +333,40 @@ public class FlowNetwork : Graph
     // Edmonds-Karp
     public List<Vertex> CheminBfs()
     {
-        Dictionary<Vertex, Vertex> parents = new();
-        Queue<Vertex> queue = new();
-        HashSet<Vertex> visited = [];
+        Queue<Vertex> queue = [];
+        Dictionary<Vertex, Vertex?> parents = [];
+    
         queue.Enqueue(Source);
-        visited.Add(Source);
+        parents[Source] = null;
+
         while (queue.Count > 0)
         {
             var current = queue.Dequeue();
 
+            if (current == Puits)
+            {
+                Stack<Vertex> stack = [];
+                for (var v = current; v != null; v = parents[v])
+                {
+                    stack.Push(v);
+                }
+                return [..stack];
+            }
+
             foreach (var t in AdjVertices[current])
             {
-                if (Edges.TryGetValue((current, t), out int capacity) && capacity > 0 && !visited.Contains(t))
+                if (!parents.ContainsKey(t) &&
+                    Edges.TryGetValue((current, t), out int capacity) && capacity > 0)
                 {
                     queue.Enqueue(t);
-                    visited.Add(t);
                     parents[t] = current;
                 }
             }
-
         }
-        if (!parents.ContainsKey(Puits))
-        {
-            return [];
-        }
-        List<Vertex> path = [Puits];
-        var currentVertex = Puits;
-
-        while (currentVertex != Source)
-        {
-            currentVertex = parents[currentVertex];
-            path.Insert(0, currentVertex);
-        }
-        return path;
+        return [];
     }
+    
+    
 
 
     public override object Clone()
@@ -423,7 +575,4 @@ public class FlowNetwork : Graph
             }
         }
     }
-
-
-
 }

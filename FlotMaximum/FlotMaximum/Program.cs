@@ -25,19 +25,20 @@ foreach (var edge in nf.Edges)
 }
 Console.WriteLine("\n");
 Console.WriteLine(nf);
-var val = nf.Push_Label();
+var val0 = nf.Push_Label();
 int i = 0;
-foreach (var edge in val.Item1)
+foreach (var edge in val0.Item1)
 {
     Console.WriteLine(edge);
-    i = val.Item2;
+    i = val0.Item2;
 }
 Console.WriteLine("Valeur du flot : " + i);
+Console.WriteLine();
 //nf.CheminDfs();
-/*
+
     RandomFlowNetwork randomFlow;
-    FlowNetwork nf;
-    while (true)
+    //FlowNetwork nf;
+    //while (true)
     {
         randomFlow = new(100, 200);
         nf = randomFlow.Generate();
@@ -51,6 +52,7 @@ Console.WriteLine("Valeur du flot : " + i);
         Console.WriteLine("Ford-Fulkerson: " + val.Item2);
         var val3 = nf.Push_Label();
         Console.WriteLine("Push_Label " + val3.Item2);
-        if (val.Item2 != val2.Item2) break;
-    }*/
-nf.ToMiniZinc();
+        //if (val.Item2 != val2.Item2) break;
+    }
+
+    nf.ToMiniZinc();

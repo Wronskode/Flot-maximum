@@ -272,24 +272,25 @@ public class FlowNetwork : Graph
     // Poussage-réétiquatage
     public void ReLabel(Vertex u, Dictionary<Vertex, int> hauteur, Flow flot)
     {
-        var m = -1;
+        int m = AdjVertices.Count;;
         foreach (var t in AdjVertices[u])
         {
             if (GetResidualEdge(flot, (u, t)) > 0)
             {
-                if (m < 0)
-                {
-                    m = hauteur[t];
-                } 
                 m = Math.Min(hauteur[t], m);
             }
         }
-        hauteur[u] = m + 1;
+
+        if (u != Puits)
+        {
+            hauteur[u] = m + 1;
+        }
     }
     
     public void Push(Vertex u, Vertex v, Dictionary<Vertex, int> excedent, Flow flot)
     {
         var m = Math.Min(GetResidualEdge(flot, (u, v)), excedent[u]);
+        if (m == 0) return;
         excedent[u] -= m;
         excedent[v] += m;
         flot.IncreaseFlow((u,v),m);
@@ -302,7 +303,6 @@ public class FlowNetwork : Graph
         Dictionary<Vertex, int> hauteur = new();
         Dictionary<Vertex, int> excedent = new();
         Queue<Vertex> sommet_actifs = [];
-        Flow flot = new(Edges.ToDictionary(edge => edge.Key, _ => 0), Puits);
         foreach (var (s,t) in AdjVertices)
         {
             hauteur.Add(s,0);
@@ -311,7 +311,18 @@ public class FlowNetwork : Graph
             {
                 hauteur[Source]=AdjVertices.Count;
             }
+            //if (s != Source && s != Puits)
+            {
+                foreach (var u in AdjVertices[s])
+                {
+                    if (! AdjVertices[u].Contains(s))
+                    {
+                        AddEdge((u,s), 0);
+                    }
+                }
+            }
         }
+        Flow flot = new(Edges.ToDictionary(edge => edge.Key, _ => 0), Puits);
         foreach (var s in AdjVertices[Source])
         {
             excedent[s] = Edges[(Source,s)];
@@ -320,15 +331,28 @@ public class FlowNetwork : Graph
         }
         
         // Corps de la fonction
-        while (sommet_actifs.Count > 0)
+        HashSet<Vertex> enFile = new();
+        enFile.Add(Source);
+        enFile.Add(Puits);
+        int compteur = AdjVertices.Count * AdjVertices.Count;
+        while (sommet_actifs.Count > 0 && compteur > 0)
         {
             var s = sommet_actifs.Dequeue();
+            if (excedent[s] > 0)
+            {
+                ReLabel(s, hauteur, flot);
+                if (enFile.Add(s))
+                {
+                    sommet_actifs.Enqueue(s);
+                }
+            }
             foreach (var t in AdjVertices[s])
             {
-                if (hauteur[t] - hauteur[s] == 1 && GetResidualEdge(flot, (s, t))>0)
+                ReLabel(t, hauteur, flot);
+                if (hauteur[s] - hauteur[t] == 1 && GetResidualEdge(flot, (s, t))>0)
                 {
                     Push(s,t, excedent, flot);
-                    if (excedent[t] > 0)
+                    if (excedent[t] > 0 && enFile.Add(t))
                     {
                         sommet_actifs.Enqueue(t);
                     }
@@ -337,7 +361,22 @@ public class FlowNetwork : Graph
             if (excedent[s] > 0)
             {
                 ReLabel(s, hauteur, flot);
-                sommet_actifs.Enqueue(s); 
+                if (enFile.Add(s))
+                {
+                    sommet_actifs.Enqueue(s);
+                }
+            }
+
+            if (sommet_actifs.Count == 0)
+            {
+                compteur--;
+                foreach (var t in AdjVertices)
+                {
+                    if (excedent[t.Key] > 0 && hauteur[t.Key] <AdjVertices.Count && t.Key != Puits)
+                    {
+                        sommet_actifs.Enqueue(t.Key);
+                    }
+                }
             }
         }
         return (flot.FlowEdges, flot.Value);

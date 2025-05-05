@@ -18,7 +18,11 @@ public class Tests
             var nf = randomFlow.Generate();
             var val = nf.FordFulkerson();
             var val2 = nf.EdmondsKarp();
+            var val3 = nf.Push_Label();
             Assert.That(val.Item2, Is.EqualTo(val2.Item2));
+            Assert.That(val.Item2, Is.EqualTo(val3.Item2));
         }
+
+        Console.WriteLine("Gagné");
     }
 }

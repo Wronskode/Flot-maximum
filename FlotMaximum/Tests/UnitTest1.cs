@@ -19,9 +19,13 @@ public class Tests
             var val = nf.FordFulkerson();
             var val2 = nf.EdmondsKarp();
             var val3 = nf.Dinic();
+            var val4 = nf.Push_Label();
             Assert.That(val.Value, Is.EqualTo(val2.Value));
             Assert.That(val.Value, Is.EqualTo(val3.Value));
+            Assert.That(val.Value, Is.EqualTo(val4.Value));
         }
+
+        Console.WriteLine("Gagné");
     }
     
     [Test]
@@ -34,8 +38,10 @@ public class Tests
             var val = nf.FordFulkerson();
             var val2 = nf.EdmondsKarp();
             var val3 = nf.Dinic();
+            var val4 = nf.Push_Label();
             Assert.That(val.Value, Is.EqualTo(val2.Value));
             Assert.That(val.Value, Is.EqualTo(val3.Value));
+            Assert.That(val.Value, Is.EqualTo(val4.Value));
         }
     }
     
@@ -49,8 +55,10 @@ public class Tests
             var val = nf.FordFulkerson();
             var val2 = nf.EdmondsKarp();
             var val3 = nf.Dinic();
+            var val4 = nf.Push_Label();
             Assert.That(val.Value, Is.EqualTo(val2.Value));
             Assert.That(val.Value, Is.EqualTo(val3.Value));
+            Assert.That(val.Value, Is.EqualTo(val4.Value));
         }
     }
     
@@ -66,8 +74,10 @@ public class Tests
             var val3 = PL.SolveWithGurobi(nf);
             var val4 = PL.SolveWithOrTools(nf, "GLOP");
             var val5 = nf.Dinic();
+            var val6 = nf.Push_Label();
             Assert.That(val.Value, Is.EqualTo(val2.Value));
             Assert.That(val.Value, Is.EqualTo(val5.Value));
+            Assert.That(val.Value, Is.EqualTo(val6.Value));
             Assert.That(Math.Abs(val2.Value-val3), Is.LessThan(1e-5));
             Assert.That(Math.Abs(val3-val4), Is.LessThan(1e-5));
         }

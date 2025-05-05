@@ -1,5 +1,3 @@
-using System.Collections.Concurrent;
-
 namespace FlotMaximum;
 using System.Text;
 
@@ -96,6 +94,7 @@ public class FlowNetwork : Graph
         while (chemin.Count > 0)
         {
             int delta = int.MaxValue;
+            HashSet<Vertex> test = new();
             for (int i = 0; i < chemin.Count - 1; i++)
             {
                 var edge = (chemin[i], chemin[i + 1]);
@@ -287,8 +286,13 @@ public class FlowNetwork : Graph
             }
         }
         newEdgesNf = newEdgesNf.Where(x => x.Value > 0).ToDictionary();
-        var residuel = new FlowNetwork(newEdgesNf, Source, Puits, [], [],[]);
+        var residuel = new FlowNetwork(newEdgesNf, Source, Puits, [], [], AdjVertices.Keys);
         return residuel;
+    }
+
+    public int GetResidualEdge(Flow flot, (Vertex, Vertex) edge)
+    {
+        return Edges[edge] - flot.FlowEdges[(edge.Item1, edge.Item2)];
     }
     
     // Trouver chemin avec parcours en profondeur (Ford-Fulkerson)
@@ -574,5 +578,117 @@ public class FlowNetwork : Graph
                 writer.WriteLine($"{v1} {v2} {weight}");
             }
         }
+    }
+    // Poussage-réétiquatage
+    public void ReLabel(Vertex u, Dictionary<Vertex, int> hauteur, Flow flot)
+    {
+        int m = AdjVertices.Count;;
+        foreach (var t in AdjVertices[u])
+        {
+            if (GetResidualEdge(flot, (u, t)) > 0)
+            {
+                m = Math.Min(hauteur[t], m);
+            }
+        }
+
+        if (u != Puits)
+        {
+            hauteur[u] = m + 1;
+        }
+    }
+    
+    public void Push(Vertex u, Vertex v, Dictionary<Vertex, int> excedent, Flow flot)
+    {
+        var m = Math.Min(GetResidualEdge(flot, (u, v)), excedent[u]);
+        if (m == 0) return;
+        excedent[u] -= m;
+        excedent[v] += m;
+        flot.IncreaseFlow((u,v),m);
+        flot.DecreaseFlow((v,u),m);
+    }
+
+    public Flow Push_Label()
+    {
+        // Initialisation
+        Dictionary<Vertex, int> hauteur = new();
+        Dictionary<Vertex, int> excedent = new();
+        Queue<Vertex> sommet_actifs = [];
+        foreach (var (s,t) in AdjVertices)
+        {
+            hauteur.Add(s,0);
+            excedent.Add(s,0);
+            if (s == Source)
+            {
+                hauteur[Source]=AdjVertices.Count;
+            }
+            //if (s != Source && s != Puits)
+            {
+                foreach (var u in AdjVertices[s])
+                {
+                    if (! AdjVertices[u].Contains(s))
+                    {
+                        AddEdge((u,s), 0);
+                    }
+                }
+            }
+        }
+        Flow flot = new(Edges.ToDictionary(edge => edge.Key, _ => 0), Puits);
+        foreach (var s in AdjVertices[Source])
+        {
+            excedent[s] = Edges[(Source,s)];
+            sommet_actifs.Enqueue(s);
+            flot.IncreaseFlow((Source,s),Edges[(Source,s)]);
+        }
+        
+        // Corps de la fonction
+        HashSet<Vertex> enFile = new();
+        enFile.Add(Source);
+        enFile.Add(Puits);
+        int compteur = AdjVertices.Count * AdjVertices.Count;
+        while (sommet_actifs.Count > 0 && compteur > 0)
+        {
+            var s = sommet_actifs.Dequeue();
+            if (excedent[s] > 0)
+            {
+                ReLabel(s, hauteur, flot);
+                if (enFile.Add(s))
+                {
+                    sommet_actifs.Enqueue(s);
+                }
+            }
+            foreach (var t in AdjVertices[s])
+            {
+                ReLabel(t, hauteur, flot);
+                if (hauteur[s] - hauteur[t] == 1 && GetResidualEdge(flot, (s, t))>0)
+                {
+                    Push(s,t, excedent, flot);
+                    if (excedent[t] > 0 && enFile.Add(t))
+                    {
+                        sommet_actifs.Enqueue(t);
+                    }
+                }
+            }
+            if (excedent[s] > 0)
+            {
+                ReLabel(s, hauteur, flot);
+                if (enFile.Add(s))
+                {
+                    sommet_actifs.Enqueue(s);
+                }
+            }
+
+            if (sommet_actifs.Count == 0)
+            {
+                compteur--;
+                foreach (var t in AdjVertices)
+                {
+                    if (excedent[t.Key] > 0 && hauteur[t.Key] <AdjVertices.Count && t.Key != Puits)
+                    {
+                        sommet_actifs.Enqueue(t.Key);
+                    }
+                }
+            }
+        }
+        return flot;
     }
 }

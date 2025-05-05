@@ -565,231 +565,226 @@ Retourner $f$.\\
 \subsubsection{Application sur l'exemple}
 Au début le flot est nul, le réseau résiduel $N_f$ à droite est donc le même que le réseau de transport $N$.\\
 Nous avons aussi en dessous, le réseau de niveau $N_L$ :
+
+
+% --- Deux premiers graphes côte à côte ---
 \begin{center}
-\begin{tikzpicture}[
-	every node/.style={circle, draw, fill=red!20, inner sep=2pt},
-	every edge/.style={draw, ->, thick}, % Ajout de flèches
-	->,>=stealth % Style explicite de flèches (stealth' pour une tête nette)
-	]
+	\begin{tikzpicture}[
+		vertex/.style={circle, draw, fill=blue!20, minimum size=15pt, inner sep=1pt},
+		every edge/.style={->, thick},
+		->,>=stealth
+		]
+	
+		\def\xshift{6}
+	
+		% --- Graphe 1 ---
+		\node[vertex] (S1) at (0.5, 1) {S};
+		\node[vertex] (A1) at (2, 2) {A};
+		\node[vertex] (B1) at (4, 2) {B};
+		\node[vertex] (C1) at (2, 0) {C};
+		\node[vertex] (D1) at (4, 0) {D};
+		\node[vertex] (P1) at (5.5, 1) {P};
+	
+		\draw (S1) to node[midway, above left] {4} (A1);
+		\draw (S1) to node[midway, below left] {3} (C1);
+		\draw (A1) to node[midway, above] {3} (B1);
+		\draw (A1) to node[midway, left] {2} (C1);
+		\draw (B1) to node[midway, right] {3} (D1);
+		\draw (B1) to node[midway, above right] {2} (P1);
+		\draw (C1) to node[midway, below] {2} (D1);
+		\draw (D1) to node[midway, below left] {1} (A1);
+		\draw (D1) to node[midway, below right] {4} (P1);
+	
+		% --- Graphe 2 ---
+		\node[vertex] (S2) at ($(S1)+(\xshift,0)$) {S};
+		\node[vertex] (A2) at ($(A1)+(\xshift,0)$) {A};
+		\node[vertex] (B2) at ($(B1)+(\xshift,0)$) {B};
+		\node[vertex] (C2) at ($(C1)+(\xshift,0)$) {C};
+		\node[vertex] (D2) at ($(D1)+(\xshift,0)$) {D};
+		\node[vertex] (P2) at ($(P1)+(\xshift,0)$) {P};
+	
+		\draw (S2) to node[midway, above left] {4} (A2);
+		\draw (S2) to node[midway, below left] {3} (C2);
+		\draw (A2) to node[midway, above] {3} (B2);
+		\draw (A2) to node[midway, left] {2} (C2);
+		\draw (B2) to node[midway, right] {3} (D2);
+		\draw (B2) to node[midway, above right] {2} (P2);
+		\draw (C2) to node[midway, below] {2} (D2);
+		\draw (D2) to node[midway, below left] {1} (A2);
+		\draw (D2) to node[midway, below right] {4} (P2);
+	
+	\end{tikzpicture}
+	\end{center}
+	\begin{center}
+	\begin{tikzpicture}[
+		vertex/.style={circle, draw, fill=blue!20, minimum size=15pt, inner sep=1pt},
+		highlight/.style={->, line width=3pt, draw=yellow},
+		every edge/.style={->, thick},
+		->,>=stealth
+		]
+	
+		\node[vertex] (S3) at (0.5, 1) {S:0};
+		\node[vertex] (A3) at (2, 2) {A:1};
+		\node[vertex] (B3) at (4, 2) {B:2};
+		\node[vertex] (C3) at (2, 0) {C:1};
+		\node[vertex] (D3) at (4, 0) {D:2};
+		\node[vertex] (P3) at (5.5, 1) {P:3};
+	
+		\draw (S3) to node[midway, above left] {4} (A3);
+		\draw (S3) to node[midway, below left] {3} (C3);
+		\draw (A3) to node[midway, above] {3} (B3);
+		\draw (B3) to node[midway, right] {2} (P3);
+		\draw (C3) to node[midway, below] {2} (D3);
+		\draw (D3) to node[midway, below right] {4} (P3);
+	
+	\end{tikzpicture}
+	\end{center}
+	
 
-	% Les sommets
-    \node (S) at (0.5, 1) {S};
-    \node (A) at (2, 2) {A};
-	\node (B) at (4, 2) {B};
-	\node (C) at (2, 0) {C};
-	\node (D) at (4, 0) {D};
-	\node (P) at (5.5, 1) {P};
-		
-	% Les arêtes orientées
-	%\draw[->, bend left=15] (A) to (B);
-    \draw[->] (S) to node[midway, rectangle, fill=white, above left] {4} (A);
-    \draw[->] (S) to node[midway, rectangle, fill=white, below left] {3} (C);
-	\draw[->] (A) to node[midway, rectangle, fill=white, above] {3} (B);
-	\draw[->] (A) to node[midway, rectangle, fill=white, left] {2} (C);
-    \draw[->] (B) to node[midway, rectangle, fill=white, right] {3} (D);
-	\draw[->] (B) to node[midway, rectangle, fill=white, above right] {2} (P);
-	\draw[->] (C) to node[midway, rectangle, fill=white, below] {2} (D);
-    \draw[->] (D) to node[midway, rectangle, fill=white, below left] {1} (A);
-    \draw[->] (D) to node[midway, rectangle, fill=white, below right] {4} (P);
-\end{tikzpicture}
-\begin{tikzpicture}[
-	every node/.style={circle, draw, fill=red!20, inner sep=2pt},
-	every edge/.style={draw, ->, thick}, % Ajout de flèches
-	->,>=stealth % Style explicite de flèches (stealth' pour une tête nette)
-	]
 
-	% Les sommets
-    \node (S) at (0.5, 1) {S};
-    \node (A) at (2, 2) {A};
-	\node (B) at (4, 2) {B};
-	\node (C) at (2, 0) {C};
-	\node (D) at (4, 0) {D};
-	\node (P) at (5.5, 1) {P};
-		
-	% Les arêtes orientées
-	%\draw[->, bend left=15] (A) to (B);
-    \draw[->] (S) to node[midway, rectangle, fill=white, above left] {4} (A);
-    \draw[->] (S) to node[midway, rectangle, fill=white, below left] {3} (C);
-	\draw[->] (A) to node[midway, rectangle, fill=white, above] {3} (B);
-	\draw[->] (A) to node[midway, rectangle, fill=white, left] {2} (C);
-    \draw[->] (B) to node[midway, rectangle, fill=white, right] {3} (D);
-	\draw[->] (B) to node[midway, rectangle, fill=white, above right] {2} (P);
-	\draw[->] (C) to node[midway, rectangle, fill=white, below] {2} (D);
-    \draw[->] (D) to node[midway, rectangle, fill=white, below left] {1} (A);
-    \draw[->] (D) to node[midway, rectangle, fill=white, below right] {4} (P);
-\end{tikzpicture}
-\begin{tikzpicture}[
-	every node/.style={circle, draw, fill=red!20, inner sep=2pt},
-	every edge/.style={draw, ->, thick}, % Ajout de flèches
-	->,>=stealth % Style explicite de flèches (stealth' pour une tête nette)
-	]
 
-	% Les sommets
-    \node (S) at (0.5, 1) {S:0};
-    \node (A) at (2, 2) {A:1};
-	\node (B) at (4, 2) {B:2};
-	\node (C) at (2, 0) {C:1};
-	\node (D) at (4, 0) {D:2};
-	\node (P) at (5.5, 1) {P:3};
-		
-	% Les arêtes orientées
-	%\draw[->, bend left=15] (A) to (B);
-    \draw[->] (S) to node[midway, rectangle, fill=white, above left] {4} (A);
-    \draw[->] (S) to node[midway, rectangle, fill=white, below left] {3} (C);
-	\draw[->] (A) to node[midway, rectangle, fill=white, above] {3} (B);
-    \draw[->] (B) to node[midway, rectangle, fill=white, right] {2} (P);
-	\draw[->] (C) to node[midway, rectangle, fill=white, below] {2} (D);
-    \draw[->] (D) to node[midway, rectangle, fill=white, below right] {4} (P);
-\end{tikzpicture}\end{center}
 On a donc un chemin améliorant $SABP$ de valeur $2$ ainsi qu'un chemin améliorant $SCDP$ de valeur $2$.
+
 \begin{center}
-\begin{tikzpicture}[
-	every node/.style={circle, draw, fill=red!20, inner sep=2pt},
-	every edge/.style={draw, ->, thick}, % Ajout de flèches
-	->,>=stealth % Style explicite de flèches (stealth' pour une tête nette)
-	]
-
-	% Les sommets
-    \node (S) at (0.5, 1) {S};
-    \node (A) at (2, 2) {A};
-	\node (B) at (4, 2) {B};
-	\node (C) at (2, 0) {C};
-	\node (D) at (4, 0) {D};
-	\node (P) at (5.5, 1) {P};
-		
-	% Les arêtes orientées
-	%\draw[->, bend left=15] (A) to (B);
-    \draw[->] (S) to node[midway, rectangle, fill=white, above left] {2/4} (A);
-    \draw[->] (S) to node[midway, rectangle, fill=white, below left] {2/3} (C);
-	\draw[->] (A) to node[midway, rectangle, fill=white, above] {2/3} (B);
-	\draw[->] (A) to node[midway, rectangle, fill=white, left] {2} (C);
-    \draw[->] (B) to node[midway, rectangle, fill=white, right] {3} (D);
-	\draw[->] (B) to node[midway, rectangle, fill=white, above right] {2/2} (P);
-	\draw[->] (C) to node[midway, rectangle, fill=white, below] {2/2} (D);
-    \draw[->] (D) to node[midway, rectangle, fill=white, below left] {1} (A);
-    \draw[->] (D) to node[midway, rectangle, fill=white, below right] {2/4} (P);
-\end{tikzpicture}
-\begin{tikzpicture}[
-	every node/.style={circle, draw, fill=red!20, inner sep=2pt},
-	every edge/.style={draw, ->, thick}, % Ajout de flèches
-	->,>=stealth % Style explicite de flèches (stealth' pour une tête nette)
-	]
-
-	% Les sommets
-    \node (S) at (0.5, 1) {S};
-    \node (A) at (2, 2) {A};
-	\node (B) at (4, 2) {B};
-	\node (C) at (2, 0) {C};
-	\node (D) at (4, 0) {D};
-	\node (P) at (5.5, 1) {P};
-		
-	% Les arêtes orientées
-	%\draw[->, bend left=15] (A) to (B);
-    \draw[->] (S) to node[midway, rectangle, fill=white, above left] {2} (A);
-    \draw[->] (S) to node[midway, rectangle, fill=white, below left] {1} (C);
-	\draw[->, bend left=15] (A) to node[midway, rectangle, fill=white, above] {1} (B);
-	\draw[->] (A) to node[midway, rectangle, fill=white, left] {2} (C);
-    \draw[->, bend left=15] (B) to node[midway, rectangle, fill=white, below] {2} (A);
-    \draw[->] (B) to node[midway, rectangle, fill=white, right] {3} (D);
-	\draw[->] (D) to node[midway, rectangle, fill=white, above] {2} (C);
-    \draw[->] (D) to node[midway, rectangle, fill=white, below left] {1} (A);
-    \draw[->] (D) to node[midway, rectangle, fill=white, below right] {2} (P);
-\end{tikzpicture}
-\begin{tikzpicture}[
-	every node/.style={circle, draw, fill=red!20, inner sep=2pt},
-	every edge/.style={draw, ->, thick}, % Ajout de flèches
-	->,>=stealth % Style explicite de flèches (stealth' pour une tête nette)
-	]
-
-	% Les sommets
-    \node (S) at (0.5, 1) {S:0};
-    \node (A) at (2, 2) {A:1};
-	\node (B) at (4, 2) {B:2};
-	\node (C) at (2, 0) {C:1};
-	\node (D) at (4, 0) {D:3};
-	\node (P) at (5.5, 1) {P:4};
-		
-	% Les arêtes orientées
-	%\draw[->, bend left=15] (A) to (B);
-    \draw[->] (S) to node[midway, rectangle, fill=white, above left] {2} (A);
-    \draw[->] (S) to node[midway, rectangle, fill=white, below left] {1} (C);
-	\draw[->] (A) to node[midway, rectangle, fill=white, above] {1} (B);
-    \draw[->] (B) to node[midway, rectangle, fill=white, right] {3} (D);
-    \draw[->] (D) to node[midway, rectangle, fill=white, below right] {2} (P);
-\end{tikzpicture}\end{center}
+	\begin{tikzpicture}[
+		vertex/.style={circle, draw, fill=blue!20, minimum size=15pt, inner sep=1pt},
+		every edge/.style={->, thick},
+		->,>=stealth
+		]
+	
+		% Graphe 1
+		\node[vertex] (S1) at (0.5, 1) {S};
+		\node[vertex] (A1) at (2, 2) {A};
+		\node[vertex] (B1) at (4, 2) {B};
+		\node[vertex] (C1) at (2, 0) {C};
+		\node[vertex] (D1) at (4, 0) {D};
+		\node[vertex] (P1) at (5.5, 1) {P};
+	
+		\draw (S1) -- (A1) node[midway, rectangle, fill=white, above left] {2/4};
+		\draw (S1) -- (C1) node[midway, rectangle, fill=white, below left] {2/3};
+		\draw (A1) -- (B1) node[midway, rectangle, fill=white, above] {2/3};
+		\draw (A1) -- (C1) node[midway, rectangle, fill=white, left] {2};
+		\draw (B1) -- (D1) node[midway, rectangle, fill=white, right] {3};
+		\draw (B1) -- (P1) node[midway, rectangle, fill=white, above right] {2/2};
+		\draw (C1) -- (D1) node[midway, rectangle, fill=white, below] {2/2};
+		\draw (D1) -- (A1) node[midway, rectangle, fill=white, below left] {1};
+		\draw (D1) -- (P1) node[midway, rectangle, fill=white, below right] {2/4};
+	
+		% Graphe 2 à droite
+		\begin{scope}[xshift=6cm]
+			\node[vertex] (S2) at (0.5, 1) {S};
+			\node[vertex] (A2) at (2, 2) {A};
+			\node[vertex] (B2) at (4, 2) {B};
+			\node[vertex] (C2) at (2, 0) {C};
+			\node[vertex] (D2) at (4, 0) {D};
+			\node[vertex] (P2) at (5.5, 1) {P};
+	
+			\draw (S2) -- (A2) node[midway, rectangle, fill=white, above left] {2};
+			\draw (S2) -- (C2) node[midway, rectangle, fill=white, below left] {1};
+			\draw[->, bend left=15] (A2) to node[midway, rectangle, fill=white, above] {1} (B2);
+			\draw (A2) -- (C2) node[midway, rectangle, fill=white, left] {2};
+			\draw[->, bend left=15] (B2) to node[midway, rectangle, fill=white, below] {2} (A2);
+			\draw (B2) -- (D2) node[midway, rectangle, fill=white, right] {3};
+			\draw (D2) -- (C2) node[midway, rectangle, fill=white, above] {2};
+			\draw (D2) -- (A2) node[midway, rectangle, fill=white, below left] {1};
+			\draw (D2) -- (P2) node[midway, rectangle, fill=white, below right] {2};
+		\end{scope}
+	\end{tikzpicture}
+	\begin{tikzpicture}[
+		vertex/.style={circle, draw, fill=blue!20, minimum size=15pt, inner sep=1pt},
+		every edge/.style={->, thick},
+		->,>=stealth
+		]
+	
+		% Graphe 3 seul avec distances
+		\node[vertex] (S3) at (0.5, 1) {S:0};
+		\node[vertex] (A3) at (2, 2) {A:1};
+		\node[vertex] (B3) at (4, 2) {B:2};
+		\node[vertex] (C3) at (2, 0) {C:1};
+		\node[vertex] (D3) at (4, 0) {D:3};
+		\node[vertex] (P3) at (5.5, 1) {P:4};
+	
+		\draw (S3) -- (A3) node[midway, rectangle, fill=white, above left] {2};
+		\draw (S3) -- (C3) node[midway, rectangle, fill=white, below left] {1};
+		\draw (A3) -- (B3) node[midway, rectangle, fill=white, above] {1};
+		\draw (B3) -- (D3) node[midway, rectangle, fill=white, right] {3};
+		\draw (D3) -- (P3) node[midway, rectangle, fill=white, below right] {2};
+	\end{tikzpicture}
+	\end{center}
+	
 Nous avons un chemin améliorant $SABDP$ de valeur $1$.
+
+% --- Deux premiers graphes côte à côte ---
 \begin{center}
-\begin{tikzpicture}[
-	every node/.style={circle, draw, fill=red!20, inner sep=2pt},
-	every edge/.style={draw, ->, thick}, % Ajout de flèches
-	->,>=stealth % Style explicite de flèches (stealth' pour une tête nette)
-	]
+	\begin{tikzpicture}[
+		vertex/.style={circle, draw, fill=blue!20, minimum size=15pt, inner sep=1pt},
+		every edge/.style={->, thick},
+		->,>=stealth
+		]
+	
+		\def\xshift{6}
+	
+		% --- Graphe 1 ---
+		\node[vertex] (S1) at (0.5, 1) {S};
+		\node[vertex] (A1) at (2, 2) {A};
+		\node[vertex] (B1) at (4, 2) {B};
+		\node[vertex] (C1) at (2, 0) {C};
+		\node[vertex] (D1) at (4, 0) {D};
+		\node[vertex] (P1) at (5.5, 1) {P};
+	
+		\draw (S1) to node[midway, above left] {3/4} (A1);
+		\draw (S1) to node[midway, below left] {2/3} (C1);
+		\draw (A1) to node[midway, above] {3/3} (B1);
+		\draw (A1) to node[midway, left] {2} (C1);
+		\draw (B1) to node[midway, right] {1/3} (D1);
+		\draw (B1) to node[midway, above right] {2/2} (P1);
+		\draw (C1) to node[midway, below] {2/2} (D1);
+		\draw (D1) to node[midway, below left] {1} (A1);
+		\draw (D1) to node[midway, below right] {3/4} (P1);
+	
+		% --- Graphe 2 ---
+		\node[vertex] (S2) at ($(S1)+(\xshift,0)$) {S};
+		\node[vertex] (A2) at ($(A1)+(\xshift,0)$) {A};
+		\node[vertex] (B2) at ($(B1)+(\xshift,0)$) {B};
+		\node[vertex] (C2) at ($(C1)+(\xshift,0)$) {C};
+		\node[vertex] (D2) at ($(D1)+(\xshift,0)$) {D};
+		\node[vertex] (P2) at ($(P1)+(\xshift,0)$) {P};
+	
+		\draw (S2) to node[midway, above left] {1} (A2);
+		\draw (S2) to node[midway, below left] {1} (C2);
+		\draw (A2) to node[midway, left] {2} (C2);
+		\draw (B2) to node[midway, below] {3} (A2);
+		\draw[bend left=15] (B2) to node[midway, right] {2} (D2);
+		\draw[bend left=15] (D2) to node[midway, left] {1} (B2);
+		\draw (D2) to node[midway, above] {2} (C2);
+		\draw (D2) to node[midway, below left] {1} (A2);
+		\draw (D2) to node[midway, below right] {1} (P2);
+	
+	\end{tikzpicture}
+	\end{center}
+	
+	% --- Troisième graphe centré ---
+	\begin{center}
+	\begin{tikzpicture}[
+		vertex/.style={circle, draw, fill=blue!20, minimum size=15pt, inner sep=1pt},
+		every edge/.style={->, thick},
+		->,>=stealth
+		]
+	
+		\node[vertex] (S3) at (0.5, 1) {\hspace{0.1cm} S:0 \hspace{0.1cm}};
+		\node[vertex] (A3) at (2, 2) {\hspace{0.1cm} A:1 \hspace{0.1cm}};
+		\node[vertex] (B3) at (4, 2) {B:$\infty$};
+		\node[vertex] (C3) at (2, 0) {\hspace{0.1cm} C:1 \hspace{0.1cm}};
+		\node[vertex] (D3) at (4, 0) {D:$\infty$};
+		\node[vertex] (P3) at (5.5, 1) {P:$\infty$};
+	
+		\draw (S3) to node[midway, above left] {1} (A3);
+		\draw (S3) to node[midway, below left] {1} (C3);
+	
+	\end{tikzpicture}
+	\end{center}
+	
 
-	% Les sommets
-    \node (S) at (0.5, 1) {S};
-    \node (A) at (2, 2) {A};
-	\node (B) at (4, 2) {B};
-	\node (C) at (2, 0) {C};
-	\node (D) at (4, 0) {D};
-	\node (P) at (5.5, 1) {P};
-		
-	% Les arêtes orientées
-	%\draw[->, bend left=15] (A) to (B);
-    \draw[->] (S) to node[midway, rectangle, fill=white, above left] {3/4} (A);
-    \draw[->] (S) to node[midway, rectangle, fill=white, below left] {2/3} (C);
-	\draw[->] (A) to node[midway, rectangle, fill=white, above] {3/3} (B);
-	\draw[->] (A) to node[midway, rectangle, fill=white, left] {2} (C);
-    \draw[->] (B) to node[midway, rectangle, fill=white, right] {1/3} (D);
-	\draw[->] (B) to node[midway, rectangle, fill=white, above right] {2/2} (P);
-	\draw[->] (C) to node[midway, rectangle, fill=white, below] {2/2} (D);
-    \draw[->] (D) to node[midway, rectangle, fill=white, below left] {1} (A);
-    \draw[->] (D) to node[midway, rectangle, fill=white, below right] {3/4} (P);
-\end{tikzpicture}
-\begin{tikzpicture}[
-	every node/.style={circle, draw, fill=red!20, inner sep=2pt},
-	every edge/.style={draw, ->, thick}, % Ajout de flèches
-	->,>=stealth % Style explicite de flèches (stealth' pour une tête nette)
-	]
-
-	% Les sommets
-    \node (S) at (0.5, 1) {S};
-    \node (A) at (2, 2) {A};
-	\node (B) at (4, 2) {B};
-	\node (C) at (2, 0) {C};
-	\node (D) at (4, 0) {D};
-	\node (P) at (5.5, 1) {P};
-		
-	% Les arêtes orientées
-	%\draw[->, bend left=15] (A) to (B);
-    \draw[->] (S) to node[midway, rectangle, fill=white, above left] {1} (A);
-    \draw[->] (S) to node[midway, rectangle, fill=white, below left] {1} (C);
-	\draw[->] (A) to node[midway, rectangle, fill=white, left] {2} (C);
-    \draw[->] (B) to node[midway, rectangle, fill=white, below] {3} (A);
-    \draw[->, bend left=15] (B) to node[midway, rectangle, fill=white, right] {2} (D);
-    \draw[->, bend left=15] (D) to node[midway, rectangle, fill=white, left] {1} (B);
-	\draw[->] (D) to node[midway, rectangle, fill=white, above] {2} (C);
-    \draw[->] (D) to node[midway, rectangle, fill=white, below left] {1} (A);
-    \draw[->] (D) to node[midway, rectangle, fill=white, below right] {1} (P);
-\end{tikzpicture}
-\begin{tikzpicture}[
-	every node/.style={circle, draw, fill=red!20, inner sep=2pt},
-	every edge/.style={draw, ->, thick}, % Ajout de flèches
-	->,>=stealth % Style explicite de flèches (stealth' pour une tête nette)
-	]
-
-	% Les sommets
-    \node (S) at (0.5, 1) {S:0};
-    \node (A) at (2, 2) {A:1};
-	\node (B) at (4, 2) {B:\infty};
-	\node (C) at (2, 0) {C:1};
-	\node (D) at (4, 0) {D:\infty};
-	\node (P) at (5.5, 1) {P:\infty};
-		
-	% Les arêtes orientées
-	%\draw[->, bend left=15] (A) to (B);
-    \draw[->] (S) to node[midway, rectangle, fill=white, above left] {1} (A);
-    \draw[->] (S) to node[midway, rectangle, fill=white, below left] {1} (C);
-\end{tikzpicture}\end{center}
 Le puits $P$ n'est plus atteignable, l'algorithme se termine.\\
 Finalement la coupe minimale de ce réseau est l'ensemble $\{S,A,C\}$ et son flot maximal est de valeur $5$.\\
 

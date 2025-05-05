@@ -792,5 +792,54 @@ Finalement la coupe minimale de ce réseau est l'ensemble $\{S,A,C\}$ et son flo
 %Expliquer pour chaque algo, ce qu'il fait, sa complexité, les avantages/inconvénients et faire un exemple (prendre le même pour tous les algos)
 %Faire un graphique qui montre la courbe du temps de calculs de chaque algo en fonction du nombre de sommet
 
+\section{Création des instances}
+
+\subsection{La classe RandomFlowNetwork}
+
+Afin de pourvoir tester et comparer nos algorithmes, nousa vons eu besoins d'instances de flots, de tailles et de formes et de topologies differentes afin de pouvoir comparer comment se comportent les different algorithmes. Comme nous n'avons pas trouvé d'instances de flots suffisement grande en ligne, nous avons décidé de créer nos propres instances. Pour cela nous avons créé une classe \texttt{RandomFlowNetwork}.\\
+
+Cette classe permet de générer un réseau de flux orienté en plusieurs étapes :
+
+\begin{enumerate}
+    \item Elle crée un graphe vide et commence par lui ajouter l'ensemble de ses sommets, chacun identifié par un nom ou un numéro. Le nombre de sommet $n$ crée est controlé à l'avance.
+    
+    \item Ensuite, elle établit des arêtes orientées entre ces sommets. Ces connexions sont ajoutées de manière aléatoire, tout en respectant certaines contraintes :
+    \begin{itemize}
+        \item Soit on fixe à l’avance un nombre précis de connexions ;
+        \item Soit on utilise une densité, c’est-à-dire une proportion du nombre maximal de connexions possibles.
+    \end{itemize}
+	Ici dans le cas de nos instances, cette derniere méthode est utilisée. Nous avons ainsi pu faire varier la densité de nos graphes entre 0.1 et 0.9.
+    Chaque arête reçoit une capacité aléatoire, c’est-à-dire une valeur représentant sa "capacité" ou "poids".
+    
+    \item Une fois les arêtes ajoutées, deux sommets distincts sont choisis au hasard : un sommet source (point de départ) et un sommet puits (point d’arrivée).
+    
+    \item Les arêtes qui partent directement de la source et celles qui arrivent directement au puits sont récupérée et stockées à part.
+    
+    \item Finalement, le graphe est retourné avec :
+    \begin{itemize}
+        \item Le sommet source ;
+        \item Le sommet puits ;
+        \item Les arêtes entre les sommets.
+    \end{itemize}
+\end{enumerate}
+
+En résumé, cette classe construit un graphe orienté aléatoire, puis désigne deux extrémités pour simuler un réseau de flux. Le problème est le suivant : comment construire des graphes pertinents afin de tester les algorithmes ? 
+
+\subsection{Tests sur les graphes générés}
+
+Les graphes étant générés aléatoirement, on peut obtenir des graphes non connexes, des sommets non reliés à la source ou au puits, etc. Tout cela fausserait les instances. En effet, si le graphe n’est pas connexe, cela pourrait fausser les résultats : un graphe de taille $1000$ pourrait se résumer à un de taille $100$, ce que l’on ne souhaite pas. On pourrait même tomber sur des graphes où nos algorithmes ne convergeraient pas, par exemple si la source et le puits ne sont pas reliés.\\
+
+On va donc devoir créer un ensemble de tests sur nos graphes afin de s’assurer qu’ils soient bien formés et propices à être utilisés comme instances. Cela pourra prendre du temps car nous générons les graphes aléatoirement et n’en gardons qu’une petite partie, mais ce n’est pas très grave, car le jeu d’instances n’a besoin d’être créé qu’une seule fois. Il n’est pas nécessaire que le code qui permet sa création soit bien optimisé : on le lance un soir et on récupère les instances le lendemain dans le pire des cas.\\
+
+Nous avons donc implémenté une fonction \texttt{IsConnected} qui permet de vérifier les trois critères suivants sur le graphe :
+\begin{enumerate}
+	\item Depuis la source, on peut atteindre n'importe quel sommet du graphe.
+	\item Depuis n'importe quel sommet du graphe, on peut atteindre le puits.
+	\item Le graphe est connexe.
+\end{enumerate}
+Cela nous permet de nous assurer que le graphe que nous avons généré est bien formé. En effet, l'algorithme convergera car le premier point nous assure qu'on peut créer un flot sur ce graphe (la source est bien connectée au puits). Les points 2 et 3 nous permettent d'être sûrs que sur un graphe de taille $n$, chaque sommet aura bien son importance et sera bien pris en compte par le calcul. Le graphe ne peut donc pas se résumer à une version plus petite de lui-même.\\
+
+
+
 \end{document}
 

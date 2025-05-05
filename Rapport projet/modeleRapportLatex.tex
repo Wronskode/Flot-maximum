@@ -31,6 +31,12 @@
 \usepackage{amsthm} 
 \usepackage{datetime}
 \usepackage{numprint}
+\usepackage{listings}
+\lstset{
+  basicstyle=\ttfamily\small,
+  frame=single,
+  columns=fullflexible
+}
 %\usepackage{fullpage}
 \addbibresource{sample.bib}
 %\usepackage{minitoc}
@@ -835,10 +841,124 @@ Nous avons donc implémenté une fonction \texttt{IsConnected} qui permet de vé
 \begin{enumerate}
 	\item Depuis la source, on peut atteindre n'importe quel sommet du graphe.
 	\item Depuis n'importe quel sommet du graphe, on peut atteindre le puits.
-	\item Le graphe est connexe.
+	\item Le graphe est connexe.\\
 \end{enumerate}
+
 Cela nous permet de nous assurer que le graphe que nous avons généré est bien formé. En effet, l'algorithme convergera car le premier point nous assure qu'on peut créer un flot sur ce graphe (la source est bien connectée au puits). Les points 2 et 3 nous permettent d'être sûrs que sur un graphe de taille $n$, chaque sommet aura bien son importance et sera bien pris en compte par le calcul. Le graphe ne peut donc pas se résumer à une version plus petite de lui-même.\\
 
+\begin{center}
+	\begin{tikzpicture}[
+		vertex/.style={circle, draw, fill=blue!20, minimum size=15pt, inner sep=1pt},
+		every edge/.style={->, thick},
+		->,>=stealth
+		]
+	
+		% Graphe 1
+		\node[vertex] (S1) at (0.5, 1) {S};
+		\node[vertex] (A1) at (2, 2) {A};
+		\node[vertex] (B1) at (4, 2) {B};
+		\node[vertex] (C1) at (2, 0) {C};
+		\node[vertex] (D1) at (4, 0) {D};
+		\node[vertex] (P1) at (5.5, 1) {P};
+		\node (G1) at (3, -1) {Graphe $G$};
+	
+		\draw (S1) -- (A1) node[midway, above left] {4};
+		\draw (S1) -- (C1) node[midway, below left] {3};
+		\draw (A1) -- (B1) node[midway, above] {3};
+		\draw (C1) -- (A1) node[midway, left] {2};{2};
+		\draw (C1) -- (D1) node[midway, below] {2};
+		\draw (D1) -- (A1) node[midway, below left] {1};
+		\draw (D1) -- (P1) node[midway, below right] {2};
+	
+		% Graphe 2 à droite
+		\begin{scope}[xshift=6cm]
+			\node[vertex] (S2) at (0.5, 1) {S'};
+			\node[vertex] (A2) at (2, 2) {A'};
+			\node[vertex] (B2) at (4, 2) {B'};
+			\node[vertex] (C2) at (2, 0) {C'};
+			\node[vertex] (D2) at (4, 0) {D'};
+			\node[vertex] (P2) at (5.5, 1) {P'};
+			\node (G1) at (3, -1) {Graphe $G'$};
+	
+			\draw (S2) -- (C2) node[midway, below left] {1};
+			\draw (A2) -- (B2) node[midway, above] {1};
+			\draw (A2) -- (C2) node[midway, left] {2};
+			\draw (B2) -- (P2) node[midway, above] {3};
+			\draw (C2) -- (B2) node[midway, above] {3};
+			\draw (C2) -- (P2) node[midway, above] {3};
+		\end{scope}
+	\end{tikzpicture}
+\end{center}
+
+Ainsi le graphe $G$ ne sera pas pris car on ne peux pas accéder au puit depuis les sommets $A$ et $B$. Le graphe $G'$ quand à lui ne sera pas pris car il n'est pas connexe (le sommet $D'$ est isolé), aussi on ne peux pas accéder au sommet $A'$ depuis la source $S'$. En revanche, le graphe suivant est tout à fait valide :
+
+\begin{center}
+	\begin{tikzpicture}[
+		vertex/.style={circle, draw, fill=blue!20, inner sep=2pt},
+		every edge/.style={draw, ->, thick}, % Ajout de flèches
+		->,>=stealth % Style explicite de flèches (stealth' pour une tête nette)
+		]
+	
+		% Les sommets
+		\node[vertex] (S) at (0.5, 1) {S};
+		\node[vertex] (A) at (2, 2) {A};
+		\node[vertex] (B) at (4, 2) {B};
+		\node[vertex] (C) at (2, 0) {C};
+		\node[vertex] (D) at (4, 0) {D};
+		\node[vertex] (P) at (5.5, 1) {P};
+			
+		% Les arêtes orientées
+		%\draw[->, bend left=15] (A) to (B);
+		\draw[->] (S) to node[midway, above left] {4} (A);
+		\draw[->] (S) to node[midway, below left] {3} (C);
+		\draw[->] (A) to node[midway, above] {3} (B);
+		\draw[->] (A) to node[midway, left] {2} (C);
+		\draw[->] (B) to node[midway, right] {3} (D);
+		\draw[->] (B) to node[midway, above right] {2} (P);
+		\draw[->] (C) to node[midway, below] {2} (D);
+		\draw[->] (D) to node[midway, below left] {1} (A);
+		\draw[->] (D) to node[midway, below right] {4} (P);
+	\end{tikzpicture}
+\end{center}
+
+Nous avons ainsi pu créer un jeu d’instances complet. Afin de généraliser davantage et de mieux comparer les résultats, plusieurs instances similaires (ayant la même taille et la même densité) sont créées. Pour connaître l’efficacité d’un algorithme sur une instance de ce type, on peut ainsi faire la moyenne des performances sur l’ensemble des instances de même taille et même densité.
+
+\subsection{Représentation des instances}
+
+Nous avons décidé de représenter les instances sous forme de fichiers texte. Chaque instance est représentée par un fichier contenant les informations suivantes :\\
+
+\begin{itemize}
+	\item Le numéro de la source ;
+	\item Le numéro du puits ;
+	\item La liste des arcs du graphe, sous la forme : $x\ y\ c(xy)$ où $x$ et $y$ sont les numéros des sommets de l’arc, et $c(xy)$ est la capacité de l’arc.\\
+\end{itemize}
+
+Le nombre de sommets ainsi que la densité du graphe sont indiqués dans le nom du fichier. Par exemple, voici les premières lignes du fichier \texttt{inst30\_0,1\_1}, où $30$ représente le nombre de sommets, $0{,}1$ la densité, et $1$ le numéro de l’instance (car plusieurs instances sont créées pour un même nombre de sommets et une même densité).\\
+
+\begin{center}
+\noindent
+\begin{minipage}{0.6\linewidth}  % Réduit la largeur du bloc
+\begin{lstlisting}
+	22
+	4
+	17 21 9
+	24 25 8
+	12 27 55
+	...
+\end{lstlisting}
+\end{minipage}
+\end{center}
+
+\subsection{Les instances choisies}
+
+Nous avons créé des instances pour toutes les tailles multiples de $10$ entre $30$ et $200$. Pour chaque taille, nous avons utilisé trois densités : $0{,}1$, $0{,}5$ et $0{,}9$. Pour chaque densité, trois instances différentes ont été générées. Cela représente au total plus de $150$ instances pour tester nos programmes.
+Nous avons choisi de rester sur des tailles raisonnables afin que tous les algorithmes, même les moins efficaces, puissent toujours converger et ainsi être comparés. En effet, on constate que pour une taille de $200$ et une densité de $0{,}9$, on a en moyenne :
+
+\begin{center}
+$\frac{200 \times (200-1)}{2} \times 2 \times 0{,}9 = 35 820$ arêtes
+\end{center}
+
+Le $\frac{200 \times (200-1)}{2} \times 2$ correspondant à toutes les arêtes possibles. En effet $\frac{n \times (n-1)}{2}$ pour le graphe complet, $\times 2$ car les arêtes sont orientés. On multiplie par la densité pour savoir le nombre d'arête en moyenne, dans notre exemple la densité est de $0,9$.
 
 
 \end{document}

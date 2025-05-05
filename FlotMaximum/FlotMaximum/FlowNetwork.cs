@@ -218,21 +218,15 @@ public class FlowNetwork : Graph
         {
             return currentPath;
         }
-        foreach (var edge in currentResidualNetwork.Edges.Where(kvp => kvp.Key.Item1.Equals(u) && kvp.Value > 0))
+        foreach (var v in currentResidualNetwork.AdjVertices[u])
         {
-            Vertex v = edge.Key.Item2;
+            if (currentResidualNetwork.Edges[(u, v)] <= 0) continue;
             if (levels.TryGetValue(v, out int value) && value == levels[u] + 1 && !visitedOnPath.Contains(v))
             {
                 var newPath = new List<Vertex>(currentPath);
                 newPath.Add(v);
                 stack.Push((v, newPath));
                 visitedOnPath.Add(v);
-                 if (levels.TryGetValue(v, out int value2) && value2 == levels[u] + 1 && !currentPath.Contains(v))
-                 {
-                    var newPath2 = new List<Vertex>(currentPath);
-                    newPath2.Add(v);
-                    stack.Push((v, newPath2));
-                 }
             }
         }
     }
@@ -582,7 +576,7 @@ public class FlowNetwork : Graph
     // Poussage-réétiquatage
     public void ReLabel(Vertex u, Dictionary<Vertex, int> hauteur, Flow flot)
     {
-        int m = AdjVertices.Count;;
+        int m = AdjVertices.Count;
         foreach (var t in AdjVertices[u])
         {
             if (GetResidualEdge(flot, (u, t)) > 0)
@@ -613,7 +607,7 @@ public class FlowNetwork : Graph
         Dictionary<Vertex, int> hauteur = new();
         Dictionary<Vertex, int> excedent = new();
         Queue<Vertex> sommet_actifs = [];
-        foreach (var (s,t) in AdjVertices)
+        foreach (var s in AdjVertices.Keys)
         {
             hauteur.Add(s,0);
             excedent.Add(s,0);
@@ -680,11 +674,11 @@ public class FlowNetwork : Graph
             if (sommet_actifs.Count == 0)
             {
                 compteur--;
-                foreach (var t in AdjVertices)
+                foreach (var t in AdjVertices.Keys)
                 {
-                    if (excedent[t.Key] > 0 && hauteur[t.Key] <AdjVertices.Count && t.Key != Puits)
+                    if (excedent[t] > 0 && hauteur[t] <AdjVertices.Count && t != Puits)
                     {
-                        sommet_actifs.Enqueue(t.Key);
+                        sommet_actifs.Enqueue(t);
                     }
                 }
             }

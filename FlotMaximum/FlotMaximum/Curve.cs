@@ -109,6 +109,7 @@ public static class Curve
             myPlot.Axes.Left.Label.Text = "Seconds";
             myPlot.ShowLegend(Alignment.UpperLeft);
             myPlot.Legend.FontSize = 20;
+            myPlot.Legend.FontName = Fonts.Serif;
             myPlot.SavePng("../../../../courbes/benchmark" + Math.Round(density, 2) + ".png", 1500, 1000);
         }
     }

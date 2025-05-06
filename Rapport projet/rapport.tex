@@ -798,7 +798,40 @@ Finalement la coupe minimale de ce réseau est l'ensemble $\{S,A,C\}$ et son flo
 
 %Expliquer pour chaque algo, ce qu'il fait, sa complexité, les avantages/inconvénients et faire un exemple (prendre le même pour tous les algos)
 %Faire un graphique qui montre la courbe du temps de calculs de chaque algo en fonction du nombre de sommet
+\section{Programmation linéaire}
+Nous avons également comparé nos algorithmes avec les meilleurs solveurs de programmation linéaire. Pour cela nous avons utilisé la modélisation standard du problème de flot maximum :
+\[
+		\begin{aligned}
+			&\max \quad z = \sum_{v:(s, v)\in E} f(s, v) \\
+			&
+			 \begin{cases}
+				\sum_{u:(u, v)\in E} f(u, v) - \sum_{w:(v, w)\in E} f(v, w) = 0 & \forall v \in V \setminus \{s, t\} \\
+				f(u, v) \leq c(u, v) & \forall (u, v) \in E \\
+				f(u, v) \geq 0 & \forall (u, v) \in E \\
+			\end{cases}
+		\end{aligned}
+\]
 
+La fonction à maximiser est la somme des flots sortants du sommet source $s$, par conservation du flot, c'est aussi égal à la somme des flots entrants dans le sommet puits. La première contrainte assure la conservation du flot pour chaque sommet, sauf pour la source et le puits. La deuxième contrainte assure que le flot sur chaque arête ne dépasse pas sa capacité et la dernière contrainte assure que le flot est positif ou nul.
+
+Une remarque importante est que les variables de flot $f(u, v)$ sont continues, donc à priori, rien n'assure que la solution optimale soit entière.
+
+\subsection{Matrice totalement unimodulaires}
+\paragraph{Définition}
+Soit $M$ une matrice, on dit qu'elle est totalement unimodulaire si pour toute matrice carrée $N$ de $M$, le déterminant de $N$ est égal à $0$, $1$ ou $-1$.
+
+\paragraph{Théorème (Hoffman \& Kruskal, 1956)} Une matrice entière est totalement unimodulaire si et seulement si le polyhèdre défini par $\{x : Ax \leq b, x \geq 0\}$ est un polyèdre entier pour tout vecteur $b$ entier.
+
+
+Ce que nous dit ce théorème, c'est que tout problème linéaire dont la matrice de contraintes est totalement unimodulaire et dont le vecteur de contraintes est entier, a une solution entière.
+
+\paragraph{Théorème} La matrice du problème de flot maximum est totalement unimodulaire.
+
+Et comme le vecteur de contraintes est entier (car les capacités sont entières), la solution optimale est entière.
+
+L'intérêt de ce théorème est que, bien que la programmation linéaire en nombres entiers soit NP-complet, dans le cas du flot maximum, on peut utiliser un solveur de programmation linéaire classique pour obtenir une solution entière.
+\subsection{Solveurs de programmation linéaire}
+Nous avons utilisé deux solveurs de programmation linéaire : \texttt{Gurobi} et \texttt{GLOP}, ces deux solveurs sont très performants et permettent de résoudre des problèmes de grande taille rapidement.
 \section{Création des instances}
 
 Afin de pourvoir tester et comparer nos algorithmes, nous avons eu besoins d'instances de graphe de tailles et de formes differentes afin de pouvoir comparer comment se comportent nos algorithmes. Comme nous n'avons pas trouvé d'instances de graphes suffisement grande en ligne, nous avons décidé de créer nos propres instances. Cette partie détaille ce procesus de création et présente les differentes instances que nous avons pu créer ainsi que les choix que nous avons fait.

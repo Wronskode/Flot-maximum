@@ -811,8 +811,8 @@ Cette classe permet de générer un réseau de flux orienté en plusieurs étape
     
     \item Ensuite, elle établit des arêtes orientées entre ces sommets. Ces connexions sont ajoutées de manière aléatoire, tout en respectant certaines contraintes :
     \begin{itemize}
-        \item Soit on fixe à l’avance un nombre précis de connexions ;
-        \item Soit on utilise une densité, c’est-à-dire une proportion du nombre maximal de connexions possibles.
+        \item Soit on fixe à l’avance un nombre précis de connexions.
+        \item Soit on utilise une densité, c’est-à-dire une proportion du nombre maximal de connexions possibles. Pour expliquer plus clairement comment cela fonctionne, pour un graphe $G=(E,V)$ on pose $d \in \[0,1\]$ la densité, et ensuite $\forall x, y \in V$ la probabilité d'apparition de l'arête $xy$ est $d$.
     \end{itemize}
 	Ici dans le cas de nos instances, cette derniere méthode est utilisée. Nous avons ainsi pu faire varier la densité de nos graphes entre 0.1 et 0.9.
     Chaque arête reçoit une capacité aléatoire, c’est-à-dire une valeur représentant sa "capacité" ou "poids".

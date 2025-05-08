@@ -25,8 +25,8 @@ FlowNetwork nf = new([
 //     Console.WriteLine($"Distance: {kvp.Key} - {kvp.Value}");
 // }
 // return;
-var instancesPath = "../../../../Instances/";
-List<double> densities = new List<double> {0.1, 0.5, 0.75, 0.9};
+const string instancesPath = "../../../../Instances/";
+List<double> densities = [0.1, 0.5, 0.75, 0.9];
 void DeleteInstances(string path)
 {
     var di = new DirectoryInfo(path);
@@ -39,15 +39,14 @@ void DeleteInstances(string path)
 void CreateInstances(string instancesPath, List<double> densities)
 {
     DeleteInstances(instancesPath);
-    int i;
 
-    List<int> tailles = new List<int> {10, 20, 50, 100, 200, 500, 1000};
+    List<int> tailles = [10, 20, 50, 100, 200, 500, 1000];
 
     for (int n = 30; n <= 200; n+=10)
     {
         foreach (double d in densities)
         {
-            i = 1;
+            var i = 1;
             while (i <= 3)
             {
                 RandomFlowNetwork randomFlow = new(n, d);
@@ -65,8 +64,8 @@ void CreateInstances(string instancesPath, List<double> densities)
     }
 }
 
-CreateInstances(instancesPath, densities);
-// Ligne Gurubi à commenter si vous n'avez pas de licence
+//CreateInstances(instancesPath, densities);
+// Ligne Gurobi à commenter si vous n'avez pas de licence
 var solvers = new List<(string, Func<FlowNetwork, double>)>
 {
     ("Ford-Fulkerson", nf => nf.FordFulkerson().Value),
@@ -74,8 +73,8 @@ var solvers = new List<(string, Func<FlowNetwork, double>)>
     ("Dinic", nf => nf.Dinic().Value),
     ("Poussage-Réétiquetage", nf => nf.Push_Label().Value),
     ("Gurobi", nf => PL.SolveWithGurobi(nf)),
-    //("SCIP", nf => PL.SolveWithOrTools(nf, "SCIP")),
-    ("GLOP", nf => PL.SolveWithOrTools(nf, "GLOP")),
+    ("SCIP", nf => PL.SolveWithOrTools(nf, "SCIP")),
+    //("GLOP", nf => PL.SolveWithOrTools(nf, "GLOP")),
     //("CP-SAT", nf => PL.SolveWithOrTools(nf, "CP-SAT")),
 };
 

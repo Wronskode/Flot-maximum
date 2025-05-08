@@ -7,16 +7,14 @@ public class Graph : ICloneable
     public Dictionary<Vertex, HashSet<Vertex>> AdjVertices { get; protected set; } = new();
     public Dictionary<(Vertex, Vertex), int> Edges { get; protected set;  } = new ();
     
-    public Graph(IEnumerable<(Vertex?, Vertex?, int Value)> neighbors, IEnumerable<Vertex?> vertices) {
+    public Graph(IEnumerable<(Vertex, Vertex, int Value)> neighbors, IEnumerable<Vertex> vertices) {
         HashSet<Vertex> vertexSet = [];
         foreach (var (u, v, value) in neighbors) {
-            if (u is null || v is null) continue;
             AddEdge((u, v), value);
         }
 
-        foreach (Vertex? v in vertices)
+        foreach (Vertex v in vertices)
         {
-            if (v is null) continue;
             vertexSet.Add(v);
         }
         foreach (Vertex v in vertexSet)
@@ -109,22 +107,14 @@ public class Graph : ICloneable
         return output;
     }
 
-    public List<(Vertex, int)> neighborsRight (Vertex vertex)
+    public List<(Vertex, int)> NeighborsRight (Vertex vertex)
     {
-        List<(Vertex, int)> res = new List<(Vertex, int)>();
-        foreach (var edge in Edges)
-        {
-            if (edge.Key.Item1 == vertex)
-            {
-                res.Add((edge.Key.Item2,edge.Value));
-            }
-        }
-        return res;
+        return AdjVertices[vertex].Select(x => (x, Edges[(vertex, x)])).ToList();
     }
     
-    public List<(Vertex, int)> neighborsLeft (Vertex vertex)
+    public List<(Vertex, int)> NeighborsLeft (Vertex vertex)
     {
-        List<(Vertex, int)> res = new List<(Vertex, int)>();
+        List<(Vertex, int)> res = [];
         foreach (var edge in Edges)
         {
             if (edge.Key.Item2 == vertex)
@@ -137,7 +127,7 @@ public class Graph : ICloneable
     
     public virtual object Clone()
     {
-        return new Graph(Edges.Select(x => (x.Key.Item1.Clone() as Vertex, x.Key.Item2.Clone() as Vertex, x.Value)),
-            AdjVertices.Keys.Select(x => x.Clone() as Vertex));
+        return new Graph(Edges.Select(x => (x.Key.Item1, x.Key.Item2, x.Value)),
+            AdjVertices.Keys.Select(x => x));
     }
 }

@@ -6,12 +6,12 @@ public class FlowNetwork : Graph
 {
     public Vertex Source { get; }
     public Vertex Puits { get; }
-    public List<(Vertex?, int)> SourceNeighbors { get; }
-    public List<(Vertex?, int)> PuitsNeighbors { get; }
+    public List<(Vertex, int)> SourceNeighbors { get; }
+    public List<(Vertex, int)> PuitsNeighbors { get; }
     
     public Dictionary<Vertex, HashSet<Vertex>> InEdges { get; } = new();
 
-    public FlowNetwork(IEnumerable<(Vertex?, Vertex?, int Value)> neighbors, Vertex source, Vertex puits, IEnumerable<(Vertex?, int)> sourceNeighbors, IEnumerable<(Vertex?, int)> puitsNeighbors, IEnumerable<Vertex> vertices) : base(neighbors, vertices)
+    public FlowNetwork(IEnumerable<(Vertex, Vertex, int Value)> neighbors, Vertex source, Vertex puits, IEnumerable<(Vertex, int)> sourceNeighbors, IEnumerable<(Vertex, int)> puitsNeighbors, IEnumerable<Vertex> vertices) : base(neighbors, vertices)
     {
         Source = source;
         Puits = puits;
@@ -21,7 +21,7 @@ public class FlowNetwork : Graph
     }
     
     public FlowNetwork(Dictionary<(Vertex, Vertex), int> neighbors, Vertex source, Vertex puits, IEnumerable<
-        (Vertex?, int)> sourceNeighbors, IEnumerable<(Vertex?, int)> puitsNeighbors, IEnumerable<Vertex> vertices) : base(neighbors, vertices)
+        (Vertex, int)> sourceNeighbors, IEnumerable<(Vertex, int)> puitsNeighbors, IEnumerable<Vertex> vertices) : base(neighbors, vertices)
     {
         Source = source;
         Puits = puits;
@@ -34,8 +34,8 @@ public class FlowNetwork : Graph
     {
         Source = source;
         Puits = puits;
-        SourceNeighbors = this.neighborsRight(Source);
-        PuitsNeighbors = this.neighborsLeft(Puits);
+        SourceNeighbors = NeighborsRight(Source);
+        PuitsNeighbors = NeighborsLeft(Puits);
         InitFlowNetwork();
     }
 
@@ -51,14 +51,12 @@ public class FlowNetwork : Graph
         newAdjVertices.TryAdd(Puits, []);
         foreach (var (vertex, value) in SourceNeighbors)
         {
-            if (vertex is null) continue;
             newEdges.TryAdd((Source, vertex), value);
             newAdjVertices[Source].Add(vertex);
         }
         
         foreach (var (vertex, value) in PuitsNeighbors)
         {
-            if (vertex is null) continue;
             newEdges.TryAdd((vertex, Puits), value);
             newAdjVertices[vertex].Add(Puits);
         }
@@ -94,7 +92,6 @@ public class FlowNetwork : Graph
         while (chemin.Count > 0)
         {
             int delta = int.MaxValue;
-            HashSet<Vertex> test = new();
             for (int i = 0; i < chemin.Count - 1; i++)
             {
                 var edge = (chemin[i], chemin[i + 1]);
@@ -114,7 +111,11 @@ public class FlowNetwork : Graph
                 {
                     flot.IncreaseFlow(forwardEdge, delta);
                 }
-                else if (flot.FlowEdges.ContainsKey(backwardEdge))
+                // else if (flot.FlowEdges.ContainsKey(backwardEdge))
+                // {
+                //     flot.DecreaseFlow(backwardEdge, delta);
+                // }
+                else
                 {
                     flot.DecreaseFlow(backwardEdge, delta);
                 }
@@ -175,13 +176,9 @@ public class FlowNetwork : Graph
                 {
                     flot.IncreaseFlow(forwardEdge, delta);
                 }
-                else if (Edges.ContainsKey(backwardEdge))
-                {
-                    flot.DecreaseFlow(backwardEdge, delta);
-                }
                 else
                 {
-                    Console.Error.WriteLine($"Erreur: Ni l'arête {forwardEdge} ni l'arête inverse {backwardEdge} n'existent dans le graphe original.");
+                    flot.DecreaseFlow(backwardEdge, delta);
                 }
             }
             for (int i = 0; i < chemin.Count - 1; i++)
@@ -193,7 +190,7 @@ public class FlowNetwork : Graph
                 nf.Edges[forwardEdge] -= delta;
                 if (nf.Edges.TryAdd(backwardEdge, 0))
                 {
-                    if (nf.AdjVertices.TryGetValue(v, out HashSet<Vertex>? value)) { value.Add(u); } else { nf.AdjVertices[v] = new HashSet<Vertex>{ u }; }
+                    if (nf.AdjVertices.TryGetValue(v, out HashSet<Vertex>? value)) { value.Add(u); } else { nf.AdjVertices[v] = [u]; }
                 }
                 nf.Edges[backwardEdge] += delta;
             }
@@ -223,8 +220,7 @@ public class FlowNetwork : Graph
             if (currentResidualNetwork.Edges[(u, v)] <= 0) continue;
             if (levels.TryGetValue(v, out int value) && value == levels[u] + 1 && !visitedOnPath.Contains(v))
             {
-                var newPath = new List<Vertex>(currentPath);
-                newPath.Add(v);
+                var newPath = new List<Vertex>(currentPath) { v };
                 stack.Push((v, newPath));
                 visitedOnPath.Add(v);
             }
@@ -364,21 +360,18 @@ public class FlowNetwork : Graph
         return [];
     }
     
-    
-
-
     public override object Clone()
     {
-        return new FlowNetwork(Edges.Select(x => (x.Key.Item1.Clone() as Vertex, x.Key.Item2.Clone() as Vertex, x.Value)),
-            Source.Clone() as Vertex ?? throw new InvalidOperationException(), Puits.Clone() as Vertex ?? throw new InvalidOperationException(), 
-            SourceNeighbors.Select(x => (x.Item1?.Clone() as Vertex, x.Item2)), PuitsNeighbors.Select(x => (x.Item1?.Clone() as Vertex, x.Item2)),
-            AdjVertices.Keys);
+        return new FlowNetwork(Edges.Where(x => x.Value != 0).ToDictionary(),
+            Source, Puits, 
+            SourceNeighbors.Select(x => x), PuitsNeighbors.Select(x => x),
+            AdjVertices.Keys.Select(x => x));
     }
     
     public List<Vertex> GetEntrant (Vertex vertex)
     {
         List<Vertex> entrant = new();
-        foreach (var edge in this.Edges)
+        foreach (var edge in Edges)
         {
             var (u, v) = edge.Key;
             if (v == vertex)
@@ -392,7 +385,7 @@ public class FlowNetwork : Graph
 
     public HashSet<Vertex> GetSortant(Vertex vertex)
     {
-        return this.AdjVertices[vertex];
+        return AdjVertices[vertex];
     }
     
     
@@ -411,8 +404,7 @@ public class FlowNetwork : Graph
             var vertex = queue.Dequeue();
             if (AdjVertices.TryGetValue(vertex, out var neighbors)) {
                 foreach (var neighbor in neighbors) {
-                    if (!visited.Contains(neighbor)) {
-                        visited.Add(neighbor);
+                    if (visited.Add(neighbor)) {
                         queue.Enqueue(neighbor);
                     }
                 }
@@ -422,15 +414,12 @@ public class FlowNetwork : Graph
         // Vérifier si tous les sommets ont été visités
         if (visited.Count != AdjVertices.Count)
         {
-            var allVertices = AdjVertices.Keys.ToList();  // Récupère tous les sommets du graphe
-            var unvisited = allVertices.Except(visited).ToList();  // Récupère ceux qui ne sont pas dans 'visited'
             //Console.WriteLine("Source non connectée à tout les sommets");
             //Console.WriteLine("Exemple : [{0}]", string.Join(", ", unvisited.Select(v => v.ToString())));
             return false;
-        };
+        }
         
-        var goToPuits = new HashSet<Vertex>();
-        goToPuits.Add(Puits);
+        var goToPuits = new HashSet<Vertex> { Puits };
         foreach (Vertex v in AdjVertices.Keys.ToList())
         {
             bool check = false;
@@ -449,8 +438,7 @@ public class FlowNetwork : Graph
                 }
                 if (AdjVertices.TryGetValue(vertex, out var neighbors)) {
                     foreach (var neighbor in neighbors) {
-                        if (!visited.Contains(neighbor)) {
-                            visited.Add(neighbor);
+                        if (visited.Add(neighbor)) {
                             queue.Enqueue(neighbor);
                         }
                     }
@@ -470,12 +458,11 @@ public class FlowNetwork : Graph
     
     public override string ToString()
     {
-        String special = "";
         StringBuilder output = new();
         output.Append("source : "+Source+", puits : "+Puits+"\n");
         foreach (Vertex vertex in AdjVertices.Keys)
         {
-            special = "";
+            var special = "";
             StringBuilder txt = new();
             foreach (var edge in Edges)
             {
@@ -516,61 +503,50 @@ public class FlowNetwork : Graph
     public void CreateGraphFile(string filePath)
     {
         // Ouvre ou crée le fichier en écriture
-        using (StreamWriter writer = new StreamWriter(filePath))
+        using StreamWriter writer = new StreamWriter(filePath);
+        // Écrit la source
+        writer.WriteLine(Source);
+
+        // Écrit le puit
+        writer.WriteLine(Puits);
+
+        // Écrit les sommets et leurs voisins
+        foreach (var vertex in AdjVertices.Keys)
         {
-            // Écrit la source
-            writer.WriteLine(Source);
-
-            // Écrit le puit
-            writer.WriteLine(Puits);
-
-            // Écrit les sommets et leurs voisins
-            foreach (var vertex in AdjVertices.Keys)
+            if (vertex == Puits)
             {
-                if (vertex == Puits)
-                {
-                    continue;
-                }
-                writer.Write($"{vertex}: "); // Affiche le sommet suivi de ": "
-
-                // Récupère les voisins du sommet
-                var neighbors = AdjVertices[vertex];
-
-                // Si le sommet a des voisins, les afficher séparés par des virgules
-                if (neighbors.Count > 0)
-                {
-                    writer.WriteLine(string.Join(", ", neighbors));
-                }
-                else
-                {
-                    // Si le sommet n'a pas de voisins, afficher "aucun"
-                    writer.WriteLine("aucun");
-                }
+                continue;
             }
+            writer.Write($"{vertex}: "); // Affiche le sommet suivi de ": "
+
+            // Récupère les voisins du sommet
+            var neighbors = AdjVertices[vertex];
+
+            // Si le sommet a des voisins, les afficher séparés par des virgules
+            // Si le sommet n'a pas de voisins, afficher "aucun"
+            writer.WriteLine(neighbors.Count > 0 ? string.Join(", ", neighbors) : "aucun");
         }
     }
     
     public void CreateGraphWeightFile(string filePath)
     {
         // Ouvre ou crée le fichier en écriture
-        using (StreamWriter writer = new StreamWriter(filePath))
+        using StreamWriter writer = new StreamWriter(filePath);
+        // Écrit la source
+        writer.WriteLine(Source);
+
+        // Écrit le puit
+        writer.WriteLine(Puits);
+
+        // Écrit les sommets et leurs voisins
+        foreach (var edge in Edges)
         {
-            // Écrit la source
-            writer.WriteLine(Source);
-
-            // Écrit le puit
-            writer.WriteLine(Puits);
-
-            // Écrit les sommets et leurs voisins
-            foreach (var edge in Edges)
-            {
                 
-                var (v1, v2) = edge.Key;
-                var weight = edge.Value;
+            var (v1, v2) = edge.Key;
+            var weight = edge.Value;
 
-                // Affiche "v1 v2 p" si l'arête existe
-                writer.WriteLine($"{v1} {v2} {weight}");
-            }
+            // Affiche "v1 v2 p" si l'arête existe
+            writer.WriteLine($"{v1} {v2} {weight}");
         }
     }
     // Poussage-réétiquatage
@@ -606,7 +582,7 @@ public class FlowNetwork : Graph
         // Initialisation
         Dictionary<Vertex, int> hauteur = new();
         Dictionary<Vertex, int> excedent = new();
-        Queue<Vertex> sommet_actifs = [];
+        Queue<Vertex> sommetActifs = [];
         foreach (var s in AdjVertices.Keys)
         {
             hauteur.Add(s,0);
@@ -619,7 +595,7 @@ public class FlowNetwork : Graph
             {
                 foreach (var u in AdjVertices[s])
                 {
-                    if (! AdjVertices[u].Contains(s))
+                    if (!AdjVertices[u].Contains(s))
                     {
                         AddEdge((u,s), 0);
                     }
@@ -630,24 +606,26 @@ public class FlowNetwork : Graph
         foreach (var s in AdjVertices[Source])
         {
             excedent[s] = Edges[(Source,s)];
-            sommet_actifs.Enqueue(s);
+            sommetActifs.Enqueue(s);
             flot.IncreaseFlow((Source,s),Edges[(Source,s)]);
         }
         
         // Corps de la fonction
-        HashSet<Vertex> enFile = new();
-        enFile.Add(Source);
-        enFile.Add(Puits);
+        HashSet<Vertex> enFile =
+        [
+            Source,
+            Puits
+        ];
         int compteur = AdjVertices.Count * AdjVertices.Count;
-        while (sommet_actifs.Count > 0 && compteur > 0)
+        while (sommetActifs.Count > 0 && compteur > 0)
         {
-            var s = sommet_actifs.Dequeue();
+            var s = sommetActifs.Dequeue();
             if (excedent[s] > 0)
             {
                 ReLabel(s, hauteur, flot);
                 if (enFile.Add(s))
                 {
-                    sommet_actifs.Enqueue(s);
+                    sommetActifs.Enqueue(s);
                 }
             }
             foreach (var t in AdjVertices[s])
@@ -658,7 +636,7 @@ public class FlowNetwork : Graph
                     Push(s,t, excedent, flot);
                     if (excedent[t] > 0 && enFile.Add(t))
                     {
-                        sommet_actifs.Enqueue(t);
+                        sommetActifs.Enqueue(t);
                     }
                 }
             }
@@ -667,18 +645,18 @@ public class FlowNetwork : Graph
                 ReLabel(s, hauteur, flot);
                 if (enFile.Add(s))
                 {
-                    sommet_actifs.Enqueue(s);
+                    sommetActifs.Enqueue(s);
                 }
             }
 
-            if (sommet_actifs.Count == 0)
+            if (sommetActifs.Count == 0)
             {
                 compteur--;
                 foreach (var t in AdjVertices.Keys)
                 {
                     if (excedent[t] > 0 && hauteur[t] <AdjVertices.Count && t != Puits)
                     {
-                        sommet_actifs.Enqueue(t);
+                        sommetActifs.Enqueue(t);
                     }
                 }
             }

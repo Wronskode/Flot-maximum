@@ -66,7 +66,7 @@ public static class Curve
                 densityStr += fileName[fileName.IndexOf('_') + i];
                 i++;
             }
-            return Convert.ToDouble(densityStr) == density;
+            return Math.Abs(Convert.ToDouble(densityStr) - density) < 1e-5;
         }).OrderBy(file =>
         {
             FileFlowNetwork ffn = new(directoryPath + file.Name);
@@ -80,9 +80,10 @@ public static class Curve
             FlowNetwork nf = ffn.Generate();
             int nodeCount = nf.AdjVertices.Count;
             
-            if (!timingData.ContainsKey(nodeCount))
+            if (!timingData.TryGetValue(nodeCount, out Dictionary<string, List<double>>? value))
             {
-                timingData[nodeCount] = new Dictionary<string, List<double>>();
+                value = new Dictionary<string, List<double>>();
+                timingData[nodeCount] = value;
                 foreach (var (name, _) in solvers)
                 {
                     timingData[nodeCount][name] = new List<double>();
@@ -92,10 +93,11 @@ public static class Curve
             
             foreach (var (name, solver) in solvers)
             {
+                var nf2 = (FlowNetwork)nf.Clone();
                 Stopwatch sw = Stopwatch.StartNew();
-                var result = solver(nf);
+                var result = solver(nf2);
                 sw.Stop();
-                timingData[nodeCount][name].Add(sw.Elapsed.TotalSeconds);
+                value[name].Add(sw.Elapsed.TotalSeconds);
                 Console.WriteLine($"{name} {result} in {sw.Elapsed.TotalSeconds}s for {nodeCount} nodes");
             }
             Plot myPlot = new Plot();

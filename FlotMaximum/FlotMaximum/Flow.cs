@@ -7,7 +7,7 @@ public class Flow
 
     public Flow(Dictionary<(Vertex, Vertex), int> flowEdges, Vertex puits)
     {
-       FlowEdges = new Dictionary<(Vertex, Vertex), int>(flowEdges); 
+       FlowEdges = flowEdges; 
        this.puits = puits;
     }
     public int Value

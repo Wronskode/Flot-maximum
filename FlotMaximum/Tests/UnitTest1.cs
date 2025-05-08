@@ -67,7 +67,7 @@ public class Tests
     {
         for (int i = 0; i < 1000; i++)
         {
-            RandomFlowNetwork randomFlow = new(100, 1000);
+            RandomFlowNetwork randomFlow = new(random.Next(2, 200), random.Next(2, 1000));
             var nf = randomFlow.Generate();
             var val = nf.FordFulkerson();
             var val2 = nf.EdmondsKarp();
@@ -75,11 +75,14 @@ public class Tests
             var val4 = PL.SolveWithOrTools(nf, "GLOP");
             var val5 = nf.Dinic();
             var val6 = nf.Push_Label();
-            Assert.That(val.Value, Is.EqualTo(val2.Value));
-            Assert.That(val.Value, Is.EqualTo(val5.Value));
-            Assert.That(val.Value, Is.EqualTo(val6.Value));
-            Assert.That(Math.Abs(val2.Value-val3), Is.LessThan(1e-5));
-            Assert.That(Math.Abs(val3-val4), Is.LessThan(1e-5));
+            Assert.Multiple(() =>
+            {
+                Assert.That(val.Value, Is.EqualTo(val2.Value));
+                Assert.That(val.Value, Is.EqualTo(val5.Value));
+                Assert.That(val.Value, Is.EqualTo(val6.Value));
+                Assert.That(Math.Abs(val2.Value - val3), Is.LessThan(1e-5));
+                Assert.That(Math.Abs(val3 - val4), Is.LessThan(1e-5));
+            });
         }
     }
     
@@ -90,7 +93,7 @@ public class Tests
         {
             RandomFlowNetwork randomFlow = new(random.Next(2, 5000), random.Next(0, 10000));
             var nf = randomFlow.Generate();
-            var val = nf.EdmondsKarp();
+            var val = nf.Dinic();
             foreach (var v in nf.AdjVertices.Keys)
             {
                 if (v == nf.Source || v == nf.Puits) continue;
@@ -109,7 +112,7 @@ public class Tests
         {
             RandomFlowNetwork randomFlow = new(random.Next(2, 5000), random.Next(0, 10000));
             var nf = randomFlow.Generate();
-            var val = nf.EdmondsKarp();
+            var val = nf.Dinic();
             var somme1 = val.FlowEdges.Where(edge => edge.Key.Item2 == nf.Puits).Sum(edge => edge.Value);
             var somme2 = val.FlowEdges.Where(edge => edge.Key.Item1 == nf.Source).Sum(edge => edge.Value);
             Assert.That(somme1, Is.EqualTo(somme2));
@@ -123,7 +126,7 @@ public class Tests
         {
             RandomFlowNetwork randomFlow = new(random.Next(2, 5000), random.Next(0, 10000));
             var nf = randomFlow.Generate();
-            var val = nf.EdmondsKarp();
+            var val = nf.Dinic();
             foreach (var edge in nf.Edges)
             {
                 Assert.That(edge.Value, Is.GreaterThanOrEqualTo(val.FlowEdges[edge.Key]));
@@ -138,9 +141,21 @@ public class Tests
         {
             RandomFlowNetwork randomFlow = new(random.Next(2, 5000), random.Next(0, 10000));
             var nf = randomFlow.Generate();
-            var val = nf.EdmondsKarp();
+            var val = nf.Dinic();
             var guro = PL.SolveWithGurobi(nf);
-            Assert.That(val.Value, Is.EqualTo(guro));
+            Assert.That(Math.Abs(val.Value-guro), Is.LessThan(1e-5));
+        }
+    }
+    [Test]
+    public void Scip()
+    {
+        for (int i = 0; i < 100; i++)
+        {
+            RandomFlowNetwork randomFlow = new(random.Next(2, 5000), random.Next(0, 10000));
+            var nf = randomFlow.Generate();
+            var val = nf.Dinic();
+            var scip = PL.SolveWithOrTools(nf, "SCIP");
+            Assert.That(Math.Abs(val.Value-scip), Is.LessThan(1e-5));
         }
     }
     

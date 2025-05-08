@@ -1,24 +1,23 @@
-using System.Runtime.Intrinsics;
-
 namespace FlotMaximum;
 
 public class FileFlowNetwork
 {
-    public String fileName;
+    public string FileName;
+    private static readonly char[] Separator = [' '];
 
-    public FileFlowNetwork(String fileName)
+    public FileFlowNetwork(string fileName)
     {
-        this.fileName = fileName;
+        FileName = fileName;
     }
     
     public FlowNetwork Generate ()
     {
         Vertex s;
         Vertex p;
-        List<Vertex> vertices = new List<Vertex>();
+        List<Vertex> vertices = [];
         
         Graph graph = new(new List<(Vertex, Vertex, int)>(), []);
-        using (StreamReader reader = new StreamReader(fileName))
+        using (var reader = new StreamReader(FileName))
         {
             // Lire la source
             s = new Vertex(reader.ReadLine().Trim()); // Source
@@ -29,14 +28,13 @@ public class FileFlowNetwork
             vertices.Add(p);
             
             // Lire les arêtes et leur poids
-            string line;
-            while ((line = reader.ReadLine()) != null)
+            while (reader.ReadLine() is { } line)
             {
                 // Ignorer les lignes vides
                 if (string.IsNullOrWhiteSpace(line)) continue;
 
                 // Séparer le sommet et ses voisins
-                var parts = line.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                var parts = line.Split(Separator, StringSplitOptions.RemoveEmptyEntries);
                 if (parts.Length == 3)
                 {
                     Vertex? v1 = vertices.FirstOrDefault(v => v.Id == parts[0]);
@@ -59,11 +57,7 @@ public class FileFlowNetwork
         }
             
         Console.WriteLine("Graph successfully loaded from file.");
-        int VertexNumber = graph.AdjVertices.Count;
-        Random r = new Random();
-        List < (Vertex, int) > sourceVerticesList = graph.neighborsRight(s);
-        List<(Vertex, int)> puitsVerticesList = graph.neighborsLeft(p);
-        return new FlowNetwork(graph.Edges, s, p, vertices);;
+        return new FlowNetwork(graph.Edges, s, p, vertices);
     }
     
 }

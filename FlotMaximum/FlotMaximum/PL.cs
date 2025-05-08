@@ -12,7 +12,7 @@ public class PL
         foreach (var edge in flowNetwork.Edges)
         {
             var (u, v) = edge.Key; // u et v sont les sommets
-            Variable var = solver.MakeNumVar(0.0, double.PositiveInfinity, $"x_{u.ToString()}_{v.ToString()}");
+            Variable var = solver.MakeNumVar(0.0, double.PositiveInfinity, $"x_{u}_{v}");
             variablesDic[(u, v)] = var;
         }
         
@@ -66,7 +66,7 @@ public class PL
     }
     
     
-    public void AfficherSysteme(Solver solver)
+    public static void AfficherSysteme(Solver solver)
     {
         Console.WriteLine("=== Système de Programmation Linéaire ===\n");
 

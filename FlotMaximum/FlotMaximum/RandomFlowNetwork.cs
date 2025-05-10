@@ -63,7 +63,7 @@ public class RandomFlowNetwork
                         u = vertices[Random.Next(0, VertexNumber)];
                     }
                 }
-                graph.AddEdge((u, v), Random.Next(0, graph.Edges.Count));
+                graph.AddEdge((u, v), Random.Next(0, edges));
             }
         }
         Vertex source = vertices[Random.Next(0, VertexNumber)];

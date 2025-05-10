@@ -11,6 +11,7 @@
 \usepackage{tikz}
 \usetikzlibrary{arrows,shapes,positioning}
 \usepackage{titling}
+\usepackage{float}
 \usepackage{tikz-uml}
 \usepackage{pgf-umlsd}
 \usepackage{tikz}
@@ -101,8 +102,7 @@ L’objectif de ce travail est de comparer ces différentes méthodes de résolu
 
 Ce rapport est structuré comme suit : après une présentation des méthodes considérées, nous décrivons notre méthodologie expérimentale, puis nous analysons les résultats obtenus avant de conclure sur les perspectives ouvertes par ce travail.
 \subsection{Présentation détaillée du problème de flot maximum}
-
-Le problème du flot maximum se définit sur un graphe orienté $G = (V, E)$, où $V$ est l’ensemble des sommets et $E$ l’ensemble des arcs. Chaque arc $(u, v) \in E$ est associé à une capacité $c(u, v) \geq 0$, représentant la quantité maximale de flot qui peut circuler de $u$ vers $v$, Si $(u, v)\notin E$, on suppose que $c(u, v) = 0$. On désigne par $s \in V$ la source et par $t \in V$ le puits, avec $s \neq t$.
+Le problème du flot maximum se définit sur un graphe orienté $G = (V, E)$, où $V$ est l’ensemble des sommets et $E$ l’ensemble des arcs. Chaque arc $(u, v) \in E$ est associé à une capacité $c(u, v) \geq 0$, représentant la quantité maximale de flot qui peut circuler de $u$ vers $v$. Si $(u, v)\notin E$, on suppose que $c(u, v) = 0$. On désigne par $s \in V$ la source et par $t \in V$ le puits, avec $s \neq t$.
 
 Un \emph{flot} est une fonction $f : V^2 \to \mathbb{R}$ qui satisfait les contraintes suivantes :
 \begin{itemize}
@@ -112,22 +112,61 @@ Un \emph{flot} est une fonction $f : V^2 \to \mathbb{R}$ qui satisfait les contr
     \item \textbf{Valeur du flot} : la quantité totale envoyée par la source est $|f| = \sum_{v \in V} f(s, v)$, et c’est cette valeur que l’on cherche à maximiser.
 \end{itemize}
 
+On appelle \emph{réseau de flot} un quadruplet $(G, s, t, c)$, où :
+\begin{itemize}
+    \item $G = (V,E)$ est un graphe orienté,
+    \item $s \in V$ est la source,
+    \item $t \in V$ est le puits ($s \neq t$),
+    \item $c : V^2 \to \mathbb{R}^+$ est une fonction de capacité sur les arcs, et qui est nulle si l’arc n’existe pas.
+\end{itemize}
 Le problème du flot maximum consiste donc à trouver un flot $f$ respectant les contraintes ci-dessus et maximisant $|f|$. Dans notre cas particulier, nous allons nous intéresser à des graphes orientés avec un flot entier et des capacités entières.
 
 \paragraph{Applications :} Le flot maximum possède de nombreuses applications concrètes : planification logistique, réseaux de transport (par exemple pour maximiser le trafic dans un réseau routier), routage dans les réseaux de communication, allocation de ressources, et même en algorithmique pour résoudre d’autres problèmes puisque le problème du flot maximum est \textsc{P-complet}. C'est-à-dire qu'il se résout en temps polynomial, et que tout problème polynomial peut s'y réduire par une réduction en espace logarithmique.
 \subsection{Exemple}
-\textit{Faire un exemple illustratif}
+% \textit{Faire un exemple illustratif}
+\begin{figure}[H]
+	\begin{center}
+		\begin{tikzpicture}[
+			vertex/.style={circle, draw, fill=blue!20, inner sep=2pt},
+			every edge/.style={draw, ->, thick}, % Ajout de flèches
+			->,>=stealth % Style explicite de flèches (stealth' pour une tête nette)
+			]
+
+			% Les sommets
+			\node[vertex] (S) at (0.5, 1) {S};
+			\node[vertex] (A) at (2, 2) {A};
+			\node[vertex] (B) at (4, 2) {B};
+			\node[vertex] (C) at (2, 0) {C};
+			\node[vertex] (D) at (4, 0) {D};
+			\node[vertex] (P) at (5.5, 1) {P};
+				
+			% Les arêtes orientées
+			%\draw[->, bend left=15] (A) to (B);
+			\draw[->] (S) to node[midway, above left] {\textcolor{red}{2}/4} (A);
+			\draw[->] (S) to node[midway, below left] {\textcolor{red}{0}/3} (C);
+			\draw[->] (A) to node[midway, above] {\textcolor{red}{2}/3} (B);
+			\draw[->] (A) to node[midway, left] {\textcolor{red}{0}/2} (C);
+			\draw[->] (B) to node[midway, right] {\textcolor{red}{1}/3} (D);
+			\draw[->] (B) to node[midway, above right] {\textcolor{red}{1}/2} (P);
+			\draw[->] (C) to node[midway, below] {\textcolor{red}{0}/2} (D);
+			\draw[->] (D) to node[midway, below left] {\textcolor{red}{0}/1} (A);
+			\draw[->] (D) to node[midway, below right] {\textcolor{red}{1}/4} (P);
+		\end{tikzpicture}
+		\caption{Exemple de réseau de flot, avec en \textcolor{red}{\textbf{rouge}} un flot et en \textbf{noir} la capacité de chaque arc.}
+	\end{center}
+\end{figure}
+
+Dans cet exemple, le sommet $A$ reçoit deux unités depuis la source et les envoies au sommet $B$. Le sommet $B$ redistribue ce flot vers les sommets $P$ et $D$. La valeur du flot est de $2$, c'est la somme des flots sortants de la source $S$ (et également la somme des flots entrants dans le puits). 
 \section{Définitions générales}
 \subsection{Réseau résiduel}
-
-Soit $G$ un graphe avec $s$, $p$ et $c$ respectivement la source, le puits et la fonction de capacité associés au graphe $G$. Notons $N = (G,s,p,c)$ un réseau de transport dans $G$ avec un flot $f$.\\
+Soit $G$ un graphe avec $s$, $p$ et $c$ respectivement la source, le puits et la fonction de capacité associés au graphe $G$. Notons $N = (G,s,p,c)$ un réseau de flot dans $G$ avec un flot $f$.\\
 Le réseau résiduel de $N$ et d'un flot $f$, noté $N_f$, est construit de la manière suivante :\\
 Pour chaque arc $xy$ de $G$ :
 \begin{itemize}
 	\item
     Si $f(xy)<c(xy)$, on crée un arc $xy$ dans $G'$ avec la quantité restante disponible de la capacité: $c'(xy) = c(xy) - f(xy)$.
     \item 
-    Si $f(xy)>0$ avec $x\ne s$ et $y\ne p$, on crée un arc $yx$ dans $G'$ avec la capacité qu'on peut ré-aiguiller : $c'(yx) = f(xy)$.
+    Si $f(xy)>0$ avec $x\ne s$ et $y\ne p$, on crée un arc $yx$ dans $G'$ avec la capacité qu'on peut réaiguiller : $c'(yx) = f(xy)$.
 \end{itemize}
 Ceci nous donne $N_f = (G',s,p,c')$.\\
 \subsection{Chemin et flot améliorants}
@@ -179,7 +218,7 @@ Nous prendrons l'exemple suivant pour illustrer les différents algorithmes :
 \subsection{L'algorithme de Ford-Fulkerson}
 
 \subsubsection{Fonctionnement général}
-L'algorithme de Ford-Fulkerson est le plus connu d'entre tous. Celui-ci consiste à trouver un chemin améliorant entre la source et le puits afin d'augmenter la valeur du flot. Pour cela nous aurons besoin du graphe résiduel de $G$ et $f$ qui nous permettra de savoir les capacités restantes disponibles.\\
+L'algorithme de Ford-Fulkerson est le plus connu parmi tous. Celui-ci consiste à trouver un chemin améliorant entre la source et le puits afin d'augmenter la valeur du flot. Pour cela nous aurons besoin du graphe résiduel de $G$ et $f$ qui nous permettra de savoir les capacités restantes disponibles.\\
 
 \subsubsection{Algorithme}
 Pour tout arc $xy$ du graphe $G$: on initialise la valeur du flot de $xy$ à $0$.\\
@@ -370,7 +409,7 @@ Finalement la coupe minimale de ce réseau est l'ensemble $\{S,A,C\}$ et son flo
 \subsection{L'algorithme d'Edmonds-Karp}
 
 \subsubsection{Fonctionnement général}
-L'algorithme d'Edmonds-Karp est une spécificité de celui de Ford-Fulkerson. Celui-ci consiste à trouver le plus court chemin améliorant entre la source et le puits afin d'augmenter la valeur du flot. Pour le trouver, il suffira d'utiliser un parcours en largeur.\\
+L'algorithme d'Edmonds-Karp est une spécificité de celui de Ford-Fulkerson. Celui-ci consiste à trouver le plus court chemin améliorant entre la source et le puits afin d'augmenter la valeur du flot. Pour le trouver, il suffit d'utiliser un parcours en largeur.\\
 
 \subsubsection{Algorithme}
 Pour tout arc $xy$ du graphe $G$: on initialise la valeur du flot de $xy$ à $0$.\\
@@ -574,7 +613,7 @@ Finalement la coupe minimale de ce réseau est l'ensemble $\{S,A,C\}$ et son flo
 \subsection{L'algorithme de Dinic}
 
 \subsubsection{Fonctionnement général}
-L'algorithme de Dinic est semblable à celui d'Edmonds-Karp. Comme lui, il utilise des plus courts chemins améliorants entre la source et le puits afin d'augmenter la valeur du flot. \\Pour les trouver, il faudra renommer les sommets en fonction de leur distance par rapport à la source et garder les arcs qui relient un sommet à un sommet de distance immédiatement supérieure. Ceci nous donnera le réseau de niveau $N_L$ obtenu à partir du réseau résiduel $N_f$.\\
+L'algorithme de Dinic est semblable à celui d'Edmonds-Karp. Comme lui, il utilise des plus courts chemins améliorants entre la source et le puits afin d'augmenter la valeur du flot. \\Pour les trouver, il faudra étiqueter les sommets en fonction de leur distance par rapport à la source et garder les arcs qui relient un sommet à un sommet de distance immédiatement supérieure. Ceci nous donnera le réseau de niveau $N_L$ obtenu à partir du réseau résiduel $N_f$.\\
 Nous aurons également besoin du flot bloquant. Il est défini comme suit : un flot est bloquant si $\forall C$ chemin entre la source et le puits, $\exists xy$ un arc dans $C$ où $f(xy)=c(xy)$.\\
 
 \subsubsection{Algorithme}
@@ -595,7 +634,7 @@ Retourner $f$.\\
 \subsubsection{Avantages/inconvénients}
 
 \subsubsection{Application sur l'exemple}
-Au début le flot est nul, le réseau résiduel $N_f$ à droite est donc le même que le réseau de transport $N$.\\
+Au début le flot est nul, le réseau résiduel $N_f$ à droite est donc le même que le réseau de flot $N$.\\
 Nous avons aussi en dessous, le réseau de niveau $N_L$ :
 
 
@@ -840,16 +879,16 @@ Nous avons également comparé nos algorithmes avec les meilleurs solveurs de pr
 
 La fonction à maximiser est la somme des flots sortants du sommet source $s$, par conservation du flot, c'est aussi égal à la somme des flots entrants dans le sommet puits. La première contrainte assure la conservation du flot pour chaque sommet, sauf pour la source et le puits. La deuxième contrainte assure que le flot sur chaque arête ne dépasse pas sa capacité et la dernière contrainte assure que le flot est positif ou nul.
 
-Une remarque importante est que les variables de flot $f(u, v)$ sont continues, donc à priori, rien n'assure que la solution optimale soit entière.
+Une remarque importante est que les variables de flot $f(u, v)$ sont continues, donc a priori, rien n'assure que la solution optimale soit entière.
 
-\subsection{Matrice totalement unimodulaires}
+\subsection{Matrices totalement unimodulaires}
 \paragraph{Définition}
-Soit $M$ une matrice, on dit qu'elle est totalement unimodulaire si pour toute matrice carrée $N$ de $M$, le déterminant de $N$ est égal à $0$, $1$ ou $-1$.
+Soit $M$ une matrice, on dit qu'elle est totalement unimodulaire si pour toute sous-matrice carrée $N$ de $M$, le déterminant de $N$ est égal à $0$, $1$ ou $-1$.
 
 \paragraph{Théorème (Hoffman \& Kruskal, 1956)} Une matrice entière est totalement unimodulaire si et seulement si le polyhèdre défini par $\{x : Ax \leq b, x \geq 0\}$ est un polyèdre entier pour tout vecteur $b$ entier.
 
 
-Ce que nous dit ce théorème, c'est que tout problème linéaire dont la matrice de contraintes est totalement unimodulaire et dont le vecteur de contraintes est entier, a une solution entière.
+Ce que nous apprend ce théorème, c'est que tout problème linéaire dont la matrice de contraintes est totalement unimodulaire et dont le vecteur de contraintes est entier, a une solution entière.
 
 \paragraph{Théorème} La matrice du problème de flot maximum est totalement unimodulaire.
 
@@ -860,13 +899,12 @@ L'intérêt de ce théorème est que, bien que la programmation linéaire en nom
 Nous avons utilisé deux solveurs de programmation linéaire : \texttt{Gurobi} et \texttt{GLOP}, ces deux solveurs sont très performants et permettent de résoudre des problèmes de grande taille rapidement.
 \section{Création des instances}
 
-Afin de pourvoir tester et comparer nos algorithmes, nous avons eu besoins d'instances de graphe de tailles et de formes differentes afin de pouvoir comparer comment se comportent nos algorithmes. Comme nous n'avons pas trouvé d'instances de graphes suffisement grande en ligne, nous avons décidé de créer nos propres instances. Cette partie détaille ce procesus de création et présente les differentes instances que nous avons pu créer ainsi que les choix que nous avons fait.
+Afin de pouvoir tester et comparer nos algorithmes, nous avons eu besoins d'instances de graphe de tailles et de formes differentes afin de pouvoir comparer comment se comportent nos algorithmes. Comme nous n'avons pas trouvé d'instances de graphes suffisamment grandes en ligne, nous avons décidé de créer nos propres instances. Cette partie détaille ce processus de création et présente les differentes instances que nous avons pu créer ainsi que les choix que nous avons faits.
 
 \subsection{La classe RandomFlowNetwork}
-
 Afin de créer un grand nombre d'instances, nous avons du commencé par générer des graphes de manière aléatoire. Pour cela nous avons créé une classe \texttt{RandomFlowNetwork}.\\
 
-Cette classe permet de générer un réseau de flux orienté en plusieurs étapes :
+Cette classe permet de générer un réseau de flot orienté en plusieurs étapes :
 
 \begin{enumerate}
     \item Elle crée un graphe vide et commence par lui ajouter l'ensemble de ses sommets, chacun identifié par un nom ou un numéro. Le nombre de sommet $n$ crée est controlé à l'avance.
@@ -892,13 +930,12 @@ Cette classe permet de générer un réseau de flux orienté en plusieurs étape
     \end{itemize}
 \end{enumerate}
 
-En résumé, cette classe construit un graphe orienté aléatoire, puis désigne deux extrémités pour simuler un réseau de flux. Le problème est le suivant : comment construire des graphes pertinents afin de tester les algorithmes ? 
+En résumé, cette classe construit un graphe orienté aléatoire, puis désigne deux extrémités pour simuler un réseau de flot. Le problème est le suivant : comment construire des graphes pertinents afin de tester les algorithmes ? 
 
 \subsection{Tests sur les graphes générés}
+Les graphes étant générés aléatoirement, on peut obtenir des graphes non connexes, des sommets non reliés à la source ou au puits, etc. Tout cela fausseraient les instances. En effet, si le graphe n’est pas connexe, cela pourrait fausser les résultats : un graphe de taille $1000$ pourrait se résumer à un de taille $100$, ce que l’on ne souhaite pas. On pourrait même tomber sur des graphes où nos algorithmes ne convergeraient pas, par exemple si la source et le puits ne sont pas reliés.\\
 
-Les graphes étant générés aléatoirement, on peut obtenir des graphes non connexes, des sommets non reliés à la source ou au puits, etc. Tout cela fausserait les instances. En effet, si le graphe n’est pas connexe, cela pourrait fausser les résultats : un graphe de taille $1000$ pourrait se résumer à un de taille $100$, ce que l’on ne souhaite pas. On pourrait même tomber sur des graphes où nos algorithmes ne convergeraient pas, par exemple si la source et le puits ne sont pas reliés.\\
-
-On va donc devoir créer un ensemble de tests sur nos graphes afin de s’assurer qu’ils soient bien formés et propices à être utilisés comme instances. Cela pourra prendre du temps car nous générons les graphes aléatoirement et n’en gardons qu’une petite partie, mais ce n’est pas très grave, car le jeu d’instances n’a besoin d’être créé qu’une seule fois. Il n’est pas nécessaire que le code qui permet sa création soit bien optimisé : on le lance un soir et on récupère les instances le lendemain dans le pire des cas.\\
+On va donc devoir créer un ensemble de tests sur nos graphes afin de s’assurer qu’ils soient bien formés et propices à être utilisées comme instances. Cela pourra prendre du temps car nous générons les graphes aléatoirement et n’en conservons qu’une petite partie, mais ce n’est pas très grave, car le jeu d’instances n’a besoin d’être créé qu’une seule fois. Il n’est pas nécessaire que le code qui permet sa création soit bien optimisé : on le lance un soir et on récupère les instances le lendemain dans le pire des cas.\\
 
 Nous avons donc implémenté une fonction \texttt{IsConnected} qui permet de vérifier les trois critères suivants sur le graphe :
 \begin{enumerate}
@@ -1015,7 +1052,7 @@ Le nombre de sommets ainsi que la densité du graphe sont indiqués dans le nom 
 \subsection{Les instances choisies}
 
 Nous avons créé des instances pour toutes les tailles multiples de $10$ entre $30$ et $200$. Pour chaque taille, nous avons utilisé trois densités : $0{,}1$, $0{,}5$ et $0{,}9$. Pour chaque densité, trois instances différentes ont été générées. Cela représente au total plus de $150$ instances pour tester nos programmes.
-Nous avons choisi de rester sur des tailles raisonnables afin que tous les algorithmes, même les moins efficaces, puissent toujours converger et ainsi être comparés. En effet, on constate que pour une taille de $200$ et une densité de $0{,}9$, on a en moyenne :
+Nous avons choisi de rester sur des tailles raisonnables afin que tous les algorithmes, même les moins efficaces, puissent toujours converger et ainsi être comparés. En effet, pour un graphe de taille de $200$ sommets et une densité de $0{,}9$, on obtient en moyenne :
 
 \begin{center}
 $\frac{200 \times (200-1)}{2} \times 2 \times 0{,}9 = 35 820$ arêtes

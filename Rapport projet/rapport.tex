@@ -44,7 +44,7 @@
 %\usepackage{minitoc}
 \makeatletter
 \makeatother
-\newdate{frontpagedate}{30}{01}{2025} 
+\newdate{frontpagedate}{10}{05}{2025} 
 \begin{document}
 \pagenumbering{gobble} 
 \begin{center}
@@ -98,7 +98,7 @@ Le problème du flot maximum est l’un des problèmes fondamentaux en algorithm
 
 Depuis plusieurs décennies, de nombreux algorithmes ont été développés pour résoudre ce problème, parmi lesquels on compte les méthodes classiques comme Ford-Fulkerson, Edmonds-Karp ou encore Dinic, mais aussi des approches basées sur la programmation linéaire. Ces algorithmes diffèrent à la fois par leur complexité théorique, leur comportement pratique et leur adaptabilité à différents types de graphes.
 
-L’objectif de ce travail est de comparer ces différentes méthodes de résolution, à la fois sur le plan théorique et expérimental. Nous mettrons en \oe uvre ces algorithmes, puis les testerons sur des jeux d’essais variés pour évaluer leurs performances respectives. Dans un second temps, nous étendrons notre étude à d’autres problèmes combinatoires comme le plus court chemin, afin de vérifier si les enseignements tirés du flot maximum peuvent être généralisés ou adaptés à d’autres contextes.
+L’objectif de ce travail est de comparer ces différentes méthodes de résolution, à la fois sur le plan théorique et expérimental. Nous mettrons en \oe uvre ces algorithmes, puis les testerons sur des jeux d’essais variés pour évaluer leurs performances respectives.
 
 Ce rapport est structuré comme suit : après une présentation des méthodes considérées, nous décrivons notre méthodologie expérimentale, puis nous analysons les résultats obtenus avant de conclure sur les perspectives ouvertes par ce travail.
 \subsection{Présentation détaillée du problème de flot maximum}
@@ -156,7 +156,7 @@ Le problème du flot maximum consiste donc à trouver un flot $f$ respectant les
 	\end{center}
 \end{figure}
 
-Dans cet exemple, le sommet $A$ reçoit deux unités depuis la source et les envoies au sommet $B$. Le sommet $B$ redistribue ce flot vers les sommets $P$ et $D$. La valeur du flot est de $2$, c'est la somme des flots sortants de la source $S$ (et également la somme des flots entrants dans le puits). 
+Dans cet exemple, le sommet $A$ reçoit deux unités depuis la source et les envoies au sommet $B$. Le sommet $B$ redistribue ce flot vers les sommets $D$ et $P$. La valeur du flot est de $2$, c'est la somme des flots sortants de la source $S$ (et également la somme des flots entrants dans le puits). 
 \section{Définitions générales}
 \subsection{Réseau résiduel}
 Soit $G$ un graphe avec $s$, $p$ et $c$ respectivement la source, le puits et la fonction de capacité associés au graphe $G$. Notons $N = (G,s,p,c)$ un réseau de flot dans $G$ avec un flot $f$.\\

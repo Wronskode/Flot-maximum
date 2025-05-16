@@ -1,9 +1,10 @@
 FlotMaximum/.idea/
 *.DS_Store
-FlotMaximum/FlotMaximum/bin/
-FlotMaximum/FlotMaximum/obj/
-FlotMaximum/FlotMaximum.sln.DotSettings.user
-FlotMaximum/Tests/bin/.
-FlotMaximum/Tests/obj/.
-FlotMaximum/Tests/bin/
-FlotMaximum/Tests/obj/
+FlotMaximum/bin/
+FlotMaximum/obj/
+FlotMaximum.sln.DotSettings.user
+Tests/bin/.
+Tests/obj/.
+Tests/bin/
+Tests/obj/
+.idea/

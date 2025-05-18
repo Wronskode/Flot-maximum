@@ -12,7 +12,7 @@ using ScottPlot;
 //FlowNetwork nf = new([
 //(a,d, 13), (a, b, 8), (a, c, 10), (b,c,26), (c,d,20),
 //(c,e,8),(c,f,24),(d,e,1),(d,b,2)], s, p, [(a, 38), (b, 1), (f, 2)], [(d, 7), (e, 7), (c, 1), (f, 27)]);
-var directoryPath = "../../../../Instances3/";
+var directoryPath = "../../../../Instances2/";
 var di = new DirectoryInfo(directoryPath);
 foreach (FileInfo file in di.GetFiles())
 {
@@ -20,9 +20,9 @@ foreach (FileInfo file in di.GetFiles())
 }
 int i = 1;
 
-List<int> tailles = new List<int> {30, 40, 50, 60, 70, 80, 90, 100, 120, 150, 200, 300, 400, 500, 600, 700, 800, 900, 1000, 1200,1500,2000};
+List<int> tailles = new List<int> { 30, 40, 50, 60, 70, 80 }; //, 90, 100, 120, 150, 200, 300, 400, 500, 600, 700, 800, 900, 1000, 1200,1500,2000};
 List<double> densitites = new List<double> {0.3, 0.5, 0.7, 0.9};
-float tot = tailles.Count*densitites.Count*10;
+float tot = tailles.Count*densitites.Count*5;
 float compteurTot = 0;
 
 foreach (int n in tailles)
@@ -30,10 +30,11 @@ foreach (int n in tailles)
     foreach (double d in densitites)
     {
         i = 1;
-        while (i <= 10)
+        while (i <= 5)
         {
             RandomFlowNetwork randomFlow = new(n, d);
             FlowNetwork nf = randomFlow.Generate();
+            int ar = nf.GetNombreAretes();
             //Console.WriteLine(nf);
             bool res = nf.IsConnected();
             //Console.WriteLine(res);
@@ -43,7 +44,7 @@ foreach (int n in tailles)
                 nf.CreateGraphWeightFile(fileName);
                 //Console.WriteLine("Le fichier a été créé avec succès.");
                 compteurTot++;
-                Console.WriteLine("Bien créé : " + (compteurTot * 100f) / tot + "%");
+                Console.WriteLine("Bien créé | arêtes : "+ar+"/"+d * (n * (n - 1)) + "   et "+ (compteurTot * 100f) / tot + "%");
                 i += 1;
             }
 

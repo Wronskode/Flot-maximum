@@ -51,20 +51,37 @@ public class RandomFlowNetwork
         }
         else
         {
-            int edges = (int) (density * (VertexNumber * (VertexNumber + 1) / 2));
-            while (graph.Edges.Count < edges)
+            int edges = (int) (density * (VertexNumber * (VertexNumber - 1)));
+            foreach (Vertex v1 in graph.AdjVertices.Keys.ToList())
             {
-                Vertex v = vertices[Random.Next(0, VertexNumber)];
-                Vertex u = vertices[Random.Next(0, VertexNumber)];
-                if (VertexNumber > 1)
+                foreach (Vertex v2 in graph.AdjVertices.Keys.ToList())
                 {
-                    while (v == u)
+                    if (v1 != v2)
                     {
-                        u = vertices[Random.Next(0, VertexNumber)];
+                        Random rand = new Random();
+                        double randomValue = rand.NextDouble();
+                        if (randomValue < density)
+                        {
+                            graph.AddEdge((v1, v2), Random.Next(0, edges));
+                        }
                     }
+                    
                 }
-                graph.AddEdge((u, v), Random.Next(0, edges));
             }
+            //int edges = (int) (density * (VertexNumber * (VertexNumber + 1) / 2));
+            //while (graph.Edges.Count < edges)
+            //{
+            //    Vertex v = vertices[Random.Next(0, VertexNumber)];
+            //    Vertex u = vertices[Random.Next(0, VertexNumber)];
+            //    if (VertexNumber > 1)
+            //    {
+            //        while (v == u)
+            //        {
+            //            u = vertices[Random.Next(0, VertexNumber)];
+            //        }
+            //    }
+            //    graph.AddEdge((u, v), Random.Next(0, edges));
+            //}
         }
         Vertex source = vertices[Random.Next(0, VertexNumber)];
         Vertex puits = vertices[Random.Next(0, VertexNumber)];

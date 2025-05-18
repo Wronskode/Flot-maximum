@@ -137,4 +137,10 @@ public class Graph : ICloneable
         return new Graph(Edges.Select(x => (x.Key.Item1.Clone() as Vertex, x.Key.Item2.Clone() as Vertex, x.Value)),
             AdjVertices.Keys.Select(x => x.Clone() as Vertex));
     }
+    
+    public int GetNombreAretes()
+    {
+        return Edges.Count;
+    }
+    
 }

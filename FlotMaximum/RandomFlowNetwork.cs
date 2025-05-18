@@ -52,19 +52,21 @@ public class RandomFlowNetwork
         }
         else
         {
-            int edges = (int) (density * maxEdges);
-            while (graph.Edges.Count < edges)
+            foreach (Vertex v1 in vertices)
             {
-                Vertex v = vertices[Random.Next(0, VertexNumber)];
-                Vertex u = vertices[Random.Next(0, VertexNumber)];
-                if (VertexNumber > 1)
+                foreach (Vertex v2 in vertices)
                 {
-                    while (v == u)
+                    if (v1 != v2)
                     {
-                        u = vertices[Random.Next(0, VertexNumber)];
+                        Random rand = new Random();
+                        double randomValue = rand.NextDouble();
+                        if (randomValue < density)
+                        {
+                            graph.AddEdge((v1, v2), Random.Next(lowerBound, upperBound + 1));
+                        }
                     }
+
                 }
-                graph.AddEdge((u, v), Random.Next(lowerBound, upperBound + 1));
             }
         }
         Vertex source = vertices[Random.Next(0, VertexNumber)];

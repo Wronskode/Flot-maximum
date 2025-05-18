@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using System.Text.RegularExpressions;
 using ScottPlot;
 
 namespace FlotMaximum;
@@ -69,9 +70,12 @@ public static class Curve
             return Math.Abs(Convert.ToDouble(densityStr) - density) < 1e-5;
         }).OrderBy(file =>
         {
-            FileFlowNetwork ffn = new(directoryPath + file.Name);
-            FlowNetwork nf = ffn.Generate();
-            return nf.AdjVertices.Count;
+            Match match = Regex.Match(file.Name, @"^inst(\d+)");
+            if (match.Success)
+            {
+                return int.Parse(match.Groups[1].Value);
+            }
+            return 0;
         });
         
         foreach (var file in files)

@@ -25,8 +25,9 @@ FlowNetwork nf = new([
 //     Console.WriteLine($"Distance: {kvp.Key} - {kvp.Value}");
 // }
 // return;
+
+
 const string instancesPath = "../../../../Instances/";
-List<double> densities = [0.1, 0.5, 0.9];
 void DeleteInstances(string path)
 {
     var di = new DirectoryInfo(path);
@@ -36,33 +37,47 @@ void DeleteInstances(string path)
     }
 }
 
-void CreateInstances(string instancesPath, List<double> densities)
+List<int> tailles = new List<int> { 30, 40, 50, 60, 70, 80 , 90, 100, 120, 150, 200, 300, 400, 500, 600, 700, 800, 900, 1000, 1200,1500,2000};
+List<double> densities = new List<double> {0.3, 0.5, 0.7, 0.9};
+int numberOfInstances = 5;
+float tot = tailles.Count*densities.Count*numberOfInstances;
+float compteurTot = 0;
+
+
+void CreateInstances(string instancesPath, List<int> tailles, List<double> densities, int numberOfInstances)
 {
-    DeleteInstances(instancesPath);
+    //DeleteInstances(instancesPath);
 
-    List<int> tailles = [10, 20, 50, 100, 200, 500, 1000];
-
-    for (int n = 30; n <= 200; n+=10)
+    foreach (int n in tailles)
     {
         foreach (double d in densities)
         {
-            var i = 1;
-            while (i <= 3)
+            int i = 1;
+            while (i <= numberOfInstances)
             {
                 RandomFlowNetwork randomFlow = new(n, d);
                 FlowNetwork nf = randomFlow.Generate();
+                int ar = nf.GetNombreAretes();
+                //Console.WriteLine(nf);
                 bool res = nf.IsConnected();
+                //Console.WriteLine(res);
                 if (res)
                 {
                     string fileName = instancesPath + $"inst{n}_{d}_{i}.txt";
                     nf.CreateGraphWeightFile(fileName);
-                    Console.WriteLine("Le fichier a été créé avec succès.");
+                    //Console.WriteLine("Le fichier a été créé avec succès.");
+                    compteurTot++;
+                    Console.WriteLine("Bien créé | arêtes : "+ar+"/"+d * (n * (n - 1)) + "   et "+ (compteurTot * 100f) / tot + "%");
                     i += 1;
                 }
+
+                Console.WriteLine("\n");
             }
         }
     }
 }
+
+CreateInstances(instancesPath, tailles, densities, numberOfInstances);
 
 //CreateInstances(instancesPath, densities);
 // Ligne Gurobi à commenter si vous n'avez pas de licence

@@ -75,6 +75,11 @@ public class Graph : ICloneable
     {
         AdjVertices.TryAdd(v, []);
     }
+    
+    public int GetNombreAretes()
+    {
+        return Edges.Count;
+    }
 
     public override string ToString()
     {

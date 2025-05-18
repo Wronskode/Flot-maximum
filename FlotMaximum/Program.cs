@@ -78,3 +78,22 @@ void CreateInstances(string instancesPath, List<int> tailles, List<double> densi
 }
 
 CreateInstances(instancesPath, tailles, densities, numberOfInstances);
+
+//CreateInstances(instancesPath, densities);
+// Ligne Gurobi à commenter si vous n'avez pas de licence
+var solvers = new List<(string, Func<FlowNetwork, double>)>
+{
+    ("Ford-Fulkerson", nf => nf.FordFulkerson().Value),
+    ("Edmonds-Karp", nf => nf.EdmondsKarp().Value),
+    ("Dinic", nf => nf.Dinic().Value),
+    ("Poussage-Réétiquetage", nf => nf.Push_Label().Value),
+    ("Gurobi", nf => PL.SolveWithGurobi(nf)),
+    ("SCIP", nf => PL.SolveWithOrTools(nf, "SCIP")),
+    //("GLOP", nf => PL.SolveWithOrTools(nf, "GLOP")),
+    //("CP-SAT", nf => PL.SolveWithOrTools(nf, "CP-SAT")),
+};
+
+foreach (var density in densities)
+{
+    Curve.CreateCurves(density, instancesPath, solvers);
+}

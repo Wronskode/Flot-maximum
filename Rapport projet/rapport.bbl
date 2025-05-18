@@ -16,5 +16,51 @@
   {}
 \endgroup
 
+
+\refsection{0}
+  \datalist[entry]{nty/global//global/global/global}
+    \entry{hoffman-1957}{book}{}{}
+      \name{author}{2}{}{%
+        {{hash=9d802f69fa4533dde0a4976708653077}{%
+           family={Hoffman},
+           familyi={H\bibinitperiod},
+           given={A.\bibnamedelimi J.},
+           giveni={A\bibinitperiod\bibinitdelim J\bibinitperiod}}}%
+        {{hash=3b89b4f02ff2e102fd2373f69879b51a}{%
+           family={Kruskal},
+           familyi={K\bibinitperiod},
+           given={J.\bibnamedelimi B.},
+           giveni={J\bibinitperiod\bibinitdelim B\bibinitperiod}}}%
+      }
+      \strng{namehash}{34b4cf6971d7d126a2597a865a309fa7}
+      \strng{fullhash}{34b4cf6971d7d126a2597a865a309fa7}
+      \strng{fullhashraw}{34b4cf6971d7d126a2597a865a309fa7}
+      \strng{bibnamehash}{34b4cf6971d7d126a2597a865a309fa7}
+      \strng{authorbibnamehash}{34b4cf6971d7d126a2597a865a309fa7}
+      \strng{authornamehash}{34b4cf6971d7d126a2597a865a309fa7}
+      \strng{authorfullhash}{34b4cf6971d7d126a2597a865a309fa7}
+      \strng{authorfullhashraw}{34b4cf6971d7d126a2597a865a309fa7}
+      \field{sortinit}{H}
+      \field{sortinithash}{23a3aa7c24e56cfa16945d55545109b5}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{booktitle}{Princeton University Press eBooks}
+      \field{month}{12}
+      \field{title}{{13. Integral Boundary Points of Convex Polyhedra}}
+      \field{year}{1957/1958}
+      \field{pages}{223\bibrangedash 246}
+      \range{pages}{24}
+      \verb{doi}
+      \verb 10.1515/9781400881987-014
+      \endverb
+      \verb{urlraw}
+      \verb https://doi.org/10.1515/9781400881987-014
+      \endverb
+      \verb{url}
+      \verb https://doi.org/10.1515/9781400881987-014
+      \endverb
+    \endentry
+  \enddatalist
+\endrefsection
 \endinput
 

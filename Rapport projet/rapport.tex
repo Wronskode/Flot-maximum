@@ -25,6 +25,7 @@
 %\usepackage{pdflscape}
 \usepackage{geometry}
 \usepackage{biblatex}
+\addbibresource{biblio.bib}
 \usepackage{graphicx} % Required for inserting images
 \usepackage[colorlinks=true ,urlcolor=blue,urlbordercolor={0 1 1}]{hyperref}
 \usepackage{float}
@@ -86,6 +87,12 @@ Rodolphe Giroudeau
 
 \centering \displaydate{frontpagedate} % Dags dato
 \end{center}
+\newpage
+\begin{abstract}	
+Le problème du flot maximum est un problème d'optimisation classique en informatique et en recherche opérationnelle. Étant donné un réseau de flot, l'objectif est de déterminer la quantité maximale de flot qui peut être envoyée d'une source à un puits, tout en respectant les contraintes de capacité des arcs et de conservation du flot. Ce problème a de nombreuses applications pratiques, notamment dans la planification logistique, les réseaux de transport et les réseaux de communication. 
+
+Dans ce travail, nous comparons différentes méthodes de résolution du problème du flot maximum.  Nous étudions les algorithmes classiques tels que Ford-Fulkerson, Edmonds-Karp, Poussage-Réétiquetage et Dinic, ainsi que des approches basées sur la programmation linéaire. Nous mettons en œuvre ces algorithmes et les testons sur un ensemble de graphes générés aléatoirement. Nous analysons les performances de chaque méthode en termes de complexité théorique et de temps d'exécution pratique. 
+\end{abstract}
 \newpage
 {\hypersetup{hidelinks}
 \tableofcontents
@@ -427,7 +434,7 @@ Retourner $f$.\\
 \subsubsection{Avantages/inconvénients}
 
 \subsubsection{Application sur l'exemple}
-Tout d'abord, on a le chemin améliorant : $SABP$ de taille $4$ avec une valeur de flot améliorant égal à $2$.\\
+Tout d'abord, on a le chemin améliorant : $SABP$ de taille $3$ avec une valeur de flot améliorant égal à $2$.\\
 On obtient donc à droite le réseau résiduel $N_f$ :
 
 \begin{center}
@@ -486,7 +493,7 @@ On obtient donc à droite le réseau résiduel $N_f$ :
 	
 
 
-On voit qu'il y a le chemin améliorant $SACDP$ de taille $5$ avec un flot améliorant égal à $2$. Regardons si on trouve un chemin améliorant plus petit, le chemin $SCDP$ est un autre chemin améliorant de taille $4$ avec un flot améliorant égal à $2$. C'est ce chemin que nous choisissons.\\
+On voit qu'il y a le chemin améliorant $SACDP$ de taille $4$ avec un flot améliorant égal à $2$. Regardons si on trouve un chemin améliorant plus petit, le chemin $SCDP$ est un autre chemin améliorant de taille $3$ avec un flot améliorant égal à $2$. C'est ce chemin que nous choisissons.\\
 On obtient à droite le nouveau réseau résiduel $N_f$ :
 
 
@@ -546,7 +553,7 @@ On obtient à droite le nouveau réseau résiduel $N_f$ :
 	
 
 
-Il n'y a plus de chemin améliorant de taille $4$ allant de $S$ à $P$. On va choisir un chemin améliorant de taille $5$ : $SABDP$ avec un flot améliorant égal à $1$.\\
+Il n'y a plus de chemin améliorant de taille $3$ allant de $S$ à $P$. On va choisir un chemin améliorant de taille $4$ : $SABDP$ avec un flot améliorant égal à $1$.\\
 Nous obtenons à droite le nouveau réseau résiduel $N_f$ :
 
 
@@ -885,18 +892,18 @@ Une remarque importante est que les variables de flot $f(u, v)$ sont continues, 
 \paragraph{Définition}
 Soit $M$ une matrice, on dit qu'elle est totalement unimodulaire si pour toute sous-matrice carrée $N$ de $M$, le déterminant de $N$ est égal à $0$, $1$ ou $-1$.
 
-\paragraph{Théorème (Hoffman \& Kruskal, 1956)} Une matrice entière est totalement unimodulaire si et seulement si le polyhèdre défini par $\{x : Ax \leq b, x \geq 0\}$ est un polyèdre entier pour tout vecteur $b$ entier.
+\paragraph{Théorème (Hoffman \& Kruskal, 1956)\cite{hoffman-1957} :} Une matrice entière est totalement unimodulaire si et seulement si le polyhèdre défini par $\{x : Ax \leq b, x \geq 0\}$ est un polyèdre entier pour tout vecteur $b$ entier.
 
 
 Ce que nous apprend ce théorème, c'est que tout problème linéaire dont la matrice de contraintes est totalement unimodulaire et dont le vecteur de contraintes est entier, a une solution entière.
 
-\paragraph{Théorème} La matrice du problème de flot maximum est totalement unimodulaire.
+\paragraph{Théorème :} La matrice du problème de flot maximum est totalement unimodulaire.
 
 Et comme le vecteur de contraintes est entier (car les capacités sont entières), la solution optimale est entière.
 
 L'intérêt de ce théorème est que, bien que la programmation linéaire en nombres entiers soit \textsc{NP-complet}, dans le cas du flot maximum, on peut utiliser un solveur de programmation linéaire classique pour obtenir une solution entière.
 \subsection{Solveurs de programmation linéaire}
-Nous avons utilisé deux solveurs de programmation linéaire : \texttt{Gurobi} et \texttt{GLOP}, ces deux solveurs sont très performants et permettent de résoudre des problèmes de grande taille rapidement.
+Nous avons utilisé deux solveurs de programmation linéaire : \texttt{Gurobi} et \texttt{SCIP}, ces deux solveurs sont très performants et permettent de résoudre des problèmes de grande taille rapidement. \texttt{Gurobi} est un solveur commercial, réputé pour être l'un des plus rapides du marché, tandis que \texttt{SCIP} est un solveur open-source qui est probablement le meilleur solveur open-source.
 \section{Création des instances}
 
 Afin de pouvoir tester et comparer nos algorithmes, nous avons eu besoins d'instances de graphe de tailles et de formes differentes afin de pouvoir comparer comment se comportent nos algorithmes. Comme nous n'avons pas trouvé d'instances de graphes suffisamment grandes en ligne, nous avons décidé de créer nos propres instances. Cette partie détaille ce processus de création et présente les differentes instances que nous avons pu créer ainsi que les choix que nous avons faits.
@@ -916,7 +923,7 @@ Cette classe permet de générer un réseau de flot orienté en plusieurs étape
     \end{itemize}
 	Ici dans le cas de nos instances, cette derniere méthode est utilisée. Pour expliquer plus clairement comment cela fonctionne, pour un graphe $G=(E,V)$ on pose $d \in [0,1]$ la densité, et ensuite $\forall x, y \in V$ la probabilité d'apparition de l'arête $xy$ est $d$. On essaie donc de créer le graphe complet avec une probabilité $d$ d'apparition sur chaque arêtes.\\
 	Nous avons ainsi pu faire varier la densité de nos graphes entre 0.1 et 0.9.\\
-    Chaque arête reçoit finalement une capacité aléatoire, c’est-à-dire une valeur représentant sa "capacité" ou "poids".
+    Chaque arête reçoit finalement une capacité aléatoire, c’est-à-dire une valeur représentant sa \og capacité\fg{} ou \og poids\fg{}.
     
     \item Une fois les arêtes ajoutées, deux sommets distincts sont choisis au hasard : un sommet source (point de départ) et un sommet puits (point d’arrivée).
     
@@ -1059,7 +1066,9 @@ $\frac{200 \times (200-1)}{2} \times 2 \times 0{,}9 = 35 820$ arêtes
 \end{center}
 
 Le $\frac{200 \times (200-1)}{2} \times 2$ correspondant à toutes les arêtes possibles. En effet $\frac{n \times (n-1)}{2}$ pour le graphe complet, $\times 2$ car les arêtes sont orientés. On multiplie par la densité pour savoir le nombre d'arête en moyenne, dans notre exemple la densité est de $0,9$.
-
-
+\section{Méthodologie Expérimentale}
+\section{Résultats et Discussion}
+\section{Revue de la Littérature}
+\section{Conclusion et Perspectives}
+\printbibliography[heading=bibintoc]
 \end{document}
-

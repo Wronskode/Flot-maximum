@@ -3,7 +3,7 @@ using Gurobi;
 
 namespace FlotMaximum;
 
-public class PL
+public static class PL
 {
     public static double SolveWithOrTools(FlowNetwork flowNetwork, string solverName)
     {

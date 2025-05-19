@@ -2,7 +2,7 @@ namespace FlotMaximum;
 
 public class FileFlowNetwork
 {
-    public string FileName;
+    private readonly string FileName;
     private static readonly char[] Separator = [' '];
 
     public FileFlowNetwork(string fileName)

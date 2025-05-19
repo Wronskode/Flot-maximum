@@ -22,8 +22,8 @@ public class Graph : ICloneable
             AddVertex(v);
         }
     }
-    
-    public Graph(Dictionary<(Vertex, Vertex), int> neighbors, IEnumerable<Vertex> vertices) {
+
+    protected Graph(Dictionary<(Vertex, Vertex), int> neighbors, IEnumerable<Vertex> vertices) {
         HashSet<Vertex> vertexSet = [];
         foreach (var element in neighbors) {
             AddEdge((element.Key.Item1, element.Key.Item2), element.Value);
@@ -102,7 +102,7 @@ public class Graph : ICloneable
         return output.ToString();
     }
 
-    public String ToString2()
+    public string ToString2()
     {
         string output = "";
         foreach (var ((u,v), i) in Edges)
@@ -112,12 +112,12 @@ public class Graph : ICloneable
         return output;
     }
 
-    public List<(Vertex, int)> NeighborsRight (Vertex vertex)
+    protected List<(Vertex, int)> NeighborsRight (Vertex vertex)
     {
         return AdjVertices[vertex].Select(x => (x, Edges[(vertex, x)])).ToList();
     }
-    
-    public List<(Vertex, int)> NeighborsLeft (Vertex vertex)
+
+    protected List<(Vertex, int)> NeighborsLeft (Vertex vertex)
     {
         List<(Vertex, int)> res = [];
         foreach (var edge in Edges)

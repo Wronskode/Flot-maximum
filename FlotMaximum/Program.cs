@@ -38,7 +38,7 @@ void DeleteInstances(string path)
 }
 
 List<int> tailles = new List<int> { 30, 40, 50, 60, 70, 80 , 90, 100, 120, 150, 200, 300, 400, 500, 600, 700, 800, 900, 1000, 1200,1500,2000};
-List<double> densities = new List<double> {0.3, 0.5, 0.7, 0.9};
+List<double> densities = new List<double> {0.3, 0.5, 0.9};
 int numberOfInstances = 5;
 float tot = tailles.Count*densities.Count*numberOfInstances;
 float compteurTot = 0;
@@ -77,23 +77,42 @@ void CreateInstances(string instancesPath, List<int> tailles, List<double> densi
     }
 }
 
-CreateInstances(instancesPath, tailles, densities, numberOfInstances);
+//CreateInstances(instancesPath, tailles, densities, numberOfInstances);
 
 //CreateInstances(instancesPath, densities);
 // Ligne Gurobi à commenter si vous n'avez pas de licence
-var solvers = new List<(string, Func<FlowNetwork, double>)>
-{
+List<(string, Func<FlowNetwork, double>)> solvers =
+[
     ("Ford-Fulkerson", nf => nf.FordFulkerson().Value),
     ("Edmonds-Karp", nf => nf.EdmondsKarp().Value),
     ("Dinic", nf => nf.Dinic().Value),
     ("Poussage-Réétiquetage", nf => nf.Push_Label().Value),
     ("Gurobi", nf => PL.SolveWithGurobi(nf)),
-    ("SCIP", nf => PL.SolveWithOrTools(nf, "SCIP")),
-    //("GLOP", nf => PL.SolveWithOrTools(nf, "GLOP")),
-    //("CP-SAT", nf => PL.SolveWithOrTools(nf, "CP-SAT")),
-};
+    ("SCIP", nf => PL.SolveWithOrTools(nf, "SCIP"))
+];
 
 foreach (var density in densities)
 {
-    Curve.CreateCurves(density, instancesPath, solvers);
+    Curve.CreateCurves(density, instancesPath, solvers, 100);
+}
+
+solvers =
+[
+    ("Dinic", nf => nf.Dinic().Value),
+    ("Poussage-Réétiquetage", nf => nf.Push_Label().Value),
+    ("Gurobi", nf => PL.SolveWithGurobi(nf))
+];
+foreach (var density in densities)
+{
+    Curve.CreateCurves(density, instancesPath, solvers, 500);
+}
+
+solvers =
+[
+    ("Dinic", nf => nf.Dinic().Value),
+    ("Gurobi", nf => PL.SolveWithGurobi(nf))
+];
+foreach (var density in densities)
+{
+    Curve.CreateCurves(density, instancesPath, solvers, 2000);
 }

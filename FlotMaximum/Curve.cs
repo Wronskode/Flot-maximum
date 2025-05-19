@@ -6,80 +6,33 @@ namespace FlotMaximum;
 
 public static class Curve
 {
-    public static void CreateCurves(
-        double density, int lowerBound, int upperBound, int step, int minNodes, int maxNodes,
-        List<(string name, Func<FlowNetwork, double> solver)> solvers)
-    {
-        List<double> xs = [];
-        Dictionary<string, List<double>> timings = new();
-        foreach (var (name, _) in solvers)
-        {
-            timings[name] = new List<double>();
-        }
-
-        Plot myPlot = new();
-
-        for (int i = minNodes; i <= maxNodes; i+=step)
-        {
-            Console.WriteLine("i = " + i);
-            RandomFlowNetwork randomFlow = new(i, density);
-            FlowNetwork nf = randomFlow.Generate(lowerBound, upperBound);
-            Console.WriteLine("Généré avec " + nf.AdjVertices.Keys.Count + " sommets et " + nf.Edges.Count + " arêtes.");
-            
-            xs.Add(i);
-
-            foreach (var (name, solver) in solvers)
-            {
-                Stopwatch sw = Stopwatch.StartNew();
-                var result = solver(nf);
-                sw.Stop();
-                timings[name].Add(sw.Elapsed.TotalSeconds);
-                Console.WriteLine($"{name} {result} in {sw.Elapsed.TotalSeconds}s");
-            }
-            
-            foreach (var (name2, values) in timings)
-            {
-                var curve = myPlot.Add.Scatter(xs, values);
-                curve.LegendText = name2;
-            }
-            
-            myPlot.Axes.Bottom.Label.Text = "Number of nodes";
-            myPlot.Axes.Left.Label.Text = "Seconds";
-            myPlot.ShowLegend(Alignment.UpperLeft);
-            myPlot.Legend.FontSize = 20;
-            myPlot.SavePng("../../../../courbes/benchmark"+Math.Round(density, 2)+".png", 1500, 1000);
-            myPlot = new Plot();
-        }
-    }
-
-    public static void CreateCurves(double density, string directoryPath, List<(string name, Func<FlowNetwork, double> solver)> solvers)
+    public static void CreateCurves(double density, string directoryPath, List<(string name, Func<FlowNetwork, double> solver)> solvers, int nMax)
     {
         var di = new DirectoryInfo(directoryPath);
         Dictionary<int, Dictionary<string, List<double>>> timingData = new();
         List<double> xs = new();
         var files = di.GetFiles().Where(file =>
         {
-            string fileName = file.Name;
-            string densityStr = "";
-            int i = 1;
-            while (fileName[fileName.IndexOf('_') + i] != '_')
+            Match dens = Regex.Match(file.Name, @"inst.*_(.*)_");
+            if (!dens.Success)
             {
-                densityStr += fileName[fileName.IndexOf('_') + i];
-                i++;
+                return false;
             }
-            return Math.Abs(Convert.ToDouble(densityStr) - density) < 1e-5;
+            string densityStr = dens.Groups[1].Value;
+            return Math.Abs(Convert.ToDouble(densityStr) - density) < 1e-3;
         }).OrderBy(file =>
         {
             Match match = Regex.Match(file.Name, @"^inst(\d+)");
-            if (match.Success)
-            {
-                return int.Parse(match.Groups[1].Value);
-            }
-            return 0;
+            return match.Success ? int.Parse(match.Groups[1].Value) : 0;
         });
         
         foreach (var file in files)
         {
+            Match match = Regex.Match(file.Name, @"^inst(\d+)");
+            if (match.Success && int.Parse(match.Groups[1].Value) > nMax)
+            {
+                return;
+            }
             FileFlowNetwork ffn = new(directoryPath + file.Name);
             FlowNetwork nf = ffn.Generate();
             int nodeCount = nf.AdjVertices.Count;
@@ -94,7 +47,6 @@ public static class Curve
                 }
                 xs.Add(nodeCount);
             }
-            
             foreach (var (name, solver) in solvers)
             {
                 var nf2 = (FlowNetwork)nf.Clone(); // Important si on modifie le réseau de flot
@@ -116,7 +68,7 @@ public static class Curve
             myPlot.ShowLegend(Alignment.UpperLeft);
             myPlot.Legend.FontSize = 20;
             myPlot.Legend.FontName = Fonts.Serif;
-            myPlot.SavePng("../../../../courbes/benchmark" + Math.Round(density, 2) + ".png", 1500, 1000);
+            myPlot.SavePng("../../../../courbes/benchmark" + Math.Round(density, 2) + "_" +nMax+ ".png", 1500, 1000);
         }
     }
 }

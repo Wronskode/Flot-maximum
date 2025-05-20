@@ -1,14 +1,10 @@
 \documentclass[a4paper]{article}
-
+\input{./preamble.tex}
 % Options possibles : 10pt, 11pt, 12pt (taille de la fonte)
 %                     oneside, twoside (recto simple, recto-verso)
 %                     draft, final (stade de développement)
-
-\usepackage[utf8]{inputenc}   % LaTeX, comprends les accents !
-\usepackage[T1]{fontenc}      % Police contenant les caractères français
 \usepackage{fontspec} % Pour les accents de Tomáš Kaiser
 \usepackage[french]{babel}  
-\usepackage{tikz}
 \usetikzlibrary{arrows,shapes,positioning}
 \usepackage{titling}
 \usepackage{float}
@@ -28,10 +24,7 @@
 \addbibresource{biblio.bib}
 \usepackage{graphicx} % Required for inserting images
 \usepackage[colorlinks=true ,urlcolor=blue,urlbordercolor={0 1 1}]{hyperref}
-\usepackage{float}
-\usepackage{amssymb}
-\usepackage{amsthm} 
-\usepackage{amsmath} 
+\usepackage{float} 
 \usepackage{datetime}
 \usepackage{numprint}
 \usepackage{listings}
@@ -43,8 +36,6 @@
 %\usepackage{fullpage}
 \addbibresource{sample.bib}
 %\usepackage{minitoc}
-\makeatletter
-\makeatother
 \newdate{frontpagedate}{10}{05}{2025} 
 \begin{document}
 \pagenumbering{gobble} 
@@ -97,8 +88,9 @@ Dans ce travail, nous comparons différentes méthodes de résolution du problè
 {\hypersetup{hidelinks}
 \tableofcontents
 }
-\pagenumbering{arabic}  
+\pagenumbering{arabic} 
 \newpage
+\pagestyle{headings}
 \section{Introduction}
 
 Le problème du flot maximum est l’un des problèmes fondamentaux en algorithmique et en recherche opérationnelle. Il consiste à trouver, dans un réseau orienté avec des capacités sur les arcs, le flot de valeur maximale entre une source et un puits, tout en respectant les contraintes de capacité et de conservation des flots.
@@ -166,6 +158,7 @@ Le problème du flot maximum consiste donc à trouver un flot $f$ respectant les
 Dans cet exemple, le sommet $A$ reçoit deux unités depuis la source et les envoies au sommet $B$. Le sommet $B$ redistribue ce flot vers les sommets $D$ et $P$. La valeur du flot est de $2$, c'est la somme des flots sortants de la source $S$ (et également la somme des flots entrants dans le puits). 
 \section{Définitions générales}
 \subsection{Réseau résiduel}
+\begin{definition}[Réseau résiduel]\,
 Soit $G$ un graphe avec $s$, $p$ et $c$ respectivement la source, le puits et la fonction de capacité associés au graphe $G$. Notons $N = (G,s,p,c)$ un réseau de flot dans $G$ avec un flot $f$.\\
 Le réseau résiduel de $N$ et d'un flot $f$, noté $N_f$, est construit de la manière suivante :\\
 Pour chaque arc $xy$ de $G$ :
@@ -175,8 +168,10 @@ Pour chaque arc $xy$ de $G$ :
     \item 
     Si $f(xy)>0$ avec $x\ne s$ et $y\ne p$, on crée un arc $yx$ dans $G'$ avec la capacité qu'on peut réaiguiller : $c'(yx) = f(xy)$.
 \end{itemize}
-Ceci nous donne $N_f = (G',s,p,c')$.\\
+Ceci nous donne $N_f = (G',s,p,c')$.
+\end{definition}
 \subsection{Chemin et flot améliorants}
+\begin{definition}[Chemin améliorant]\,
 \begin{itemize}
 	\item
     Un chemin améliorant pour $N$ et $f$ est un chemin de $s$ à $p$ dans la réseau résiduel $N_f$.
@@ -190,6 +185,7 @@ $f'(xy) = \left\{
 \right.$
 avec $\gamma = \min \{c'(x_ix_{i+1}); i \in [\![0;k-1]\!]\}$\\
 \end{itemize}
+\end{definition}
 \section{Différents algorithmes et exemple}
 Nous prendrons l'exemple suivant pour illustrer les différents algorithmes :
 
@@ -889,16 +885,19 @@ La fonction à maximiser est la somme des flots sortants du sommet source $s$, p
 Une remarque importante est que les variables de flot $f(u, v)$ sont continues, donc a priori, rien n'assure que la solution optimale soit entière.
 
 \subsection{Matrices totalement unimodulaires}
-\paragraph{Définition}
+\begin{definition}
 Soit $M$ une matrice, on dit qu'elle est totalement unimodulaire si pour toute sous-matrice carrée $N$ de $M$, le déterminant de $N$ est égal à $0$, $1$ ou $-1$.
-
-\paragraph{Théorème (Hoffman \& Kruskal, 1956)\cite{hoffman-1957} :} Une matrice entière est totalement unimodulaire si et seulement si le polyhèdre défini par $\{x : Ax \leq b, x \geq 0\}$ est un polyèdre entier pour tout vecteur $b$ entier.
-
+\end{definition}
+% \paragraph{Théorème (Hoffman \& Kruskal, 1956)\cite{hoffman-1957} :} Une matrice entière est totalement unimodulaire si et seulement si le polyhèdre défini par $\{x : Ax \leq b, x \geq 0\}$ est un polyèdre entier pour tout vecteur $b$ entier.
+\begin{theorem}[Hoffman \& Kruskal, 1956\cite{hoffman-1957}]
+Une matrice entière est totalement unimodulaire si et seulement si le polyhèdre défini par $\{x : Ax \leq b, x \geq 0\}$ est un polyèdre entier pour tout vecteur $b$ entier.
+\end{theorem}
 
 Ce que nous apprend ce théorème, c'est que tout problème linéaire dont la matrice de contraintes est totalement unimodulaire et dont le vecteur de contraintes est entier, a une solution entière.
 
-\paragraph{Théorème :} La matrice du problème de flot maximum est totalement unimodulaire.
-
+\begin{theorem}
+La matrice du problème de flot maximum est totalement unimodulaire.
+\end{theorem}
 Et comme le vecteur de contraintes est entier (car les capacités sont entières), la solution optimale est entière.
 
 L'intérêt de ce théorème est que, bien que la programmation linéaire en nombres entiers soit \textsc{NP-complet}, dans le cas du flot maximum, on peut utiliser un solveur de programmation linéaire classique pour obtenir une solution entière.

@@ -71,8 +71,8 @@
 \usepackage{tikz-cd}
 \usetikzlibrary{intersections, angles, quotes, calc, positioning}
 \usetikzlibrary{arrows.meta}
-\usepackage{pgfplots}
-\pgfplotsset{compat=1.13}
+%\usepackage{pgfplots}
+%\pgfplotsset{compat=1.13}
 
 
 \tikzset{
@@ -90,77 +90,62 @@
 \makeatletter
 
 
-\@ifclasswith{report}{nocolor}{
-    \declaretheoremstyle[headfont=\bfseries\sffamily, bodyfont=\normalfont, mdframed={ nobreak } ]{thmgreenbox}
-    \declaretheoremstyle[headfont=\bfseries\sffamily, bodyfont=\normalfont, mdframed={ nobreak } ]{thmredbox}
-    \declaretheoremstyle[headfont=\bfseries\sffamily, bodyfont=\normalfont]{thmbluebox}
-    \declaretheoremstyle[headfont=\bfseries\sffamily, bodyfont=\normalfont]{thmblueline}
-    \declaretheoremstyle[headfont=\bfseries\sffamily, bodyfont=\normalfont, numbered=no, mdframed={ rightline=false, topline=false, bottomline=false, }, qed=\qedsymbol ]{thmproofbox}
-    \declaretheoremstyle[headfont=\bfseries\sffamily, bodyfont=\normalfont, numbered=no, mdframed={ nobreak, rightline=false, topline=false, bottomline=false } ]{thmexplanationbox}
-    \AtEndEnvironment{eg}{\null\hfill$\diamond$}%
-}{
-    \declaretheoremstyle[
-        headfont=\bfseries\sffamily\color{ForestGreen!70!black}, bodyfont=\normalfont,
-        mdframed={
-            linewidth=2pt,
-            rightline=false, topline=false, bottomline=false,
-            linecolor=ForestGreen, backgroundcolor=ForestGreen!5,
-        }
-    ]{thmgreenbox}
+\declaretheoremstyle[
+    headfont=\bfseries\sffamily\color{ForestGreen!70!black}, bodyfont=\normalfont,
+    mdframed={
+        linewidth=2pt,
+        rightline=false, topline=false, bottomline=false,
+        linecolor=ForestGreen, backgroundcolor=ForestGreen!5,
+    }
+]{thmgreenbox}
 
-    \declaretheoremstyle[
-        headfont=\bfseries\sffamily\color{NavyBlue!70!black}, bodyfont=\normalfont,
-        mdframed={
-            linewidth=2pt,
-            rightline=false, topline=false, bottomline=false,
-            linecolor=NavyBlue, backgroundcolor=NavyBlue!5,
-        }
-    ]{thmbluebox}
+\declaretheoremstyle[
+    headfont=\bfseries\sffamily\color{NavyBlue!70!black}, bodyfont=\normalfont,
+    mdframed={
+        linewidth=2pt,
+        rightline=false, topline=false, bottomline=false,
+        linecolor=NavyBlue, backgroundcolor=NavyBlue!5,
+    }
+]{thmbluebox}
 
-    \declaretheoremstyle[
-        headfont=\bfseries\sffamily\color{NavyBlue!70!black}, bodyfont=\normalfont,
-        mdframed={
-            linewidth=2pt,
-            rightline=false, topline=false, bottomline=false,
-            linecolor=NavyBlue
-        }
-    ]{thmblueline}
+\declaretheoremstyle[
+    headfont=\bfseries\sffamily\color{NavyBlue!70!black}, bodyfont=\normalfont,
+    mdframed={
+        linewidth=2pt,
+        rightline=false, topline=false, bottomline=false,
+        linecolor=NavyBlue
+    }
+]{thmblueline}
 
-    \declaretheoremstyle[
-        headfont=\bfseries\sffamily\color{RawSienna!70!black}, bodyfont=\normalfont,
-        mdframed={
-            linewidth=2pt,
-            rightline=false, topline=false, bottomline=false,
-            linecolor=RawSienna, backgroundcolor=RawSienna!5,
-        }
-    ]{thmredbox}
+\declaretheoremstyle[
+    headfont=\bfseries\sffamily\color{RawSienna!70!black}, bodyfont=\normalfont,
+    mdframed={
+        linewidth=2pt,
+        rightline=false, topline=false, bottomline=false,
+        linecolor=RawSienna, backgroundcolor=RawSienna!5,
+    }
+]{thmredbox}
 
-    \declaretheoremstyle[
-        headfont=\bfseries\sffamily\color{RawSienna!70!black}, bodyfont=\normalfont,
-        numbered=no,
-        mdframed={
-            linewidth=2pt,
-            rightline=false, topline=false, bottomline=false,
-            linecolor=RawSienna, backgroundcolor=RawSienna!1,
-        },
-        qed=\qedsymbol
-    ]{thmproofbox}
+\declaretheoremstyle[
+    headfont=\bfseries\sffamily\color{RawSienna!70!black}, bodyfont=\normalfont,
+    numbered=no,
+    mdframed={
+        linewidth=2pt,
+        rightline=false, topline=false, bottomline=false,
+        linecolor=RawSienna, backgroundcolor=RawSienna!1,
+    },
+    qed=\qedsymbol
+]{thmproofbox}
 
-    \declaretheoremstyle[
-        headfont=\bfseries\sffamily\color{NavyBlue!70!black}, bodyfont=\normalfont,
-        numbered=no,
-        mdframed={
-            linewidth=2pt,
-            rightline=false, topline=false, bottomline=false,
-            linecolor=NavyBlue, backgroundcolor=NavyBlue!1,
-        },
-    ]{thmexplanationbox}
-}
-
-
-
-
-
+\declaretheoremstyle[
+    headfont=\bfseries\sffamily\color{NavyBlue!70!black}, bodyfont=\normalfont,
+    numbered=no,
+    mdframed={
+        linewidth=2pt,
+        rightline=false, topline=false, bottomline=false,
+        linecolor=NavyBlue, backgroundcolor=NavyBlue!1,
+    },
+]{thmexplanationbox}
 \declaretheorem[style=thmgreenbox, numbered=no, name=Définition]{definition}
 \declaretheorem[style=thmbluebox, numbered=no, name=Exemple]{eg}
 \declaretheorem[style=thmbluebox, numbered=no, name=Exercise]{ex}
@@ -169,17 +154,11 @@
 \declaretheorem[style=thmredbox, name=Lemma]{lemma}
 \declaretheorem[style=thmredbox, numbered=no, name=Corollary]{corollary}
 
-\@ifclasswith{report}{nocolor}{
-    \declaretheorem[style=thmproofbox, name=Proof]{replacementproof}
-    \declaretheorem[style=thmexplanationbox, name=Proof]{explanation}
-    \renewenvironment{proof}[1][\proofname]{\begin{replacementproof}}{\end{replacementproof}}
-}{
-    \declaretheorem[style=thmproofbox, name=Proof]{replacementproof}
-    \renewenvironment{proof}[1][\proofname]{\vspace{-10pt}\begin{replacementproof}}{\end{replacementproof}}
+\declaretheorem[style=thmproofbox, name=Proof]{replacementproof}
+\renewenvironment{proof}[1][\proofname]{\vspace{-10pt}\begin{replacementproof}}{\end{replacementproof}}
 
-    \declaretheorem[style=thmexplanationbox, name=Proof]{tmpexplanation}
-    \newenvironment{explanation}[1][]{\vspace{-10pt}\begin{tmpexplanation}}{\end{tmpexplanation}}
-}
+\declaretheorem[style=thmexplanationbox, name=Proof]{tmpexplanation}
+\newenvironment{explanation}[1][]{\vspace{-10pt}\begin{tmpexplanation}}{\end{tmpexplanation}}
 
 \makeatother
 
@@ -290,3 +269,7 @@
     \def\svgwidth{\columnwidth}
     \import{./figures/}{#1.pdf_tex}
 }
+
+% algorithms
+\usepackage{algorithm}
+\usepackage{algpseudocode}

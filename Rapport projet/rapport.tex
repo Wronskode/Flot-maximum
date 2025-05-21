@@ -162,23 +162,63 @@ Pour chaque arc $xy$ de $G$ :
 \end{itemize}
 Ceci nous donne $N_f = (G',s,p,c')$.
 \end{definition}
+\begin{eg}
+	Le réseau résiduel de l'exemple précédent est le suivant :
+	\begin{figure}[H]
+	\begin{center}
+		\begin{tikzpicture}[
+		vertex/.style={circle, draw, fill=blue!20, inner sep=2pt},
+		highlight/.style={->, line width=3pt, draw=green!100},
+		every edge/.style={draw, ->, thick},
+		->,>=stealth
+		]
+	
+
+		\node[vertex] (S) at (0.5, 1) {S};
+		\node[vertex] (A) at (2, 2) {A};
+		\node[vertex] (B) at (4, 2) {B};
+		\node[vertex] (C) at (2, 0) {C};
+		\node[vertex] (D) at (4, 0) {D};
+		\node[vertex] (P) at (5.5, 1) {P};
+	
+		\draw[->] (S) to node[midway, above left] {2} (A);
+		\draw[->] (S) to node[midway, below left] {3} (C);
+		\draw[->, bend left=15] (A) to node[midway, above] {1} (B);
+		\draw[->] (A) to node[midway, left] {2} (C);
+		\draw[->, bend left=15] (B) to node[midway, below] {2} (A);
+		\draw[->, bend right=15] (B) to node[midway, left] {2} (D);
+		\draw[->, bend right=15] (D) to node[midway, right] {1} (B);
+		\draw[->] (C) to node[midway, below] {2} (D);
+		\draw[->] (D) to node[midway, below left] {1} (A);
+		\draw[->] (D) to node[midway, below right] {3} (P);
+		\draw[->] (B) to node[midway, above right] {1} (P);
+	
+	\end{tikzpicture}
+		\caption{Réseau résiduel de l'exemple précédent.}
+	\end{center}
+\end{figure}
+Comme on peut le voir, le réseau résiduel est un graphe obtenu à partir d'un réseau de flot et d'un flot, et la plupart des algorithmes de flot maximum utilisent le réseau résiduel pour trouver des chemins améliorants.
+\end{eg}
 \subsection{Chemin et flot améliorants}
 \begin{definition}[Chemin améliorant]\,
 \begin{itemize}
 	\item
-    Un chemin améliorant pour $N$ et $f$ est un chemin de $s$ à $p$ dans la réseau résiduel $N_f$.
+    Un chemin améliorant pour un réseau de flot $N$ muni d'un flot $f$ est un chemin de $s$ à $p$ dans la réseau résiduel $N_f$.
     \item
-    Soit $C = x_0,x_1,...,x_k$ un chemin améliorant dans $N_f$, le flot améliorant correspondant est :
+    Soit $C = x_0,x_1,\ldots,x_k$ un chemin améliorant dans $N_f$, le flot améliorant correspondant est :
 $f'(xy) = \left\{
     \begin{array}{ll}
         \gamma & \mbox{si } xy \mbox{ est un arc de C} \\
-        0 & \mbox{sinon.}
+        0 & \mbox{sinon}
     \end{array}
 \right.$
-avec $\gamma = \min \{c'(x_ix_{i+1}); i \in [\![0;k-1]\!]\}$\\
+
+où $\gamma = \min \{c'(x_ix_{i+1}):\: i \in [\![0;k-1]\!]\}$
+
+Concrètement, un chemin améliorant est un chemin dans le réseau résiduel. On le munit d'un flot $f'$ sur ce chemin qui est la quantité maximale de flot qui peut être envoyée le long de ce chemin. Cette quantité est déterminée par la capacité résiduelle minimale le long du chemin.
 \end{itemize}
 \end{definition}
-\section{Différents algorithmes et exemple}
+\section{Différents algorithmes et exemples}
 Nous prendrons l'exemple suivant pour illustrer les différents algorithmes :
 
 \begin{center}
@@ -213,19 +253,38 @@ Nous prendrons l'exemple suivant pour illustrer les différents algorithmes :
 \subsection{L'algorithme de Ford-Fulkerson}
 
 \subsubsection{Fonctionnement général}
-L'algorithme de Ford-Fulkerson est le plus connu parmi tous. Celui-ci consiste à trouver un chemin améliorant entre la source et le puits afin d'augmenter la valeur du flot. Pour cela nous aurons besoin du graphe résiduel de $G$ et $f$ qui nous permettra de savoir les capacités restantes disponibles.\\
-
+L'algorithme de Ford-Fulkerson est le plus connu parmi tous. Celui-ci consiste à trouver un chemin améliorant entre la source et le puits afin d'augmenter la valeur du flot. Pour cela nous aurons besoin du graphe résiduel de $(G, f)$ qui nous permettra de savoir les capacités restantes disponibles.
 \subsubsection{Algorithme}
-Pour tout arc $xy$ du graphe $G$: on initialise la valeur du flot de $xy$ à $0$.\\
-Tant qu'il existe un chemin améliorant $C$ dans le graphe résiduel de $G$ et $f$:
-\begin{itemize}
-	\item
-    Calculer le flot améliorant $f'$ correspondant.
-    \item 
-    Augmenter $f$ par $f'$
-\end{itemize}
-Retourner $f$.\\
-
+% Pour tout arc $xy$ du graphe $G$: on initialise la valeur du flot de $xy$ à $0$.\\
+% Tant qu'il existe un chemin améliorant $C$ dans le graphe résiduel de $G$ et $f$:
+% \begin{itemize}
+% 	\item
+%     Calculer le flot améliorant $f'$ correspondant.
+%     \item 
+%     Augmenter $f$ par $f'$
+% \end{itemize}
+% Retourner $f$.\\
+\begin{algorithm}[H]
+\caption{Algorithme de flot maximum}
+\textbf{Entrée :} Un réseau de flot $G = (V, A, c, s, t)$ \\
+\textbf{Sortie :} Un flot maximal $f$
+\begin{algorithmic}[1]
+\ForAll{arc $xy$ de $G$}
+    \State $f(xy) \gets 0$
+\EndFor
+\While{il existe un chemin simple $C$ dans le graphe résiduel $N_f$}
+    \State \Delta $\gets \min \{c'(u, v):\: (u, v)\in C\}$ 
+    \ForAll {$(u, v)\in C$}
+		\If {$(u, v)\in A$}
+			\State $f(u, v) \gets f(u, v) + \Delta$
+		\Else
+			\State $f(u, v) \gets f(v, u) - \Delta$
+		\EndIf
+	\EndFor
+\EndWhile
+\State \Return $f$
+\end{algorithmic}
+\end{algorithm}
 \subsubsection{Complexité}
 
 \subsubsection{Avantages/inconvénients}

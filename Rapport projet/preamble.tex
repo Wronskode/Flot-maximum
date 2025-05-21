@@ -1,25 +1,25 @@
 % basics
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
-\usepackage{textcomp}
-\usepackage{url}
+\usepackage{fontspec} % Pour les accents de Tomáš Kaiser
+% \usepackage{textcomp}
+% \usepackage{url}
 \usepackage{graphicx}
 \usepackage{float}
-\usepackage{booktabs}
-\usepackage[shortlabels]{enumitem}
+% \usepackage{booktabs}
+% \usepackage[shortlabels]{enumitem}
 % \usepackage{parskip}
-\usepackage{emptypage}
-\usepackage{subcaption}
-\usepackage{multicol}
+% \usepackage{emptypage}
+% \usepackage{subcaption}
+% \usepackage{multicol}
 \usepackage[usenames,dvipsnames]{xcolor}
-
 % \usepackage{cmbright}
 
 
 \usepackage{amsmath, amsfonts, mathtools, amsthm, amssymb}
 \usepackage{mathrsfs}
-\usepackage{cancel}
-\usepackage{bm}
+% \usepackage{cancel}
+% \usepackage{bm}
 \newcommand\N{\ensuremath{\mathbb{N}}}
 \newcommand\R{\ensuremath{\mathbb{R}}}
 \newcommand\Z{\ensuremath{\mathbb{Z}}}
@@ -27,18 +27,15 @@
 \newcommand\Q{\ensuremath{\mathbb{Q}}}
 \newcommand\C{\ensuremath{\mathbb{C}}}
 \DeclareMathOperator{\sgn}{sgn}
-\usepackage{systeme}
+% \usepackage{systeme}
 \let\svlim\lim\def\lim{\svlim\limits}
 \let\implies\Rightarrow
 \let\impliedby\Leftarrow
 \let\iff\Leftrightarrow
 \let\epsilon\varepsilon
-\usepackage{stmaryrd} % for \lightning
-\newcommand\contra{\scalebox{1.1}{$\lightning$}}
+% \usepackage{stmaryrd} % for \lightning
+% \newcommand\contra{\scalebox{1.1}{$\lightning$}}
 % \let\phi\varphi
-
-
-
 
 
 % correct
@@ -261,14 +258,13 @@
 
 
 % figure support
-\usepackage{import}
-\usepackage{xifthen}
-\usepackage{pdfpages}
-\usepackage{transparent}
-\newcommand{\incfig}[1]{%
-    \def\svgwidth{\columnwidth}
-    \import{./figures/}{#1.pdf_tex}
-}
+% \usepackage{import}
+% \usepackage{pdfpages}
+% \usepackage{transparent}
+% \newcommand{\incfig}[1]{%
+%     \def\svgwidth{\columnwidth}
+%     \import{./figures/}{#1.pdf_tex}
+% }
 
 % algorithms
 \usepackage{algorithm}

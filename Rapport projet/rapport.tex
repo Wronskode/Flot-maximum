@@ -286,9 +286,9 @@ L'algorithme de Ford-Fulkerson est le plus connu parmi tous. Celui-ci consiste �
 \end{algorithmic}
 \end{algorithm}
 \subsubsection{Complexité}
-
+Un chemin améliorant peut être trouvé en $O(|A|)$ avec une recherche en profondeur ou en largeur par exemple, et un tel chemin augmente le flot d'au moins une unité, et d'au plus $|f^\star|$, où $f^\star$ représente un flot maximum. En notant $n$ le nombre de sommets et $m$ le nombre d'arcs, on a donc une complexité de $O(m|f^\star|)$ pour l'algorithme de Ford-Fulkerson.
 \subsubsection{Avantages/inconvénients}
-
+L'algorithme est facile à implémenter mais il n'est pas efficace dans le cas général. En effet, il peut ne pas se terminer si les capacités sont irrationnelles. De plus sa complexité n'est pas optimale et dépend de la valeur du flot maximum, nous verrons plus tard qu'il existe des algorithmes plus efficaces.
 \subsubsection{Application sur l'exemple}
 Tout d'abord, on a le chemin améliorant : $SABP$ avec une valeur de flot améliorant égal à $2$.\\
 On obtient donc à droite le réseau résiduel $N_f$ :
@@ -466,20 +466,49 @@ Finalement la coupe minimale de ce réseau est l'ensemble $\{S,A,C\}$ et son flo
 L'algorithme d'Edmonds-Karp est une spécificité de celui de Ford-Fulkerson. Celui-ci consiste à trouver le plus court chemin améliorant entre la source et le puits afin d'augmenter la valeur du flot. Pour le trouver, il suffit d'utiliser un parcours en largeur.\\
 
 \subsubsection{Algorithme}
-Pour tout arc $xy$ du graphe $G$: on initialise la valeur du flot de $xy$ à $0$.\\
-Tant qu'il existe un plus court chemin améliorant $C$ dans le graphe résiduel de $G$ et $f$:
-\begin{itemize}
-	\item
-    Calculer le flot améliorant $f'$ correspondant.
-    \item 
-    Augmenter $f$ par $f'$
-\end{itemize}
-Retourner $f$.\\
-
+% Pour tout arc $xy$ du graphe $G$: on initialise la valeur du flot de $xy$ à $0$.\\
+% Tant qu'il existe un plus court chemin améliorant $C$ dans le graphe résiduel de $G$ et $f$:
+% \begin{itemize}
+% 	\item
+%     Calculer le flot améliorant $f'$ correspondant.
+%     \item 
+%     Augmenter $f$ par $f'$
+% \end{itemize}
+% Retourner $f$.\\
+L'algorithme d'Edmonds-Karp est une variante de l'algorithme de Ford-Fulkerson. Il utilise un parcours en largeur pour trouver le plus court chemin améliorant dans le réseau résiduel, là où l'algorithme de Ford-Fulkerson peut utiliser n'importe quel chemin améliorant.
 \subsubsection{Complexité}
+La complexité de l'algorithme d'Edmonds-Karp est de $O(|A|^2|V|)$.
+% Pour prouver la complexité de l'algorithme d'Edmonds-Karp, nous avons besoin d'un lemme :
+% \begin{lemma}
+% 	Si l'algorithme d'Edmonds-Karp est appliqué à un réseau de flot $G = (V, A, c, s, t)$, alors pour tous les sommets $v\in V\setminus \{s, t\}$, la plus courte distance $\delta_f(u, v)$ dans le réseau résiduel $N_f$ augmente à chaque itération de l'algorithme.
+% \end{lemma}
+% \begin{proof}
+% 	Supposons que pour un certain sommet $v\in V\setminus \{s, t\}$, il y a une augmentation du flot qui fait que la plus courte distance de $s$ à $v$ diminue. 
 
+% 	Soit $f$ le flot juste avant la première itération qui fait décroitre la plus courte distance de $s$ à $v$, et soit $f'$ le flot après cette itération. Soit $v$ le sommet avec la distance $\delta_{f'}(s, v)$ la plus courte qui a diminué après l'augmentation du flot, on a donc $\delta_{f'}(s, v) < \delta_f(s, v)$. Soit $p = s \rightsquigarrow u \to v$ un plus court chemin de $s$ à $v$ dans le réseau résiduel $N_{f'}$, donc nous avons $(u, v)\in E_{f'}$ et $\delta_{f'}(s, u) = \delta_{f'}(s, v) - 1$.
+
+% 	Parce qu'avec la façon dont nous choisissons $v$, nous savons que la distance entre $u$ et $s$ ne peut pas décroitre, donc $\delta_{f'}(s, u) \geq \delta_f(s, u)$.
+
+% 	On a que $(u, v)\notin E_f$ car sinon, on aurait :
+% 	\begin{align*}
+% 		\delta_f(s, v) &\leq \delta_f(s, u) + 1 \text{ (inégalité triangulaire)}\\
+% 		&\leq \delta_{f'}(s, u) + 1\\
+% 		&= \delta_{f'}(s, v) 
+% 	\end{align*}
+
+% 	Ce qui contredit que le fait que $\delta_{f'}(s, v) < \delta_f(s, v)$.
+
+% 	Donc, pour que $(u, v)\notin E_f$, mais que $(u, v)\in E_{f'}$, il faut que l'augmentation du flot ait augmenté le flot de $v$ à $u$. L'algorithme d'Edmonds-Karp augmente toujours le flot sur le plus court chemin, et de plus, le plus court chemin de $s$ à $u$ dans $N_f$ a $(v, u)$ comme dernier arc. Donc :
+% 	\begin{align*}
+% 		\delta_{f}(s, v) &= \delta_f(s, u)-1\\
+% 		&\leq \delta_{f'}(s, u) - 1\\
+% 		&= \delta_{f'}(s, v) - 2
+% 	\end{align*}
+
+% 	Ce qui contredit le fait que $\delta_{f'}(s, v) < \delta_f(s, v)$.
+% \end{proof}
 \subsubsection{Avantages/inconvénients}
-
+La complexité de l'algorithme d'Edmonds-Karp ne dépend plus de la valeur du flot maximum, mais du nombre d'arcs et de sommets. De plus cet algorithme est sûr de se terminer, même si les capacités sont irrationnelles, mais sa complexité n'est toujours pas optimale.
 \subsubsection{Application sur l'exemple}
 Tout d'abord, on a le chemin améliorant : $SABP$ de taille $3$ avec une valeur de flot améliorant égal à $2$.\\
 On obtient donc à droite le réseau résiduel $N_f$ :
@@ -658,9 +687,6 @@ Nous obtenons à droite le nouveau réseau résiduel $N_f$ :
 	
 	\end{tikzpicture}
 	\end{center}
-	
-
-
 Dans ce dernier réseau résiduel, si nous partons de la source $S$ nous ne pouvons atteindre que les sommets $A$ et $C$. Comme nous ne pouvons plus atteindre le puits $P$, cela signifie que le flot obtenu est maximal.\\
 Finalement la coupe minimale de ce réseau est l'ensemble $\{S,A,C\}$ et son flot maximal est de valeur $5$.\\
 
@@ -668,7 +694,12 @@ Finalement la coupe minimale de ce réseau est l'ensemble $\{S,A,C\}$ et son flo
 
 \subsubsection{Fonctionnement général}
 L'algorithme de Dinic est semblable à celui d'Edmonds-Karp. Comme lui, il utilise des plus courts chemins améliorants entre la source et le puits afin d'augmenter la valeur du flot. \\Pour les trouver, il faudra étiqueter les sommets en fonction de leur distance par rapport à la source et garder les arcs qui relient un sommet à un sommet de distance immédiatement supérieure. Ceci nous donnera le réseau de niveau $N_L$ obtenu à partir du réseau résiduel $N_f$.\\
-Nous aurons également besoin du flot bloquant. Il est défini comme suit : un flot est bloquant si $\forall C$ chemin entre la source et le puits, $\exists xy$ un arc dans $C$ où $f(xy)=c(xy)$.\\
+Nous aurons également besoin du flot bloquant.
+\begin{definition}
+	Un flot $f$ est dit bloquant si pour tout chemin $C$ entre la source $s$ et le puits $t$, il existe $xy$ un arc dans $C$ où $f(xy)=c(xy)$.
+
+	Autrement dit, un flot est bloquant si tout $(s,t)$-chemin contient un arc où le flot est égal à la capacité.
+\end{definition}
 
 \subsubsection{Algorithme}
 Pour tout arc $xy$ du graphe $G$: on initialise la valeur du flot de $xy$ à $0$.\\
@@ -912,7 +943,21 @@ Nous avons un chemin améliorant $SABDP$ de valeur $1$.
 
 Le puits $P$ n'est plus atteignable, l'algorithme se termine.\\
 Finalement la coupe minimale de ce réseau est l'ensemble $\{S,A,C\}$ et son flot maximal est de valeur $5$.\\
-
+\subsection{Récapitulatif des algorithmes et leur complexité}
+\begin{table}[H]
+	\centering
+	\begin{tabular}{|c|c|c|}
+		\hline
+		Algorithme & Complexité & Complexité en fonction de $n$ \\
+		\hline
+		Ford-Fulkerson & $O(|E|f_{max})$ &$O(n^2 f_{max})$\\
+		Edmonds-Karp & $O(|V||E|^2)$ &$O(n^5)$\\
+		Dinic & $O(|V|^2|E|)$& $O(n^4)$\\
+		Poussage-Réétiquetage & $O(|V|^2|E|)$&$O(n^4)$ \\
+		\hline
+	\end{tabular}
+	\caption{Récapitulatif des algorithmes de flot maximum}
+\end{table}
 
 %Expliquer pour chaque algo, ce qu'il fait, sa complexité, les avantages/inconvénients et faire un exemple (prendre le même pour tous les algos)
 %Faire un graphique qui montre la courbe du temps de calculs de chaque algo en fonction du nombre de sommet

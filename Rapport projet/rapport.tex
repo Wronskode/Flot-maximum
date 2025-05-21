@@ -23,11 +23,16 @@
 \usepackage{datetime}
 \usepackage{numprint}
 \usepackage{listings}
+\usepackage{tcolorbox}
+\usepackage{xcolor}
 \lstset{
   basicstyle=\ttfamily\small,
   frame=single,
   columns=fullflexible
 }
+
+
+
 \newdate{frontpagedate}{20}{05}{2025} 
 \begin{document}
 \pagenumbering{gobble} 
@@ -92,6 +97,7 @@ Depuis plusieurs décennies, de nombreux algorithmes ont été développés pour
 L’objectif de ce travail est de comparer ces différentes méthodes de résolution, à la fois sur le plan théorique et expérimental. Nous mettrons en \oe uvre ces algorithmes, puis les testerons sur des jeux d’essais variés pour évaluer leurs performances respectives.
 
 Ce rapport est structuré comme suit : après une présentation des méthodes considérées, nous décrivons notre méthodologie expérimentale, puis nous analysons les résultats obtenus avant de conclure sur les perspectives ouvertes par ce travail.
+
 \subsection{Présentation détaillée du problème de flot maximum}
 Le problème du flot maximum se définit sur un graphe orienté $G = (V, E)$, où $V$ est l’ensemble des sommets et $E$ l’ensemble des arcs. Chaque arc $(u, v) \in E$ est associé à une capacité $c(u, v) \geq 0$, représentant la quantité maximale de flot qui peut circuler de $u$ vers $v$. Si $(u, v)\notin E$, on suppose que $c(u, v) = 0$. On désigne par $s \in V$ la source et par $t \in V$ le puits, avec $s \neq t$.
 
@@ -148,8 +154,11 @@ Le problème du flot maximum consiste donc à trouver un flot $f$ respectant les
 \end{figure}
 
 Dans cet exemple, le sommet $A$ reçoit deux unités depuis la source et les envoies au sommet $B$. Le sommet $B$ redistribue ce flot vers les sommets $D$ et $P$. La valeur du flot est de $2$, c'est la somme des flots sortants de la source $S$ (et également la somme des flots entrants dans le puits). 
+
 \section{Définitions générales}
+
 \subsection{Réseau résiduel}
+
 \begin{definition}[Réseau résiduel]\,
 Soit $G$ un graphe avec $s$, $p$ et $c$ respectivement la source, le puits et la fonction de capacité associés au graphe $G$. Notons $N = (G,s,p,c)$ un réseau de flot dans $G$ avec un flot $f$.\\
 Le réseau résiduel de $N$ et d'un flot $f$, noté $N_f$, est construit de la manière suivante :\\
@@ -218,7 +227,11 @@ où $\gamma = \min \{c'(x_ix_{i+1}):\: i \in [\![0;k-1]\!]\}$
 Concrètement, un chemin améliorant est un chemin dans le réseau résiduel. On le munit d'un flot $f'$ sur ce chemin qui est la quantité maximale de flot qui peut être envoyée le long de ce chemin. Cette quantité est déterminée par la capacité résiduelle minimale le long du chemin.
 \end{itemize}
 \end{definition}
+
+
 \section{Différents algorithmes et exemples}
+\label{sec:algos}
+
 Nous prendrons l'exemple suivant pour illustrer les différents algorithmes :
 
 \begin{center}
@@ -951,7 +964,10 @@ Finalement la coupe minimale de ce réseau est l'ensemble $\{S,A,C\}$ et son flo
 
 %Expliquer pour chaque algo, ce qu'il fait, sa complexité, les avantages/inconvénients et faire un exemple (prendre le même pour tous les algos)
 %Faire un graphique qui montre la courbe du temps de calculs de chaque algo en fonction du nombre de sommet
+
 \section{Programmation linéaire}
+\label{sec:pl}
+
 Nous avons également comparé nos algorithmes avec les meilleurs solveurs de programmation linéaire. Pour cela nous avons utilisé la modélisation standard du problème de flot maximum :
 \[
 		\begin{aligned}
@@ -976,6 +992,15 @@ Soit $M$ une matrice, on dit qu'elle est totalement unimodulaire si pour toute s
 \end{definition}
 \begin{eg}\,
 
+<<<<<<< HEAD
+\paragraph{Théorème (Hoffman \& Kruskal, 1956)\cite{hoffmankruskal1956} :} Une matrice entière est totalement unimodulaire si et seulement si le polyhèdre défini par $\{x : Ax \leq b, x \geq 0\}$ est un polyèdre entier pour tout vecteur $b$ entier.
+
+
+Ce que nous apprend ce théorème, c'est que tout problème linéaire dont la matrice de contraintes est totalement unimodulaire et dont le vecteur de contraintes est entier, a une solution entière.
+
+\paragraph{Théorème :} La matrice du problème de flot maximum est totalement unimodulaire.
+
+=======
 	$A = \begin{pmatrix}
 	-1 & -1 & 0 & 0 & 0 & 1 \\
 	1 & 0 & -1 & -1 & 0 & 0 \\
@@ -995,6 +1020,7 @@ Ce que nous apprend ce théorème, c'est que tout problème linéaire dont la ma
 \begin{theorem}
 La matrice du problème de flot maximum est totalement unimodulaire.
 \end{theorem}
+>>>>>>> e781032b7f5b0f2cd9031cee2db01ac1f9f091e8
 Et comme le vecteur de contraintes est entier (car les capacités sont entières), la solution optimale est entière.
 
 L'intérêt de ce théorème est que, bien que la programmation linéaire en nombres entiers soit \textsc{NP-complet}, dans le cas du flot maximum, on peut utiliser un solveur de programmation linéaire classique pour obtenir une solution entière en temps polynomial.
@@ -1036,6 +1062,8 @@ Cette classe permet de générer un réseau de flot orienté en plusieurs étape
 En résumé, cette classe construit un graphe orienté aléatoire, puis désigne deux extrémités pour simuler un réseau de flot. Le problème est le suivant : comment construire des graphes pertinents afin de tester les algorithmes ? 
 
 \subsection{Tests sur les graphes générés}
+\label{sec:creer_instances}
+
 Les graphes étant générés aléatoirement, on peut obtenir des graphes non connexes, des sommets non reliés à la source ou au puits, etc. Tout cela fausseraient les instances. En effet, si le graphe n’est pas connexe, cela pourrait fausser les résultats : un graphe de taille $1000$ pourrait se résumer à un de taille $100$, ce que l’on ne souhaite pas. On pourrait même tomber sur des graphes où nos algorithmes ne convergeraient pas, par exemple si la source et le puits ne sont pas reliés.\\
 
 On va donc devoir créer un ensemble de tests sur nos graphes afin de s’assurer qu’ils soient bien formés et propices à être utilisées comme instances. Cela pourra prendre du temps car nous générons les graphes aléatoirement et n’en conservons qu’une petite partie, mais ce n’est pas très grave, car le jeu d’instances n’a besoin d’être créé qu’une seule fois. Il n’est pas nécessaire que le code qui permet sa création soit bien optimisé : on le lance un soir et on récupère les instances le lendemain dans le pire des cas.\\
@@ -1162,6 +1190,89 @@ $\frac{200 \times (200-1)}{2} \times 2 \times 0{,}9 = 35 820$ arêtes
 \end{center}
 
 Le $\frac{200 \times (200-1)}{2} \times 2$ correspondant à toutes les arêtes possibles. En effet $\frac{n \times (n-1)}{2}$ pour le graphe complet, $\times 2$ car les arêtes sont orientés. On multiplie par la densité pour savoir le nombre d'arête en moyenne, dans notre exemple la densité est de $0,9$.
+
+\section{Développement Logiciel}
+
+\subsection{Organisation du projet}
+
+\subsection{Présentation des classes}
+
+Dans cette section, nous présentons les différentes classes développées dans le cadre de ce projet, ainsi que leur rôle et leurs interactions.
+
+Les classes principales que nous avons implémentées sont les suivantes :
+
+\begin{itemize}
+    \item \colorbox{gray!20}{\textcolor{violet}{Vertex}}
+    \item \colorbox{gray!20}{\textcolor{violet}{Graph}}
+    \item \colorbox{gray!20}{\textcolor{violet}{FlowNetwork}}
+    \item \colorbox{gray!20}{\textcolor{violet}{FileFlowNetwork}}
+    \item \colorbox{gray!20}{\textcolor{violet}{RandomFlowNetwork}}
+    \item \colorbox{gray!20}{\textcolor{violet}{PL}}
+    \item \colorbox{gray!20}{\textcolor{violet}{Curve}}
+    \item \colorbox{gray!20}{\textcolor{violet}{Program}}
+\end{itemize}
+
+Nous détaillons maintenant chacune de ces classes en exposant leur conception, leurs fonctionnalités principales, ainsi que leur rôle dans le fonctionnement global du projet.
+
+\subsubsection{Vertex}
+
+La classe \textcolor{violet}{Vertex} représente un sommet dans un graphe. Chaque sommet est identifié par un nom ou une étiquette, généralement une chaîne de caractères. Cette classe permet d'identifier et de manipuler les nœuds du graphe. Deux sommets sont considérés comme égaux s'ils portent le même nom, ce qui autorise leur utilisation comme clés dans des dictionnaires, notamment pour stocker les arêtes, les capacités ou les flots.
+
+\subsubsection{Graph}
+
+La classe \textcolor{violet}{Graph} représente un graphe orienté pondéré, outils de base pour tous nos algorithmes. En effet la classe \textcolor{violet}{FlowNetwork}, qui représente un réseau le réseau de flot qu'on va utiliser, hérite de la classe \textcolor{violet}{Graph}. Un objet de \textcolor{violet}{Graph} est défini par deux dictionnaires : \textcolor{blue!60}{AdjVertices}, qui associe chaque sommet à l'ensemble de ses successeurs, et \textcolor{blue!60}{Edges}, qui stocke les arêtes du graphe avec leur capacité sous forme de couple de sommets.
+Quelques fonctions de bases sont codées, comme par exemple \textcolor{green!30!black}{NeighborsLeft} où \textcolor{green!30!black}{NeighborsRight}, qui retournent respectivement les voisins entrants et sortants d'un sommet donné, une fonction \textcolor{green!30!black}{Clone} qui clone le graphe et d'autres fonctionnalités classiques.
+
+\subsubsection{FlowNetwork}
+
+La classe \textcolor{violet}{FlowNetwork} est au cœur de la bibliothèque de calcul de flot maximal. Elle étend la structure de base \textcolor{violet}{Graph} en introduisant plusieurs notions fondamentales. C'est depuis cette classe que l'on va gérer tout les algorithmes de calcul de flot maximum qui consituent le coeur de ce projet. Nous nous proposons donc naturellement de détailler cette classe, qui est la plus importante.\\
+
+En plus de l'héritage de la classe \textcolor{violet}{Graph}, la classe \textcolor{violet}{FlowNetwork} introduit les attributs \textcolor{blue!60}{Source} et \textcolor{blue!60}{Puits}, qui représentent respectivement le sommet source et le sommet puits du réseau. Ces attributs sont essentiels pour les algorithmes de flot maximal, car ils définissent les points d'entrée et de sortie du réseau.\\
+
+Cette classe concentrant tout les algorithmes de calcul sur un réseau de flot, elle contient évidement tout les algorithmes de de calcul de flot maximum que nous avons implémentés. Nous en redonnons ici une liste non exhaustive :
+\begin{itemize}
+	\item \textcolor{green!30!black}{FordFulkerson}
+	\item \textcolor{green!30!black}{EdmondsKarp}
+	\item \textcolor{green!30!black}{Dinic}
+	\item \textcolor{green!30!black}{PushRelabel}
+\end{itemize}
+La résolution via la programmation linéaire fait l'objet d'une classe séparée, \textcolor{violet}{PL}, car cette méthode ne constitue pas réellement en elle même un algorithmes sur les réseaux de flot.\\
+
+Plusieurs fontions essentielles aux fonctionnement de ces algorithmes où à d'autres taches telles que la constructions d'instances on également été implémentées. En voici les plus importantes :
+\begin{itemize}
+	\item \textcolor{green!30!black}{DFS\_GetPathInLevelGraph} : implémente une recherche en profondeur (DFS) pour trouver un chemin augmentant dans un graphe résiduel (typiquement dans l'algorithme de FordFulkerson ou de Dinic).
+	\item \textcolor{green!30!black}{BFS\_GetLevels} : utilise une recherche en largeur (BFS) pour attribuer à chaque sommet son niveau (distance minimale en nombre d’arêtes depuis la source) dans un graphe.
+	\item \textcolor{green!30!black}{GetResidualGraph} : permet de récupérer le graphe résiduel du réseau de flot.
+	\item \textcolor{green!30!black}{GetMaxFlow} : permet de récupérer la valeur du flot maximum. L'interêt et les propriétés d'un tel graphes sont détaillés dans la section sur les algorithmes de flot maximum.
+	\item \textcolor{green!30!black}{IsConnected} : cette méthode n'est pas utilisée dans les algorithmes de flot maximum, mais elle a été très utile lors de la création des instances. En effet, elle permet de vérifier plusieurs propriétés sur le graphe qui sont essentielles pour s'assurer que le graphe est "bien formé". Comme détaillé dans la partie sur les instances, elle vérifie que tout sommet est accessible depuis la source et que tout sommet admet un chemin jusqu'au puits. Elle décide donc si un graphe est gardé comme instance ou jeté.
+	\item \textcolor{green!30!black}{CreateGraphFile} : permet de créer un fichier texte contenant la représentation du graphe. Cette méthode est utilisée lors de la création des instances, afin de pouvoir les sauvegarder et les réutiliser plus tard.
+\end{itemize}
+Pour plus de precisions sur le fonctionnement des méthodes relatives aux algorithmes de flot maximum, nous vous renvoyons à la \hyperref[sec:algos]{\textcolor{black}{section sur les algorithmes de flot maximum.}}
+
+\subsubsection{FileFlowNetwork}
+
+La classe \textcolor{violet}{FileFlowNetwork} a pour rôle de générer dynamiquement un réseau de flot (\textcolor{violet}{FlowNetwork}) à partir d’un fichier texte structuré. Elle lit dans ce fichier les informations nécessaires à la construction du graphe : l'identifiant du sommet source, celui du puits, puis une liste d’arêtes définies par deux sommets et une capacité. Le fichier est lu ligne par ligne, chaque sommet étant instancié sous forme d’objet \textcolor{violet}{Vertex}, et les arêtes ajoutées avec leur poids dans un objet \textcolor{violet}{Graph}. À la fin de la lecture, la méthode \textcolor{green!30!black}{Generate} de la classe construit et retourne une instance de \textcolor{violet}{FlowNetwork} contenant la topologie complète du graphe, prête à être utilisée dans les algorithmes de flot maximum.
+
+\subsubsection{RandomFlowNetwork}
+La classe \textcolor{violet}{RandomFlowNetwork} est responsable de la génération aléatoire de graphes orientés, qui sont ensuite utilisés comme instances pour les algorithmes de flot maximum. Elle crée un graphe orienté en ajoutant des sommets et des arêtes de manière aléatoire, tout en respectant une densité spécifiée. La classe permet également de définir une source et un puits, ainsi que d'assigner des capacités aux arêtes. Sa méthode \textcolor{green!30!black}{Generate} retourne un objet \textcolor{violet}{FlowNetwork} représentant le réseau de flot. La methode de génération de graphes aléatoires est détaillée dans la \hyperref[sec:creer_instances]{\textcolor{black}{section sur la création des instances}}.
+
+\subsubsection{PL}
+
+La classe \textcolor{violet}{PL} (Programmation Linéaire) a pour rôle de modéliser le problème du calcul du flot maximum sur un graphe donné sous la forme d’un système linéaire, puis de le résoudre à l’aide de solveurs spécialisés tels que Google OR-Tools ou Gurobi. Elle construit un modèle dans lequel chaque variable représente le flot sur une arête, les contraintes traduisent les capacités maximales des arêtes et les lois de conservation du flot en chaque sommet intermédiaire (autres que la source et le puits), et la fonction objectif vise à maximiser le flot total sortant de la source. La méthode \textcolor{green!30!black}{SolveWithOrTools} implémente cette logique avec OR-Tools, tandis que \textcolor{green!30!black}{SolveWithGurobi} l’implémente via l’API Gurobi. Une méthode \textcolor{green!30!black}{AfficherSysteme} est également disponible pour visualiser les variables, les contraintes et la fonction objectif du système linéaire généré. Pour plus de détails nous vous renvoyons à la \hyperref[sec:pl]{\textcolor{black}{section sur la programmation linéaire}}.
+
+\subsubsection{Curve}
+
+La classe \textcolor{violet}{Curve} est chargée de mesurer les performances temporelles de différents algorithmes de calcul du flot maximum sur un ensemble d’instances de graphes, puis de générer automatiquement des courbes de benchmark. Pour une densité donnée, la méthode \textcolor{green!30!black}{CreateCurves} parcourt tous les fichiers de graphes correspondants dans un dossier, instancie le réseau de flot associé, et exécute chaque algorithme de calcul fourni tout en mesurant le temps d’exécution. Ces temps sont ensuite agrégés en fonction du nombre de sommets du graphe, permettant ainsi de tracer des courbes de performance (temps en fonction du nombre de sommets) pour chaque méthode. La bibliothèque ScottPlot est utilisée pour la génération des graphiques, qui sont ensuite enregistrés au format PNG. Cette classe permet donc de produire les courbes qui nous permettent de visualiser la complexité pratique des algorithmes de flot maximum en fonction de la taille du graphe.
+
+\subsubsection{Program}
+
+Cette \textcolor{violet}{Program} classe principale constitue le point d'entrée du programme. C’est depuis ce fichier que l’on appelle les différentes classes développées dans le projet pour effectuer les diverses actions nécessaires : génération des instances aléatoires, résolution du problème de flot maximum à l’aide de plusieurs algorithmes, et création des courbes de performances. Elle orchestre ainsi l’ensemble du processus expérimental, de la construction des graphes jusqu’à l’analyse des résultats.
+
+\subsection{Langage et classes}
+
+\subsection{Tests}
+
+
 \section{Méthodologie Expérimentale}
 \section{Résultats et Discussion}
 \section{Revue de la Littérature}

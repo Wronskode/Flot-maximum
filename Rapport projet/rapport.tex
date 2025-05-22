@@ -15,10 +15,13 @@
 \usetikzlibrary{arrows.meta,calc,positioning,shapes,arrows}
 %\usepackage{pdflscape}
 \usepackage{geometry}
-\usepackage{biblatex}
+\usepackage[backref=true]{biblatex}
 \addbibresource{biblio.bib}
 \usepackage{csquotes}
-\usepackage[colorlinks=true ,urlcolor=blue,urlbordercolor={0 1 1}]{hyperref}
+\usepackage[colorlinks=true, urlcolor=blue,urlbordercolor={0 1 1}]{hyperref}
+\hypersetup{
+	pdftitle={Résolution du problème du flot maximum}
+}
 \usepackage{datetime}
 \usepackage{numprint}
 \usepackage{listings}
@@ -29,9 +32,6 @@
   frame=single,
   columns=fullflexible
 }
-
-
-
 \newdate{frontpagedate}{20}{05}{2025} 
 \begin{document}
 \pagenumbering{gobble} 
@@ -227,8 +227,13 @@ où $\gamma = \min \{c'(x_ix_{i+1}):\: i \in [\![0;k-1]\!]\}$
 Concrètement, un chemin améliorant est un chemin dans le réseau résiduel. On le munit d'un flot $f'$ sur ce chemin qui est la quantité maximale de flot qui peut être envoyée le long de ce chemin. Cette quantité est déterminée par la capacité résiduelle minimale le long du chemin.
 \end{itemize}
 \end{definition}
+Nous pouvons aussi définir la notion de $(s, t)$-coupe. Cette notion peut être interprétée comme une faiblesse dans un réseau : l'ensemble minimum de pannes pouvant déconnecter le réseau. C'est un problème très proche du flot maximum comme nous le verrons plus tard.
+\begin{definition}[$(s, t)$-coupe]
+	Soit $G = (V, E)$ un graphe. On appelle \emph{$(s, t)$-coupe} de $G$ un couple de sous-ensembles de sommets $(S, T)$ disjoints d'union $V$ tel que $s \in S$ et $t \in T$.
 
-
+	La capacité de la coupe $(S, T)$, notée $c(S, T)$, est la somme des capacités respectives des arcs de $S$ à $T$, soit $c(S, T) = \displaystyle\sum_{(u, v) \in S \times T} c(u, v)$.
+\end{definition}
+Le problème de la coupe minimum est la minimisation de la capacité $c(S, T)$, c'est-à-dire la recherche de la coupe $(S, T)$ qui minimise la capacité de la $(s, t)$-coupe.
 \section{Différents algorithmes et exemples}
 \label{sec:algos}
 
@@ -979,12 +984,13 @@ D'une manière générale, un problème de programmation linéaire peut être fo
 \end{align*}
 
 où :
-\begin{itemize}
+\begin{itemize}[label={\color{gray}\small \textbullet}]
 	\item $c$ est un vecteur de coefficients de la fonction objectif,
 	\item $x$ est le vecteur des variables de décision,
 	\item $A$ est une matrice de coefficients des contraintes,
 	\item $b$ est un vecteur de contraintes.
 \end{itemize}
+On appelle $c^T x$ la \emph{fonction objectif} et on la note souvent $z(x)$.
 \begin{eg}
 	\begin{align*}
 	\text{Maximiser}\quad &z(x) = 2x_1 + 1x_2 \\
@@ -1010,7 +1016,9 @@ Nous avons $A = \begin{pmatrix}
 	x_2
 	\end{pmatrix}$.
 \end{eg}
-
+\begin{remark}
+	Nous pouvons soit maximiser la fonction objectif, soit la minimiser. Mais dans tous les cas, $\min z(x) = -\max -z(x)$ donc il est facile de voir que les deux cas sont équivalents. De plus les contraintes peuvent aussi être des inégalités dans l'autre sens, c'est-à-dire avec $x_i \geq b_i$ par exemple.
+\end{remark}
 Dans cet exemple, les variables $x_1$ et $x_2$ sont réelles, c'est-à-dire que leur valeur peut être n'importe quel nombre réel positif. Cependant, dans de nombreux problèmes pratiques, les variables de décision doivent être des entiers (par exemple, le nombre d'objets à produire ou à transporter). Dans ce cas, on parle de \emph{programmation linéaire en nombres entiers}.
 La programmation linéaire en nombres entiers est un cas particulier de la programmation linéaire où toutes les variables sont contraintes à prendre des valeurs entières. Si certaines variables sont continues et d'autres entières, on parle de \emph{programmation linéaire mixte}.
 
@@ -1044,7 +1052,7 @@ Nous avons également comparé nos algorithmes avec les meilleurs solveurs de pr
 			\text{Sous les contraintes} \quad
 			&
 			 \begin{cases}
-				\displaystyle\sum_{u:(u, v)\in E} f(u, v) - \sum_{w:(v, w)\in E} f(v, w) = 0 & \forall v \in V \setminus \{s, t\} \\
+				\displaystyle\sum_{u:(u, v)\in E}{f(u, v)} - \sum_{w:(v, w)\in E}{f(v, w)} = 0 & \forall v \in V \setminus \{s, t\} \\
 				f(u, v) \leq c(u, v) & \forall (u, v) \in E \\
 				f(u, v) \geq 0 & \forall (u, v) \in E \\
 			\end{cases}
@@ -1054,7 +1062,7 @@ Nous avons également comparé nos algorithmes avec les meilleurs solveurs de pr
 La fonction à maximiser est la somme des flots sortants du sommet source $s$, par conservation du flot, c'est aussi égal à la somme des flots entrants dans le sommet puits. La première contrainte assure la conservation du flot pour chaque sommet, sauf pour la source et le puits. La deuxième contrainte assure que le flot sur chaque arête ne dépasse pas sa capacité et la dernière contrainte assure que le flot est positif ou nul.
 
 \begin{remark}
-	Une remarque importante est que les variables de flot $f(u, v)$ sont continues, donc a priori, rien n'assure que la solution optimale soit entière.
+	Une remarque importante est que les variables de flot $f(u, v)$ sont réelles, donc a priori, rien n'assure que la solution optimale soit entière.
 \end{remark}
 \subsection{Matrices totalement unimodulaires}
 \begin{definition}[Matrice totalement unimodulaire]
@@ -1085,13 +1093,41 @@ Une matrice entière est totalement unimodulaire si et seulement si le polyhèdr
 \end{theorem}
 
 Ce que nous apprend ce théorème, c'est que tout problème linéaire dont la matrice de contraintes est totalement unimodulaire et dont le vecteur de contraintes est entier, a une solution entière.
-
 \begin{theorem}
 La matrice du problème de flot maximum est totalement unimodulaire.
 \end{theorem}
 Et comme le vecteur de contraintes est entier (car les capacités sont entières), la solution optimale est entière.
 
 L'intérêt de ce théorème est que, bien que la programmation linéaire en nombres entiers soit \textsc{NP-complet}, dans le cas du flot maximum, on peut utiliser un solveur de programmation linéaire classique pour obtenir une solution entière en temps polynomial.
+\subsection{Le théorème Max-Flow/Min-Cut}
+Trouver une coupe minimale dans un réseau de flot est équivalent à trouver un flot maximum.
+\begin{theorem}[Max-Flow/Min-Cut]
+	Si $f$ est un flot dans un réseau de flot $G = (V, E)$, avec $s$ la source et $t$ le puits, alors les conditions suivantes sont équivalentes :
+	\begin{enumerate}
+		\item $f$ est un flot maximum ;
+		\item Il n'existe pas de chemin augmentant dans le réseau résiduel $G_f$ ;
+		\item La valeur du flot est égale à la capacité de la coupe minimale entre $s$ et $t$, c'est-à-dire : $|f| = c(S, T)$, pour une certaine coupe $(S, T)$ de $G$.
+	\end{enumerate}
+\end{theorem}
+La preuve de ce théorème sera donnée en annexe.
+
+Ce théorème a de nombreuses applications concrètes :
+\begin{eg}[Circulation routière]\,
+
+	\begin{itemize}[label={\color{gray}\small \textbullet}]
+		\item Objectif : déterminer la capacité maximale d'un réseau routier entre deux villes.
+		\item Le théorème Max-Flow/Min-Cut permet de d'identifier les goulots d'étranglement pour optimiser le trafic.
+	\end{itemize}
+\end{eg}
+\begin{eg}[Réseaux de télécommunications]\,
+
+	\begin{itemize}[label={\color{gray}\small \textbullet}]
+		\item Max-flow : combien de données peuvent être transmises entre deux points d'un réseau.
+		\item Min-cut : où placer des protections ou surveiller des failles critiques du réseau.
+	\end{itemize}
+\end{eg}
+
+Ainsi, nous comprenons que le flot maximum est un problème d'optimisation très important et résoudre rapidement ce problème est crucial dans de nombreux domaines.
 \subsection{Solveurs de programmation linéaire}
 Nous avons utilisé deux solveurs de programmation linéaire : \texttt{Gurobi} et \texttt{SCIP}, ces deux solveurs sont très performants et permettent de résoudre des problèmes de grande taille rapidement. \texttt{Gurobi} est un solveur commercial, réputé pour être l'un des plus rapides du marché, tandis que \texttt{SCIP} est un solveur open-source qui est probablement le meilleur dans sa catégorie.
 \section{Création des instances}

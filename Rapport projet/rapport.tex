@@ -3,14 +3,9 @@
 % Options possibles : 10pt, 11pt, 12pt (taille de la fonte)
 %                     oneside, twoside (recto simple, recto-verso)
 %                     draft, final (stade de développement)
-\usepackage{fontspec} % Pour les accents de Tomáš Kaiser
 \usepackage[french]{babel}  
 \usetikzlibrary{arrows,shapes,positioning}
-\usepackage{titling}
 \usepackage{float}
-\usepackage{tikz-uml}
-\usepackage{pgf-umlsd}
-\usepackage{tikz}
 \definecolor{myblue}{RGB}{85,114,193}
 \tikzset{Dotted/.style={
     line width=1pt,
@@ -20,23 +15,24 @@
 \usetikzlibrary{arrows.meta,calc,positioning,shapes,arrows}
 %\usepackage{pdflscape}
 \usepackage{geometry}
-\usepackage{biblatex}
+\usepackage[backref=true]{biblatex}
 \addbibresource{biblio.bib}
-\usepackage{graphicx} % Required for inserting images
-\usepackage[colorlinks=true ,urlcolor=blue,urlbordercolor={0 1 1}]{hyperref}
-\usepackage{float} 
+\usepackage{csquotes}
+\usepackage[colorlinks=true, urlcolor=blue,urlbordercolor={0 1 1}]{hyperref}
+\hypersetup{
+	pdftitle={Résolution du problème du flot maximum}
+}
 \usepackage{datetime}
 \usepackage{numprint}
 \usepackage{listings}
+\usepackage{tcolorbox}
+\usepackage{xcolor}
 \lstset{
   basicstyle=\ttfamily\small,
   frame=single,
   columns=fullflexible
 }
-%\usepackage{fullpage}
-\addbibresource{sample.bib}
-%\usepackage{minitoc}
-\newdate{frontpagedate}{10}{05}{2025} 
+\newdate{frontpagedate}{20}{05}{2025} 
 \begin{document}
 \pagenumbering{gobble} 
 \begin{center}
@@ -92,7 +88,6 @@ Dans ce travail, nous comparons différentes méthodes de résolution du problè
 \newpage
 \pagestyle{headings}
 \section{Introduction}
-
 Le problème du flot maximum est l’un des problèmes fondamentaux en algorithmique et en recherche opérationnelle. Il consiste à trouver, dans un réseau orienté avec des capacités sur les arcs, le flot de valeur maximale entre une source et un puits, tout en respectant les contraintes de capacité et de conservation des flots.
 
 Depuis plusieurs décennies, de nombreux algorithmes ont été développés pour résoudre ce problème, parmi lesquels on compte les méthodes classiques comme Ford-Fulkerson, Edmonds-Karp ou encore Dinic, mais aussi des approches basées sur la programmation linéaire. Ces algorithmes diffèrent à la fois par leur complexité théorique, leur comportement pratique et leur adaptabilité à différents types de graphes.
@@ -100,29 +95,32 @@ Depuis plusieurs décennies, de nombreux algorithmes ont été développés pour
 L’objectif de ce travail est de comparer ces différentes méthodes de résolution, à la fois sur le plan théorique et expérimental. Nous mettrons en \oe uvre ces algorithmes, puis les testerons sur des jeux d’essais variés pour évaluer leurs performances respectives.
 
 Ce rapport est structuré comme suit : après une présentation des méthodes considérées, nous décrivons notre méthodologie expérimentale, puis nous analysons les résultats obtenus avant de conclure sur les perspectives ouvertes par ce travail.
+
 \subsection{Présentation détaillée du problème de flot maximum}
-Le problème du flot maximum se définit sur un graphe orienté $G = (V, E)$, où $V$ est l’ensemble des sommets et $E$ l’ensemble des arcs. Chaque arc $(u, v) \in E$ est associé à une capacité $c(u, v) \geq 0$, représentant la quantité maximale de flot qui peut circuler de $u$ vers $v$. Si $(u, v)\notin E$, on suppose que $c(u, v) = 0$. On désigne par $s \in V$ la source et par $t \in V$ le puits, avec $s \neq t$.
-
-Un \emph{flot} est une fonction $f : V^2 \to \mathbb{R}$ qui satisfait les contraintes suivantes :
-\begin{itemize}
-    \item \textbf{Capacité} : $\forall (u, v) \in V^2,\ 0 \leq f(u, v) \leq c(u, v)$ ;
-    \item \textbf{Anti-symétrie} : $\forall (u, v) \in V^2,\ f(u, v) = -f(v, u)$ ;
-    \item \textbf{Conservation} : $\forall v \in V \setminus \{s, t\},\ \sum_{(u, v) \in E} f(u, v) = \sum_{(v, z) \in E} f(v, z)$, c’est-à-dire que tout sommet intermédiaire conserve le flot (pas de perte ni de création de matière) ;
-    \item \textbf{Valeur du flot} : la quantité totale envoyée par la source est $|f| = \sum_{v \in V} f(s, v)$, et c’est cette valeur que l’on cherche à maximiser.
-\end{itemize}
-
-On appelle \emph{réseau de flot} un quadruplet $(G, s, t, c)$, où :
+Le problème du flot maximum se définit sur un graphe orienté $G = (V, E)$, où $V$ est l’ensemble des sommets et $E$ l’ensemble des arcs. Chaque arc $(u, v) \in E$ est associé à une capacité $c(u, v) \geq 0$, représentant la quantité maximale de flot qui peut circuler de $u$ vers $v$. Si $(u, v)\notin E$, on suppose que $c(u, v) = 0$. On désigne par $s \in V$ la source et par $t \in V$ le puits, avec $s \neq t$. Formalisons le problème du flot maximum comme suit :
+\begin{definition}[Réseau de flot]
+	On appelle \emph{réseau de flot} un quadruplet $(G, s, t, c)$, où :
 \begin{itemize}
     \item $G = (V,E)$ est un graphe orienté,
     \item $s \in V$ est la source,
     \item $t \in V$ est le puits ($s \neq t$),
     \item $c : V^2 \to \mathbb{R}^+$ est une fonction de capacité sur les arcs, et qui est nulle si l’arc n’existe pas.
 \end{itemize}
-Le problème du flot maximum consiste donc à trouver un flot $f$ respectant les contraintes ci-dessus et maximisant $|f|$. Dans notre cas particulier, nous allons nous intéresser à des graphes orientés avec un flot entier et des capacités entières.
+\end{definition}
+\begin{definition}[Flot]
+	Un \emph{flot} est une fonction $f : V^2 \to \mathbb{R}$ qui satisfait les contraintes suivantes :
+\begin{itemize}
+    \item \textbf{Capacité} : $\forall (u, v) \in V^2,\ 0 \leq f(u, v) \leq c(u, v)$ ;
+    \item \textbf{Anti-symétrie} : $\forall (u, v) \in V^2,\ f(u, v) = -f(v, u)$ ;
+    \item \textbf{Conservation} : $\forall v \in V \setminus \{s, t\},\ \displaystyle\sum_{(u, v) \in E} f(u, v) = \sum_{(v, z) \in E} f(v, z)$, c’est-à-dire que tout sommet intermédiaire conserve le flot (pas de perte ni de création de matière) ;
+    \item \textbf{Valeur du flot} : la quantité totale envoyée par la source est $|f| = \displaystyle\sum_{v \in V} f(s, v)$
+\end{itemize}
+\end{definition}
+Le problème du flot maximum consiste donc à trouver un flot $f$ dans un réseau de flot, respectant les contraintes ci-dessus et maximisant $|f|$. Dans notre cas particulier, nous allons nous intéresser à des graphes orientés avec un flot entier et des capacités entières.
+\paragraph{Applications :} Le flot maximum possède de nombreuses applications concrètes : planification logistique, réseaux de transport (par exemple pour maximiser le trafic dans un réseau routier), routage dans les réseaux de communication, allocation de ressources, et même en algorithmique pour résoudre d’autres problèmes puisque le problème du flot maximum est \textsc{P-complet}. C'est-à-dire qu'il se résout en temps polynomial, et que tout problème polynomial peut s'y réduire par une réduction en espace logarithmique\cite{GOLDSCHLAGER1982105}.
 
-\paragraph{Applications :} Le flot maximum possède de nombreuses applications concrètes : planification logistique, réseaux de transport (par exemple pour maximiser le trafic dans un réseau routier), routage dans les réseaux de communication, allocation de ressources, et même en algorithmique pour résoudre d’autres problèmes puisque le problème du flot maximum est \textsc{P-complet}. C'est-à-dire qu'il se résout en temps polynomial, et que tout problème polynomial peut s'y réduire par une réduction en espace logarithmique.
+Durant la guerre froide, le problème de flot maximum a été utilisé par l'US Air Force pour impacter au maximum le réseau ferré soviétique\cite{schrijver2002history}.
 \subsection{Exemple}
-% \textit{Faire un exemple illustratif}
 \begin{figure}[H]
 	\begin{center}
 		\begin{tikzpicture}[
@@ -132,12 +130,12 @@ Le problème du flot maximum consiste donc à trouver un flot $f$ respectant les
 			]
 
 			% Les sommets
-			\node[vertex] (S) at (0.5, 1) {S};
+			\node[vertex] (S) at (0.5, 1) {$\mathcal{S}$};
 			\node[vertex] (A) at (2, 2) {A};
 			\node[vertex] (B) at (4, 2) {B};
 			\node[vertex] (C) at (2, 0) {C};
 			\node[vertex] (D) at (4, 0) {D};
-			\node[vertex] (P) at (5.5, 1) {P};
+			\node[vertex] (P) at (5.5, 1) {$\mathcal{P}$};
 				
 			% Les arêtes orientées
 			%\draw[->, bend left=15] (A) to (B);
@@ -156,8 +154,11 @@ Le problème du flot maximum consiste donc à trouver un flot $f$ respectant les
 \end{figure}
 
 Dans cet exemple, le sommet $A$ reçoit deux unités depuis la source et les envoies au sommet $B$. Le sommet $B$ redistribue ce flot vers les sommets $D$ et $P$. La valeur du flot est de $2$, c'est la somme des flots sortants de la source $S$ (et également la somme des flots entrants dans le puits). 
+
 \section{Définitions générales}
+
 \subsection{Réseau résiduel}
+
 \begin{definition}[Réseau résiduel]\,
 Soit $G$ un graphe avec $s$, $p$ et $c$ respectivement la source, le puits et la fonction de capacité associés au graphe $G$. Notons $N = (G,s,p,c)$ un réseau de flot dans $G$ avec un flot $f$.\\
 Le réseau résiduel de $N$ et d'un flot $f$, noté $N_f$, est construit de la manière suivante :\\
@@ -170,23 +171,72 @@ Pour chaque arc $xy$ de $G$ :
 \end{itemize}
 Ceci nous donne $N_f = (G',s,p,c')$.
 \end{definition}
+\begin{eg}
+	Le réseau résiduel de l'exemple précédent est le suivant :
+	\begin{figure}[H]
+	\begin{center}
+		\begin{tikzpicture}[
+		vertex/.style={circle, draw, fill=blue!20, inner sep=2pt},
+		highlight/.style={->, line width=3pt, draw=green!100},
+		every edge/.style={draw, ->, thick},
+		->,>=stealth
+		]
+	
+
+		\node[vertex] (S) at (0.5, 1) {$\mathcal{S}$};
+		\node[vertex] (A) at (2, 2) {A};
+		\node[vertex] (B) at (4, 2) {B};
+		\node[vertex] (C) at (2, 0) {C};
+		\node[vertex] (D) at (4, 0) {D};
+		\node[vertex] (P) at (5.5, 1) {$\mathcal{P}$};
+	
+		\draw[->] (S) to node[midway, above left] {2} (A);
+		\draw[->] (S) to node[midway, below left] {3} (C);
+		\draw[->, bend left=15] (A) to node[midway, above] {1} (B);
+		\draw[->] (A) to node[midway, left] {2} (C);
+		\draw[->, bend left=15] (B) to node[midway, below] {2} (A);
+		\draw[->, bend right=15] (B) to node[midway, left] {2} (D);
+		\draw[->, bend right=15] (D) to node[midway, right] {1} (B);
+		\draw[->] (C) to node[midway, below] {2} (D);
+		\draw[->] (D) to node[midway, below left] {1} (A);
+		\draw[->] (D) to node[midway, below right] {3} (P);
+		\draw[->] (B) to node[midway, above right] {1} (P);
+	
+	\end{tikzpicture}
+		\caption{Réseau résiduel de l'exemple précédent.}
+	\end{center}
+\end{figure}
+Comme on peut le voir, le réseau résiduel est un graphe obtenu à partir d'un réseau de flot et d'un flot, et la plupart des algorithmes de flot maximum utilisent le réseau résiduel pour trouver des chemins améliorants.
+\end{eg}
 \subsection{Chemin et flot améliorants}
 \begin{definition}[Chemin améliorant]\,
 \begin{itemize}
 	\item
-    Un chemin améliorant pour $N$ et $f$ est un chemin de $s$ à $p$ dans la réseau résiduel $N_f$.
+    Un \emph{chemin améliorant} pour un réseau de flot $N$ muni d'un flot $f$ est un chemin de $s$ à $p$ dans la réseau résiduel $N_f$.
     \item
-    Soit $C = x_0,x_1,...,x_k$ un chemin améliorant dans $N_f$, le flot améliorant correspondant est :
+    Soit $C = x_0,x_1,\ldots,x_k$ un chemin améliorant dans $N_f$, le flot améliorant correspondant est :
 $f'(xy) = \left\{
     \begin{array}{ll}
         \gamma & \mbox{si } xy \mbox{ est un arc de C} \\
-        0 & \mbox{sinon.}
+        0 & \mbox{sinon}
     \end{array}
 \right.$
-avec $\gamma = \min \{c'(x_ix_{i+1}); i \in [\![0;k-1]\!]\}$\\
+
+où $\gamma = \min \{c'(x_ix_{i+1}):\: i \in [\![0;k-1]\!]\}$
+
+Concrètement, un chemin améliorant est un chemin dans le réseau résiduel. On le munit d'un flot $f'$ sur ce chemin qui est la quantité maximale de flot qui peut être envoyée le long de ce chemin. Cette quantité est déterminée par la capacité résiduelle minimale le long du chemin.
 \end{itemize}
 \end{definition}
-\section{Différents algorithmes et exemple}
+Nous pouvons aussi définir la notion de $(s, t)$-coupe. Cette notion peut être interprétée comme une faiblesse dans un réseau : l'ensemble minimum de pannes pouvant déconnecter le réseau. C'est un problème très proche du flot maximum comme nous le verrons plus tard.
+\begin{definition}[$(s, t)$-coupe]
+	Soit $G = (V, E)$ un graphe. On appelle \emph{$(s, t)$-coupe} de $G$ un couple de sous-ensembles de sommets $(S, T)$ disjoints d'union $V$ tel que $s \in S$ et $t \in T$.
+
+	La capacité de la coupe $(S, T)$, notée $c(S, T)$, est la somme des capacités respectives des arcs de $S$ à $T$, soit $c(S, T) = \displaystyle\sum_{(u, v) \in S \times T} c(u, v)$.
+\end{definition}
+Le problème de la coupe minimum est la minimisation de la capacité $c(S, T)$, c'est-à-dire la recherche de la coupe $(S, T)$ qui minimise la capacité de la $(s, t)$-coupe.
+\section{Différents algorithmes et exemples}
+\label{sec:algos}
+
 Nous prendrons l'exemple suivant pour illustrer les différents algorithmes :
 
 \begin{center}
@@ -197,12 +247,12 @@ Nous prendrons l'exemple suivant pour illustrer les différents algorithmes :
 	]
 
 	% Les sommets
-    \node[vertex] (S) at (0.5, 1) {S};
+    \node[vertex] (S) at (0.5, 1) {$\mathcal{S}$};
     \node[vertex] (A) at (2, 2) {A};
 	\node[vertex] (B) at (4, 2) {B};
 	\node[vertex] (C) at (2, 0) {C};
 	\node[vertex] (D) at (4, 0) {D};
-	\node[vertex] (P) at (5.5, 1) {P};
+	\node[vertex] (P) at (5.5, 1) {$\mathcal{P}$};
 		
 	% Les arêtes orientées
 	%\draw[->, bend left=15] (A) to (B);
@@ -221,23 +271,42 @@ Nous prendrons l'exemple suivant pour illustrer les différents algorithmes :
 \subsection{L'algorithme de Ford-Fulkerson}
 
 \subsubsection{Fonctionnement général}
-L'algorithme de Ford-Fulkerson est le plus connu parmi tous. Celui-ci consiste à trouver un chemin améliorant entre la source et le puits afin d'augmenter la valeur du flot. Pour cela nous aurons besoin du graphe résiduel de $G$ et $f$ qui nous permettra de savoir les capacités restantes disponibles.\\
-
+L'algorithme de Ford-Fulkerson est le plus connu parmi tous. Celui-ci consiste à trouver un chemin améliorant entre la source et le puits afin d'augmenter la valeur du flot. Pour cela nous aurons besoin du graphe résiduel de $(G, f)$ qui nous permettra de savoir les capacités restantes disponibles.
 \subsubsection{Algorithme}
-Pour tout arc $xy$ du graphe $G$: on initialise la valeur du flot de $xy$ à $0$.\\
-Tant qu'il existe un chemin améliorant $C$ dans le graphe résiduel de $G$ et $f$:
-\begin{itemize}
-	\item
-    Calculer le flot améliorant $f'$ correspondant.
-    \item 
-    Augmenter $f$ par $f'$
-\end{itemize}
-Retourner $f$.\\
-
+% Pour tout arc $xy$ du graphe $G$: on initialise la valeur du flot de $xy$ à $0$.\\
+% Tant qu'il existe un chemin améliorant $C$ dans le graphe résiduel de $G$ et $f$:
+% \begin{itemize}
+% 	\item
+%     Calculer le flot améliorant $f'$ correspondant.
+%     \item 
+%     Augmenter $f$ par $f'$
+% \end{itemize}
+% Retourner $f$.\\
+\begin{algorithm}[H]
+\caption{Algorithme de flot maximum}
+\textbf{Entrée :} Un réseau de flot $G = (V, A, c, s, t)$ \\
+\textbf{Sortie :} Un flot maximal $f$
+\begin{algorithmic}[1]
+\ForAll{arc $xy$ de $G$}
+    \State $f(xy) \gets 0$
+\EndFor
+\While{il existe un chemin simple $C$ dans le graphe résiduel $N_f$}
+    \State \Delta $\gets \min \{c'(u, v):\: (u, v)\in C\}$ 
+    \ForAll {$(u, v)\in C$}
+		\If {$(u, v)\in A$}
+			\State $f(u, v) \gets f(u, v) + \Delta$
+		\Else
+			\State $f(u, v) \gets f(v, u) - \Delta$
+		\EndIf
+	\EndFor
+\EndWhile
+\State \Return $f$
+\end{algorithmic}
+\end{algorithm}
 \subsubsection{Complexité}
-
+Un chemin améliorant peut être trouvé en $O(|A|)$ avec une recherche en profondeur ou en largeur par exemple, et un tel chemin augmente le flot d'au moins une unité, et d'au plus $|f^\star|$, où $f^\star$ représente un flot maximum. En notant $n$ le nombre de sommets et $m$ le nombre d'arcs, on a donc une complexité de $O(m|f^\star|)$ pour l'algorithme de Ford-Fulkerson \cite{cormen2009maxflow}.
 \subsubsection{Avantages/inconvénients}
-
+L'algorithme est facile à implémenter mais il n'est pas efficace dans le cas général. En effet, il peut ne pas se terminer si les capacités sont irrationnelles. De plus sa complexité n'est pas optimale et dépend de la valeur du flot maximum, nous verrons plus tard qu'il existe des algorithmes plus efficaces.
 \subsubsection{Application sur l'exemple}
 Tout d'abord, on a le chemin améliorant : $SABP$ avec une valeur de flot améliorant égal à $2$.\\
 On obtient donc à droite le réseau résiduel $N_f$ :
@@ -251,12 +320,12 @@ On obtient donc à droite le réseau résiduel $N_f$ :
 		]
 	
 		% --- Premier graphe (à gauche) ---
-		\node[vertex] (S) at (0.5, 1) {S};
+		\node[vertex] (S) at (0.5, 1) {$\mathcal{S}$};
 		\node[vertex] (A) at (2, 2) {A};
 		\node[vertex] (B) at (4, 2) {B};
 		\node[vertex] (C) at (2, 0) {C};
 		\node[vertex] (D) at (4, 0) {D};
-		\node[vertex] (P) at (5.5, 1) {P};
+		\node[vertex] (P) at (5.5, 1) {$\mathcal{P}$};
 
 		\draw[highlight] (S) -- (A);
 		\draw[highlight] (A) -- (B);
@@ -273,12 +342,12 @@ On obtient donc à droite le réseau résiduel $N_f$ :
 		\draw[->] (D) to node[midway, below right] {4} (P);
 	
 		% --- Deuxième graphe (à droite), décalé de +7 en x ---
-		\node[vertex] (S2) at ($(S)+(6,0)$) {S};
+		\node[vertex] (S2) at ($(S)+(6,0)$) {$\mathcal{S}$};
 		\node[vertex] (A2) at ($(A)+(6,0)$) {A};
 		\node[vertex] (B2) at ($(B)+(6,0)$) {B};
 		\node[vertex] (C2) at ($(C)+(6,0)$) {C};
 		\node[vertex] (D2) at ($(D)+(6,0)$) {D};
-		\node[vertex] (P2) at ($(P)+(6,0)$) {P};
+		\node[vertex] (P2) at ($(P)+(6,0)$) {$\mathcal{P}$};
 	
 		\draw[->] (S2) to node[midway, above left] {2} (A2);
 		\draw[->] (S2) to node[midway, below left] {3} (C2);
@@ -307,12 +376,12 @@ On obtient à droite le nouveau réseau résiduel $N_f$ :
 		]
 	
 		% --- Premier graphe (à gauche) ---
-		\node[vertex] (S) at (0.5, 1) {S};
+		\node[vertex] (S) at (0.5, 1) {$\mathcal{S}$};
 		\node[vertex] (A) at (2, 2) {A};
 		\node[vertex] (B) at (4, 2) {B};
 		\node[vertex] (C) at (2, 0) {C};
 		\node[vertex] (D) at (4, 0) {D};
-		\node[vertex] (P) at (5.5, 1) {P};
+		\node[vertex] (P) at (5.5, 1) {$\mathcal{P}$};
 
 		\draw[highlight] (S) -- (A);
 		\draw[highlight] (A) -- (C);
@@ -330,12 +399,12 @@ On obtient à droite le nouveau réseau résiduel $N_f$ :
 		\draw[->] (D) to node[midway, below right] {2/4} (P);
 	
 		% --- Deuxième graphe (à droite), décalé de +7 en x ---
-		\node[vertex] (S2) at ($(S)+(6,0)$) {S};
+		\node[vertex] (S2) at ($(S)+(6,0)$) {$\mathcal{S}$};
 		\node[vertex] (A2) at ($(A)+(6,0)$) {A};
 		\node[vertex] (B2) at ($(B)+(6,0)$) {B};
 		\node[vertex] (C2) at ($(C)+(6,0)$) {C};
 		\node[vertex] (D2) at ($(D)+(6,0)$) {D};
-		\node[vertex] (P2) at ($(P)+(6,0)$) {P};
+		\node[vertex] (P2) at ($(P)+(6,0)$) {$\mathcal{P}$};
 	
 		\draw[->] (S2) to node[midway, below left] {3} (C2);
 		\draw[->, bend left=15] (A2) to node[midway, above] {1} (B2);
@@ -361,12 +430,12 @@ On obtient à droite le nouveau réseau résiduel $N_f$ :
 		]
 	
 		% --- Premier graphe (à gauche) ---
-		\node[vertex] (S) at (0.5, 1) {S};
+		\node[vertex] (S) at (0.5, 1) {$\mathcal{S}$};
 		\node[vertex] (A) at (2, 2) {A};
 		\node[vertex] (B) at (4, 2) {B};
 		\node[vertex] (C) at (2, 0) {C};
 		\node[vertex] (D) at (4, 0) {D};
-		\node[vertex] (P) at (5.5, 1) {P};
+		\node[vertex] (P) at (5.5, 1) {$\mathcal{P}$};
 
 		\draw[highlight] (S) -- (C);
 		\draw[highlight] (C) -- (A);
@@ -385,12 +454,12 @@ On obtient à droite le nouveau réseau résiduel $N_f$ :
 		\draw[->] (D) to node[midway, below right] {3/4} (P);
 	
 		% --- Deuxième graphe (à droite), décalé de +7 en x ---
-		\node[vertex] (S2) at ($(S)+(6,0)$) {S};
+		\node[vertex] (S2) at ($(S)+(6,0)$) {$\mathcal{S}$};
 		\node[vertex] (A2) at ($(A)+(6,0)$) {A};
 		\node[vertex] (B2) at ($(B)+(6,0)$) {B};
 		\node[vertex] (C2) at ($(C)+(6,0)$) {C};
 		\node[vertex] (D2) at ($(D)+(6,0)$) {D};
-		\node[vertex] (P2) at ($(P)+(6,0)$) {P};
+		\node[vertex] (P2) at ($(P)+(6,0)$) {$\mathcal{P}$};
 	
 		\draw[->] (S2) to node[midway, below left] {2} (C2);
 		\draw[->, bend right=15] (A2) to node[midway, left] {1} (C2);
@@ -406,29 +475,47 @@ On obtient à droite le nouveau réseau résiduel $N_f$ :
 	\end{center}
 	
 
-Dans ce dernier réseau résiduel, si nous partons de la source $S$ nous ne pouvons atteindre que les sommets $A$ et $C$. Comme nous ne pouvons plus atteindre le puits $P$, cela signifie que le flot obtenu est maximal.\\
-Finalement la coupe minimale de ce réseau est l'ensemble $\{S,A,C\}$ et son flot maximal est de valeur $5$.\\
+Dans ce dernier réseau résiduel, si nous partons de la source $S$ nous ne pouvons atteindre que les sommets $A$ et $C$. Comme nous ne pouvons plus atteindre le puits $P$, cela signifie que le flot obtenu est maximal.
 
+Finalement la coupe minimale de ce réseau est l'ensemble $\{S,A,C\}$ et son flot maximal est de valeur $5$.
 \subsection{L'algorithme d'Edmonds-Karp}
-
 \subsubsection{Fonctionnement général}
-L'algorithme d'Edmonds-Karp est une spécificité de celui de Ford-Fulkerson. Celui-ci consiste à trouver le plus court chemin améliorant entre la source et le puits afin d'augmenter la valeur du flot. Pour le trouver, il suffit d'utiliser un parcours en largeur.\\
-
+L'algorithme d'Edmonds-Karp est une spécificité de celui de Ford-Fulkerson. Celui-ci consiste à trouver le plus court chemin améliorant entre la source et le puits afin d'augmenter la valeur du flot. Pour le trouver, il suffit d'utiliser un parcours en largeur.
 \subsubsection{Algorithme}
-Pour tout arc $xy$ du graphe $G$: on initialise la valeur du flot de $xy$ à $0$.\\
-Tant qu'il existe un plus court chemin améliorant $C$ dans le graphe résiduel de $G$ et $f$:
-\begin{itemize}
-	\item
-    Calculer le flot améliorant $f'$ correspondant.
-    \item 
-    Augmenter $f$ par $f'$
-\end{itemize}
-Retourner $f$.\\
-
+L'algorithme d'Edmonds-Karp est une variante de l'algorithme de Ford-Fulkerson. Il utilise un parcours en largeur pour trouver le plus court chemin améliorant dans le réseau résiduel, là où l'algorithme de Ford-Fulkerson peut utiliser n'importe quel chemin améliorant.
 \subsubsection{Complexité}
+La complexité de l'algorithme d'Edmonds-Karp est de $O(|A|^2|V|)$\cite{cormen2009maxflow}.
+% Pour prouver la complexité de l'algorithme d'Edmonds-Karp, nous avons besoin d'un lemme :
+% \begin{lemma}
+% 	Si l'algorithme d'Edmonds-Karp est appliqué à un réseau de flot $G = (V, A, c, s, t)$, alors pour tous les sommets $v\in V\setminus \{s, t\}$, la plus courte distance $\delta_f(u, v)$ dans le réseau résiduel $N_f$ augmente à chaque itération de l'algorithme.
+% \end{lemma}
+% \begin{proof}
+% 	Supposons que pour un certain sommet $v\in V\setminus \{s, t\}$, il y a une augmentation du flot qui fait que la plus courte distance de $s$ à $v$ diminue. 
 
+% 	Soit $f$ le flot juste avant la première itération qui fait décroitre la plus courte distance de $s$ à $v$, et soit $f'$ le flot après cette itération. Soit $v$ le sommet avec la distance $\delta_{f'}(s, v)$ la plus courte qui a diminué après l'augmentation du flot, on a donc $\delta_{f'}(s, v) < \delta_f(s, v)$. Soit $p = s \rightsquigarrow u \to v$ un plus court chemin de $s$ à $v$ dans le réseau résiduel $N_{f'}$, donc nous avons $(u, v)\in E_{f'}$ et $\delta_{f'}(s, u) = \delta_{f'}(s, v) - 1$.
+
+% 	Parce qu'avec la façon dont nous choisissons $v$, nous savons que la distance entre $u$ et $s$ ne peut pas décroitre, donc $\delta_{f'}(s, u) \geq \delta_f(s, u)$.
+
+% 	On a que $(u, v)\notin E_f$ car sinon, on aurait :
+% 	\begin{align*}
+% 		\delta_f(s, v) &\leq \delta_f(s, u) + 1 \text{ (inégalité triangulaire)}\\
+% 		&\leq \delta_{f'}(s, u) + 1\\
+% 		&= \delta_{f'}(s, v) 
+% 	\end{align*}
+
+% 	Ce qui contredit que le fait que $\delta_{f'}(s, v) < \delta_f(s, v)$.
+
+% 	Donc, pour que $(u, v)\notin E_f$, mais que $(u, v)\in E_{f'}$, il faut que l'augmentation du flot ait augmenté le flot de $v$ à $u$. L'algorithme d'Edmonds-Karp augmente toujours le flot sur le plus court chemin, et de plus, le plus court chemin de $s$ à $u$ dans $N_f$ a $(v, u)$ comme dernier arc. Donc :
+% 	\begin{align*}
+% 		\delta_{f}(s, v) &= \delta_f(s, u)-1\\
+% 		&\leq \delta_{f'}(s, u) - 1\\
+% 		&= \delta_{f'}(s, v) - 2
+% 	\end{align*}
+
+% 	Ce qui contredit le fait que $\delta_{f'}(s, v) < \delta_f(s, v)$.
+% \end{proof}
 \subsubsection{Avantages/inconvénients}
-
+La complexité de l'algorithme d'Edmonds-Karp ne dépend plus de la valeur du flot maximum, mais du nombre d'arcs et de sommets. De plus cet algorithme est sûr de se terminer, même si les capacités sont irrationnelles, mais sa complexité n'est toujours pas optimale.
 \subsubsection{Application sur l'exemple}
 Tout d'abord, on a le chemin améliorant : $SABP$ de taille $3$ avec une valeur de flot améliorant égal à $2$.\\
 On obtient donc à droite le réseau résiduel $N_f$ :
@@ -442,12 +529,12 @@ On obtient donc à droite le réseau résiduel $N_f$ :
 		]
 	
 		% --- Premier graphe (à gauche) ---
-		\node[vertex] (S) at (0.5, 1) {S};
+		\node[vertex] (S) at (0.5, 1) {$\mathcal{S}$};
 		\node[vertex] (A) at (2, 2) {A};
 		\node[vertex] (B) at (4, 2) {B};
 		\node[vertex] (C) at (2, 0) {C};
 		\node[vertex] (D) at (4, 0) {D};
-		\node[vertex] (P) at (5.5, 1) {P};
+		\node[vertex] (P) at (5.5, 1) {$\mathcal{P}$};
 	
 		% Arcs surlignés (avec /)
 		\draw[highlight] (S) -- (A);
@@ -466,12 +553,12 @@ On obtient donc à droite le réseau résiduel $N_f$ :
 		\draw[->] (D) to node[midway, below right] {4} (P);
 	
 		% --- Deuxième graphe (à droite), décalé ---
-		\node[vertex] (S2) at ($(S)+(6,0)$) {S};
+		\node[vertex] (S2) at ($(S)+(6,0)$) {$\mathcal{S}$};
 		\node[vertex] (A2) at ($(A)+(6,0)$) {A};
 		\node[vertex] (B2) at ($(B)+(6,0)$) {B};
 		\node[vertex] (C2) at ($(C)+(6,0)$) {C};
 		\node[vertex] (D2) at ($(D)+(6,0)$) {D};
-		\node[vertex] (P2) at ($(P)+(6,0)$) {P};
+		\node[vertex] (P2) at ($(P)+(6,0)$) {$\mathcal{P}$};
 	
 		% Aucun surlignage nécessaire ici
 		\draw[->] (S2) to node[midway, above left] {2} (A2);
@@ -502,12 +589,12 @@ On obtient à droite le nouveau réseau résiduel $N_f$ :
 		]
 	
 		% --- Premier graphe (à gauche) ---
-		\node[vertex] (S) at (0.5, 1) {S};
+		\node[vertex] (S) at (0.5, 1) {$\mathcal{S}$};
 		\node[vertex] (A) at (2, 2) {A};
 		\node[vertex] (B) at (4, 2) {B};
 		\node[vertex] (C) at (2, 0) {C};
 		\node[vertex] (D) at (4, 0) {D};
-		\node[vertex] (P) at (5.5, 1) {P};
+		\node[vertex] (P) at (5.5, 1) {$\mathcal{P}$};
 	
 		% Arcs surlignés
 		\draw[highlight] (S) -- (C);
@@ -526,12 +613,12 @@ On obtient à droite le nouveau réseau résiduel $N_f$ :
 		\draw[->] (D) to node[midway, below right] {2/4} (P);
 	
 		% --- Deuxième graphe (à droite), décalé de +7 ---
-		\node[vertex] (S2) at ($(S)+(6,0)$) {S};
+		\node[vertex] (S2) at ($(S)+(6,0)$) {$\mathcal{S}$};
 		\node[vertex] (A2) at ($(A)+(6,0)$) {A};
 		\node[vertex] (B2) at ($(B)+(6,0)$) {B};
 		\node[vertex] (C2) at ($(C)+(6,0)$) {C};
 		\node[vertex] (D2) at ($(D)+(6,0)$) {D};
-		\node[vertex] (P2) at ($(P)+(6,0)$) {P};
+		\node[vertex] (P2) at ($(P)+(6,0)$) {$\mathcal{P}$};
 	
 		% Arcs normaux
 		\draw[->] (S2) to node[midway, above left] {2} (A2);
@@ -562,12 +649,12 @@ Nous obtenons à droite le nouveau réseau résiduel $N_f$ :
 		]
 	
 		% --- Premier graphe (à gauche) ---
-		\node[vertex] (S) at (0.5, 1) {S};
+		\node[vertex] (S) at (0.5, 1) {$\mathcal{S}$};
 		\node[vertex] (A) at (2, 2) {A};
 		\node[vertex] (B) at (4, 2) {B};
 		\node[vertex] (C) at (2, 0) {C};
 		\node[vertex] (D) at (4, 0) {D};
-		\node[vertex] (P) at (5.5, 1) {P};
+		\node[vertex] (P) at (5.5, 1) {$\mathcal{P}$};
 	
 		% Arcs surlignés
 		\draw[highlight] (S) -- (A);
@@ -587,12 +674,12 @@ Nous obtenons à droite le nouveau réseau résiduel $N_f$ :
 		\draw[->] (D) to node[midway, below right] {3/4} (P);
 	
 		% --- Deuxième graphe (à droite), décalé de +7 ---
-		\node[vertex] (S2) at ($(S)+(6,0)$) {S};
+		\node[vertex] (S2) at ($(S)+(6,0)$) {$\mathcal{S}$};
 		\node[vertex] (A2) at ($(A)+(6,0)$) {A};
 		\node[vertex] (B2) at ($(B)+(6,0)$) {B};
 		\node[vertex] (C2) at ($(C)+(6,0)$) {C};
 		\node[vertex] (D2) at ($(D)+(6,0)$) {D};
-		\node[vertex] (P2) at ($(P)+(6,0)$) {P};
+		\node[vertex] (P2) at ($(P)+(6,0)$) {$\mathcal{P}$};
 	
 		% Arcs normaux
 		\draw[->] (S2) to node[midway, above left] {1} (A2);
@@ -607,17 +694,20 @@ Nous obtenons à droite le nouveau réseau résiduel $N_f$ :
 	
 	\end{tikzpicture}
 	\end{center}
-	
+Dans ce dernier réseau résiduel, si nous partons de la source $S$ nous ne pouvons atteindre que les sommets $A$ et $C$. Comme nous ne pouvons plus atteindre le puits $P$, cela signifie que le flot obtenu est maximal.
 
-
-Dans ce dernier réseau résiduel, si nous partons de la source $S$ nous ne pouvons atteindre que les sommets $A$ et $C$. Comme nous ne pouvons plus atteindre le puits $P$, cela signifie que le flot obtenu est maximal.\\
 Finalement la coupe minimale de ce réseau est l'ensemble $\{S,A,C\}$ et son flot maximal est de valeur $5$.\\
 
 \subsection{L'algorithme de Dinic}
 
 \subsubsection{Fonctionnement général}
 L'algorithme de Dinic est semblable à celui d'Edmonds-Karp. Comme lui, il utilise des plus courts chemins améliorants entre la source et le puits afin d'augmenter la valeur du flot. \\Pour les trouver, il faudra étiqueter les sommets en fonction de leur distance par rapport à la source et garder les arcs qui relient un sommet à un sommet de distance immédiatement supérieure. Ceci nous donnera le réseau de niveau $N_L$ obtenu à partir du réseau résiduel $N_f$.\\
-Nous aurons également besoin du flot bloquant. Il est défini comme suit : un flot est bloquant si $\forall C$ chemin entre la source et le puits, $\exists xy$ un arc dans $C$ où $f(xy)=c(xy)$.\\
+Nous aurons également besoin du flot bloquant.
+\begin{definition}
+	Un flot $f$ est dit \emph{bloquant} si pour tout chemin $C$ entre la source $s$ et le puits $t$, il existe $xy$ un arc dans $C$ où $f(xy)=c(xy)$.
+
+	Autrement dit, un flot est bloquant si tout $(s,t)$-chemin contient un arc où le flot est égal à la capacité.
+\end{definition}
 
 \subsubsection{Algorithme}
 Pour tout arc $xy$ du graphe $G$: on initialise la valeur du flot de $xy$ à $0$.\\
@@ -637,7 +727,8 @@ Retourner $f$.\\
 \subsubsection{Avantages/inconvénients}
 
 \subsubsection{Application sur l'exemple}
-Au début le flot est nul, le réseau résiduel $N_f$ à droite est donc le même que le réseau de flot $N$.\\
+Au début le flot est nul, le réseau résiduel $N_f$ à droite est donc le même que le réseau de flot $N$.
+
 Nous avons aussi en dessous, le réseau de niveau $N_L$ :
 
 
@@ -652,12 +743,12 @@ Nous avons aussi en dessous, le réseau de niveau $N_L$ :
 		\def\xshift{6}
 	
 		% --- Graphe 1 ---
-		\node[vertex] (S1) at (0.5, 1) {S};
+		\node[vertex] (S1) at (0.5, 1) {$\mathcal{S}$};
 		\node[vertex] (A1) at (2, 2) {A};
 		\node[vertex] (B1) at (4, 2) {B};
 		\node[vertex] (C1) at (2, 0) {C};
 		\node[vertex] (D1) at (4, 0) {D};
-		\node[vertex] (P1) at (5.5, 1) {P};
+		\node[vertex] (P1) at (5.5, 1) {$\mathcal{P}$};
 	
 		\draw (S1) to node[midway, above left] {4} (A1);
 		\draw (S1) to node[midway, below left] {3} (C1);
@@ -670,12 +761,12 @@ Nous avons aussi en dessous, le réseau de niveau $N_L$ :
 		\draw (D1) to node[midway, below right] {4} (P1);
 	
 		% --- Graphe 2 ---
-		\node[vertex] (S2) at ($(S1)+(\xshift,0)$) {S};
+		\node[vertex] (S2) at ($(S1)+(\xshift,0)$) {$\mathcal{S}$};
 		\node[vertex] (A2) at ($(A1)+(\xshift,0)$) {A};
 		\node[vertex] (B2) at ($(B1)+(\xshift,0)$) {B};
 		\node[vertex] (C2) at ($(C1)+(\xshift,0)$) {C};
 		\node[vertex] (D2) at ($(D1)+(\xshift,0)$) {D};
-		\node[vertex] (P2) at ($(P1)+(\xshift,0)$) {P};
+		\node[vertex] (P2) at ($(P1)+(\xshift,0)$) {$\mathcal{P}$};
 	
 		\draw (S2) to node[midway, above left] {4} (A2);
 		\draw (S2) to node[midway, below left] {3} (C2);
@@ -727,12 +818,12 @@ On a donc un chemin améliorant $SABP$ de valeur $2$ ainsi qu'un chemin amélior
 		]
 	
 		% Graphe 1
-		\node[vertex] (S1) at (0.5, 1) {S};
+		\node[vertex] (S1) at (0.5, 1) {$\mathcal{S}$};
 		\node[vertex] (A1) at (2, 2) {A};
 		\node[vertex] (B1) at (4, 2) {B};
 		\node[vertex] (C1) at (2, 0) {C};
 		\node[vertex] (D1) at (4, 0) {D};
-		\node[vertex] (P1) at (5.5, 1) {P};
+		\node[vertex] (P1) at (5.5, 1) {$\mathcal{P}$};
 	
 		\draw (S1) -- (A1) node[midway, rectangle, fill=white, above left] {2/4};
 		\draw (S1) -- (C1) node[midway, rectangle, fill=white, below left] {2/3};
@@ -746,12 +837,12 @@ On a donc un chemin améliorant $SABP$ de valeur $2$ ainsi qu'un chemin amélior
 	
 		% Graphe 2 à droite
 		\begin{scope}[xshift=6cm]
-			\node[vertex] (S2) at (0.5, 1) {S};
+			\node[vertex] (S2) at (0.5, 1) {$\mathcal{S}$};
 			\node[vertex] (A2) at (2, 2) {A};
 			\node[vertex] (B2) at (4, 2) {B};
 			\node[vertex] (C2) at (2, 0) {C};
 			\node[vertex] (D2) at (4, 0) {D};
-			\node[vertex] (P2) at (5.5, 1) {P};
+			\node[vertex] (P2) at (5.5, 1) {$\mathcal{P}$};
 	
 			\draw (S2) -- (A2) node[midway, rectangle, fill=white, above left] {2};
 			\draw (S2) -- (C2) node[midway, rectangle, fill=white, below left] {1};
@@ -799,12 +890,12 @@ Nous avons un chemin améliorant $SABDP$ de valeur $1$.
 		\def\xshift{6}
 	
 		% --- Graphe 1 ---
-		\node[vertex] (S1) at (0.5, 1) {S};
+		\node[vertex] (S1) at (0.5, 1) {$\mathcal{S}$};
 		\node[vertex] (A1) at (2, 2) {A};
 		\node[vertex] (B1) at (4, 2) {B};
 		\node[vertex] (C1) at (2, 0) {C};
 		\node[vertex] (D1) at (4, 0) {D};
-		\node[vertex] (P1) at (5.5, 1) {P};
+		\node[vertex] (P1) at (5.5, 1) {$\mathcal{P}$};
 	
 		\draw (S1) to node[midway, above left] {3/4} (A1);
 		\draw (S1) to node[midway, below left] {2/3} (C1);
@@ -817,12 +908,12 @@ Nous avons un chemin améliorant $SABDP$ de valeur $1$.
 		\draw (D1) to node[midway, below right] {3/4} (P1);
 	
 		% --- Graphe 2 ---
-		\node[vertex] (S2) at ($(S1)+(\xshift,0)$) {S};
+		\node[vertex] (S2) at ($(S1)+(\xshift,0)$) {$\mathcal{S}$};
 		\node[vertex] (A2) at ($(A1)+(\xshift,0)$) {A};
 		\node[vertex] (B2) at ($(B1)+(\xshift,0)$) {B};
 		\node[vertex] (C2) at ($(C1)+(\xshift,0)$) {C};
 		\node[vertex] (D2) at ($(D1)+(\xshift,0)$) {D};
-		\node[vertex] (P2) at ($(P1)+(\xshift,0)$) {P};
+		\node[vertex] (P2) at ($(P1)+(\xshift,0)$) {$\mathcal{P}$};
 	
 		\draw (S2) to node[midway, above left] {1} (A2);
 		\draw (S2) to node[midway, below left] {1} (C2);
@@ -857,15 +948,103 @@ Nous avons un chemin améliorant $SABDP$ de valeur $1$.
 	
 	\end{tikzpicture}
 	\end{center}
-	
+Le puits $P$ n'est plus atteignable, l'algorithme se termine.
 
-Le puits $P$ n'est plus atteignable, l'algorithme se termine.\\
-Finalement la coupe minimale de ce réseau est l'ensemble $\{S,A,C\}$ et son flot maximal est de valeur $5$.\\
-
+Finalement la coupe minimale de ce réseau est l'ensemble $\{S,A,C\}$ et son flot maximal est de valeur $5$.
+\subsection{Récapitulatif des algorithmes et leur complexité}
+\begin{table}[H]
+	\centering
+	\begin{tabular}{|c|c|c|}
+		\hline
+		Algorithme & Complexité & Complexité en fonction de $n = |V|$ \\
+		\hline
+		Ford-Fulkerson & $O(|E|f_{max})$ &$O(n^2 f_{max})$\\
+		Edmonds-Karp & $O(|V||E|^2)$ &$O(n^5)$\\
+		Dinic & $O(|V|^2|E|)$& $O(n^4)$\\
+		Poussage-Réétiquetage & $O(|V|^2|E|)$&$O(n^4)$ \\
+		\hline
+	\end{tabular}
+	\caption{Récapitulatif des algorithmes de flot maximum}
+\end{table}
 
 %Expliquer pour chaque algo, ce qu'il fait, sa complexité, les avantages/inconvénients et faire un exemple (prendre le même pour tous les algos)
 %Faire un graphique qui montre la courbe du temps de calculs de chaque algo en fonction du nombre de sommet
+
 \section{Programmation linéaire}
+\subsection{Introduction à la programmation linéaire}
+La programmation linéaire est un outil mathématique qui permet de résoudre des problèmes d'optimisation où l'objectif et les contraintes sont exprimés par des fonctions linéaires.
+Elle est utilisée dans de nombreux domaines tels que l'économie, la logistique, la gestion des ressources, etc.
+
+D'une manière générale, un problème de programmation linéaire peut être formulé comme suit :
+\begin{align*}
+	\text{Maximiser} \quad & c^T x \\
+	\text{Sous les contraintes} \quad
+	& Ax \leq b \\
+	& x \geq 0
+\end{align*}
+
+où :
+\begin{itemize}[label={\color{gray}\small \textbullet}]
+	\item $c$ est un vecteur de coefficients de la fonction objectif,
+	\item $x$ est le vecteur des variables de décision,
+	\item $A$ est une matrice de coefficients des contraintes,
+	\item $b$ est un vecteur de contraintes.
+\end{itemize}
+On appelle $c^T x$ la \emph{fonction objectif} et on la note souvent $z(x)$.
+\begin{eg}
+	\begin{align*}
+	\text{Maximiser}\quad &z(x) = 2x_1 + 1x_2 \\
+	\text{Sous les contraintes} \quad
+	& 2x_1 + 5x_2 \leq 17 \\
+	& 3x_1 + 2x_2 \leq 10 \\
+	& x_1, x_2 \geq 0
+	\end{align*}
+
+La solution optimale de ce problème est $x_1 = \frac{10}{3}$ et $x_2 = 0$ avec une valeur de $z(x) = \frac{20}{3}$.
+
+Nous avons $A = \begin{pmatrix}
+	2 & 5 \\
+	3 & 2
+	\end{pmatrix}$, $b = \begin{pmatrix}
+	17 \\
+	10
+	\end{pmatrix}$, $c = \begin{pmatrix}
+	2 \\
+	1
+	\end{pmatrix}$ et $x = \begin{pmatrix}
+	x_1 \\
+	x_2
+	\end{pmatrix}$.
+\end{eg}
+\begin{remark}
+	Nous pouvons soit maximiser la fonction objectif, soit la minimiser. Mais dans tous les cas, $\min z(x) = -\max -z(x)$ donc il est facile de voir que les deux cas sont équivalents. De plus les contraintes peuvent aussi être des inégalités dans l'autre sens, c'est-à-dire avec $x_i \geq b_i$ par exemple.
+\end{remark}
+Dans cet exemple, les variables $x_1$ et $x_2$ sont réelles, c'est-à-dire que leur valeur peut être n'importe quel nombre réel positif. Cependant, dans de nombreux problèmes pratiques, les variables de décision doivent être des entiers (par exemple, le nombre d'objets à produire ou à transporter). Dans ce cas, on parle de \emph{programmation linéaire en nombres entiers}.
+La programmation linéaire en nombres entiers est un cas particulier de la programmation linéaire où toutes les variables sont contraintes à prendre des valeurs entières. Si certaines variables sont continues et d'autres entières, on parle de \emph{programmation linéaire mixte}.
+
+Dans ces deux cas, la résolution du problème devient plus complexe et d'une manière générale, la programmation linéaire en nombres entiers et la programmation linéaire mixte sont \textsc{NP-complet}. Cela signifie qu'il n'existe pas d'algorithme polynomial connu pour résoudre tous les problèmes de ce type.
+
+Nous pouvons proposer une preuve concise de la NP-complétude de la programmation linéaire en nombres entiers. 
+
+\begin{theorem}
+La programmation linéaire en nombres entiers est \textsc{NP-complet}.
+\end{theorem}
+\begin{proof}
+	La preuve est une réduction depuis le problème du vertex cover minimum.
+
+	Soit $G = (V, E)$ un graphe non orienté. Nous définissons un programme linéaire de la manière suivante :
+	\begin{align*}
+	\text{Minimiser} \quad & \sum_{v \in V} y_v \\
+	\text{Sous les contraintes} \quad
+	& y_v + y_u \geq 1 & \forall (u, v) \in E \\
+	& y_v \in \mathbb{N} & \forall v \in V
+	\end{align*}
+
+	Étant donné que la contrainte limite $y_v$ à $0$ ou $1$, toute solution faisable de ce programme linéaire en nombres entiers est un sous ensemble de sommets de $G$. La première contrainte implique qu'au moins un sommet de chaque arête doit être choisi dans le sous-ensemble. De plus, la solution est un vertex cover de $G$. Réciproquement, si $C$ est un vertex cover de $G$, alors $y_v$ peut être mis à $1$ pour chaque sommet de $C$ et à $0$ pour les autres sommets. Cela nous donne une solution faisable du programme linéaire. Nous pouvons conclure que si l'on minimise la somme des $y_v$, on obtient un vertex cover de taille minimale. Comme le problème du vertex cover est \textsc{NP-complet}, la programmation linéaire en nombres entiers est également \textsc{NP-complet}.
+\end{proof}
+
+Dans le cas de la programmation linéaire, il existe des algorithmes efficaces pour résoudre le problème, tels que l'algorithme du simplexe ou l'algorithme des points intérieurs. Bien que l'algorithme du simplexe soit de complexité exponentielle dans le pire des cas, il est très efficace en pratique et résout souvent des problèmes de grande taille en un temps raisonnable. L'algorithme des points intérieurs a une complexité polynomiale, mais il est souvent moins efficace que le simplexe.
+\subsection{Problème de flot maximum}
 Nous avons également comparé nos algorithmes avec les meilleurs solveurs de programmation linéaire. Pour cela nous avons utilisé la modélisation standard du problème de flot maximum :
 \[
 		\begin{aligned}
@@ -873,7 +1052,7 @@ Nous avons également comparé nos algorithmes avec les meilleurs solveurs de pr
 			\text{Sous les contraintes} \quad
 			&
 			 \begin{cases}
-				\sum_{u:(u, v)\in E} f(u, v) - \sum_{w:(v, w)\in E} f(v, w) = 0 & \forall v \in V \setminus \{s, t\} \\
+				\displaystyle\sum_{u:(u, v)\in E}{f(u, v)} - \sum_{w:(v, w)\in E}{f(v, w)} = 0 & \forall v \in V \setminus \{s, t\} \\
 				f(u, v) \leq c(u, v) & \forall (u, v) \in E \\
 				f(u, v) \geq 0 & \forall (u, v) \in E \\
 			\end{cases}
@@ -882,29 +1061,78 @@ Nous avons également comparé nos algorithmes avec les meilleurs solveurs de pr
 
 La fonction à maximiser est la somme des flots sortants du sommet source $s$, par conservation du flot, c'est aussi égal à la somme des flots entrants dans le sommet puits. La première contrainte assure la conservation du flot pour chaque sommet, sauf pour la source et le puits. La deuxième contrainte assure que le flot sur chaque arête ne dépasse pas sa capacité et la dernière contrainte assure que le flot est positif ou nul.
 
-Une remarque importante est que les variables de flot $f(u, v)$ sont continues, donc a priori, rien n'assure que la solution optimale soit entière.
-
+\begin{remark}
+	Une remarque importante est que les variables de flot $f(u, v)$ sont réelles, donc a priori, rien n'assure que la solution optimale soit entière.
+\end{remark}
 \subsection{Matrices totalement unimodulaires}
-\begin{definition}
-Soit $M$ une matrice, on dit qu'elle est totalement unimodulaire si pour toute sous-matrice carrée $N$ de $M$, le déterminant de $N$ est égal à $0$, $1$ ou $-1$.
+\begin{definition}[Matrice totalement unimodulaire]
+Soit $M$ une matrice, on dit qu'elle est \emph{totalement unimodulaire} si pour toute sous-matrice carrée $N$ de $M$, le déterminant de $N$ est égal à $0$, $1$ ou $-1$.
 \end{definition}
-% \paragraph{Théorème (Hoffman \& Kruskal, 1956)\cite{hoffman-1957} :} Une matrice entière est totalement unimodulaire si et seulement si le polyhèdre défini par $\{x : Ax \leq b, x \geq 0\}$ est un polyèdre entier pour tout vecteur $b$ entier.
-\begin{theorem}[Hoffman \& Kruskal, 1956\cite{hoffman-1957}]
+\begin{eg}\,
+
+	$A = \begin{pmatrix}
+	\textbf{-1} & -1 & \textbf{0} & 0 & 0 & \textbf{1} \\
+	\textbf{1} & 0 & \textbf{-1} & -1 & 0 & \textbf{0} \\
+	\textbf{0} & 1 & \textbf{1} & 0 & -1 & \textbf{0} \\
+	0 & 0 & 0 & 1 & 1 & -1 \\
+	\end{pmatrix}$ est une matrice totalement unimodulaire.
+
+	Par exemple, prenons la sous-matrice $N = \begin{pmatrix}
+	-1 & 0 & 1 \\
+	1 & -1 & 0 \\
+	0 & 1 & 0 \\
+	\end{pmatrix}$ obtenue à partir des coefficients \textbf{noirs} de $A$.
+
+	$N$ est une sous-matrice carrée de $A$ et son déterminant est égal à $1$. Pour prouver que $A$ est totalement unimodulaire, il faut montrer que pour toute sous-matrice carrée de $A$, le déterminant est égal à $0$, $1$ ou $-1$.
+\end{eg}
+\begin{remark}
+	Une matrice totalement unimodulaire ne peut contenir que des $0$, $1$ et $-1$ (car sinon elle aurait une sous matrice $1\times 1$ avec un déterminant différent de $0$, $1$ ou $-1$).
+\end{remark}
+\begin{theorem}[Hoffman \& Kruskal, 1956 \cite{hoffman-1957}]
 Une matrice entière est totalement unimodulaire si et seulement si le polyhèdre défini par $\{x : Ax \leq b, x \geq 0\}$ est un polyèdre entier pour tout vecteur $b$ entier.
 \end{theorem}
 
 Ce que nous apprend ce théorème, c'est que tout problème linéaire dont la matrice de contraintes est totalement unimodulaire et dont le vecteur de contraintes est entier, a une solution entière.
-
 \begin{theorem}
 La matrice du problème de flot maximum est totalement unimodulaire.
 \end{theorem}
 Et comme le vecteur de contraintes est entier (car les capacités sont entières), la solution optimale est entière.
 
-L'intérêt de ce théorème est que, bien que la programmation linéaire en nombres entiers soit \textsc{NP-complet}, dans le cas du flot maximum, on peut utiliser un solveur de programmation linéaire classique pour obtenir une solution entière.
-\subsection{Solveurs de programmation linéaire}
-Nous avons utilisé deux solveurs de programmation linéaire : \texttt{Gurobi} et \texttt{SCIP}, ces deux solveurs sont très performants et permettent de résoudre des problèmes de grande taille rapidement. \texttt{Gurobi} est un solveur commercial, réputé pour être l'un des plus rapides du marché, tandis que \texttt{SCIP} est un solveur open-source qui est probablement le meilleur solveur open-source.
-\section{Création des instances}
+L'intérêt de ce théorème est que, bien que la programmation linéaire en nombres entiers soit \textsc{NP-complet}, dans le cas du flot maximum, on peut utiliser un solveur de programmation linéaire classique pour obtenir une solution entière en temps polynomial.
+\subsection{Le théorème Max-Flow/Min-Cut}
+Trouver une coupe minimale dans un réseau de flot est équivalent à trouver un flot maximum.
+\begin{theorem}[Max-Flow/Min-Cut]
+	Si $f$ est un flot dans un réseau de flot $G = (V, E)$, avec $s$ la source et $t$ le puits, alors les conditions suivantes sont équivalentes :
+	\begin{enumerate}
+		\item $f$ est un flot maximum ;
+		\item Il n'existe pas de chemin augmentant dans le réseau résiduel $G_f$ ;
+		\item La valeur du flot est égale à la capacité de la coupe minimale entre $s$ et $t$, c'est-à-dire : $|f| = c(S, T)$, pour une certaine coupe $(S, T)$ de $G$.
+	\end{enumerate}
+\end{theorem}
+La preuve de ce théorème sera donnée en annexe.
 
+Ce théorème a de nombreuses applications concrètes :
+\begin{eg}[Circulation routière]\,
+
+	\begin{itemize}[label={\color{gray}\small \textbullet}]
+		\item Objectif : déterminer la capacité maximale d'un réseau routier entre deux villes.
+		\item Le théorème Max-Flow/Min-Cut permet de d'identifier les goulots d'étranglement pour optimiser le trafic.
+	\end{itemize}
+\end{eg}
+\begin{eg}[Réseaux de télécommunications]\,
+
+	\begin{itemize}[label={\color{gray}\small \textbullet}]
+		\item Max-flow : combien de données peuvent être transmises entre deux points d'un réseau.
+		\item Min-cut : où placer des protections ou surveiller des failles critiques du réseau.
+	\end{itemize}
+\end{eg}
+
+Ainsi, nous comprenons que le flot maximum est un problème d'optimisation très important et résoudre rapidement ce problème est crucial dans de nombreux domaines.
+
+On peut aussi remarquer que la modélisation du problème de coupe minimum sous forme de programme linéaire est en fait le problème \emph{dual} du problème de flot maximum. En d'autres termes, ces deux problèmes ne sont en réalité qu'un seul et même problème, mais sous deux perspectives différentes, l'un exprimé comme une maximisation et l'autre comme une minimisation.
+\subsection{Solveurs de programmation linéaire}
+Nous avons utilisé deux solveurs de programmation linéaire : \texttt{Gurobi} et \texttt{SCIP}, ces deux solveurs sont très performants et permettent de résoudre des problèmes de grande taille rapidement. \texttt{Gurobi} est un solveur commercial, réputé pour être l'un des plus rapides du marché, tandis que \texttt{SCIP} est un solveur open-source qui est probablement le meilleur dans sa catégorie.
+\section{Création des instances}
 Afin de pouvoir tester et comparer nos algorithmes, nous avons eu besoins d'instances de graphe de tailles et de formes differentes afin de pouvoir comparer comment se comportent nos algorithmes. Comme nous n'avons pas trouvé d'instances de graphes suffisamment grandes en ligne, nous avons décidé de créer nos propres instances. Cette partie détaille ce processus de création et présente les differentes instances que nous avons pu créer ainsi que les choix que nous avons faits.
 
 \subsection{La classe RandomFlowNetwork}
@@ -939,19 +1167,19 @@ Cette classe permet de générer un réseau de flot orienté en plusieurs étape
 En résumé, cette classe construit un graphe orienté aléatoire, puis désigne deux extrémités pour simuler un réseau de flot. Le problème est le suivant : comment construire des graphes pertinents afin de tester les algorithmes ? 
 
 \subsection{Tests sur les graphes générés}
+\label{sec:creer_instances}
+
 Les graphes étant générés aléatoirement, on peut obtenir des graphes non connexes, des sommets non reliés à la source ou au puits, etc. Tout cela fausseraient les instances. En effet, si le graphe n’est pas connexe, cela pourrait fausser les résultats : un graphe de taille $1000$ pourrait se résumer à un de taille $100$, ce que l’on ne souhaite pas. On pourrait même tomber sur des graphes où nos algorithmes ne convergeraient pas, par exemple si la source et le puits ne sont pas reliés.\\
 
-On va donc devoir créer un ensemble de tests sur nos graphes afin de s’assurer qu’ils soient bien formés et propices à être utilisées comme instances. Cela pourra prendre du temps car nous générons les graphes aléatoirement et n’en conservons qu’une petite partie, mais ce n’est pas très grave, car le jeu d’instances n’a besoin d’être créé qu’une seule fois. Il n’est pas nécessaire que le code qui permet sa création soit bien optimisé : on le lance un soir et on récupère les instances le lendemain dans le pire des cas.\\
-
+On va donc devoir créer un ensemble de tests sur nos graphes afin de s’assurer qu’ils soient bien formés et propices à être utilisées comme instances. Cela pourra prendre du temps car nous générons les graphes aléatoirement et n’en conservons qu’une petite partie, mais ce n’est pas très grave, car le jeu d’instances n’a besoin d’être créé qu’une seule fois. Il n’est pas nécessaire que le code qui permet sa création soit bien optimisé : on le lance un soir et on récupère les instances le lendemain dans le pire des cas.
 Nous avons donc implémenté une fonction \texttt{IsConnected} qui permet de vérifier les trois critères suivants sur le graphe :
 \begin{enumerate}
 	\item Depuis la source, on peut atteindre n'importe quel sommet du graphe.
 	\item Depuis n'importe quel sommet du graphe, on peut atteindre le puits.
-	\item Le graphe est connexe.\\
+	\item Le graphe est connexe.
 \end{enumerate}
 
-Cela nous permet de nous assurer que le graphe que nous avons généré est bien formé. En effet, l'algorithme convergera car le premier point nous assure qu'on peut créer un flot sur ce graphe (la source est bien connectée au puits). Les points 2 et 3 nous permettent d'être sûrs que sur un graphe de taille $n$, chaque sommet aura bien son importance et sera bien pris en compte par le calcul. Le graphe ne peut donc pas se résumer à une version plus petite de lui-même.\\
-
+Cela nous permet de nous assurer que le graphe que nous avons généré est bien formé. En effet, l'algorithme convergera car le premier point nous assure qu'on peut créer un flot sur ce graphe (la source est bien connectée au puits). Les points 2 et 3 nous permettent d'être sûrs que sur un graphe de taille $n$, chaque sommet aura bien son importance et sera bien pris en compte par le calcul. Le graphe ne peut donc pas se résumer à une version plus petite de lui-même.
 \begin{center}
 	\begin{tikzpicture}[
 		vertex/.style={circle, draw, fill=blue!20, minimum size=15pt, inner sep=1pt},
@@ -960,12 +1188,12 @@ Cela nous permet de nous assurer que le graphe que nous avons généré est bien
 		]
 	
 		% Graphe 1
-		\node[vertex] (S1) at (0.5, 1) {S};
+		\node[vertex] (S1) at (0.5, 1) {$\mathcal{S}$};
 		\node[vertex] (A1) at (2, 2) {A};
 		\node[vertex] (B1) at (4, 2) {B};
 		\node[vertex] (C1) at (2, 0) {C};
 		\node[vertex] (D1) at (4, 0) {D};
-		\node[vertex] (P1) at (5.5, 1) {P};
+		\node[vertex] (P1) at (5.5, 1) {$\mathcal{P}$};
 		\node (G1) at (3, -1) {Graphe $G$};
 	
 		\draw (S1) -- (A1) node[midway, above left] {4};
@@ -978,12 +1206,12 @@ Cela nous permet de nous assurer que le graphe que nous avons généré est bien
 	
 		% Graphe 2 à droite
 		\begin{scope}[xshift=6cm]
-			\node[vertex] (S2) at (0.5, 1) {S'};
+			\node[vertex] (S2) at (0.5, 1) {$\mathcal{S'}$};
 			\node[vertex] (A2) at (2, 2) {A'};
 			\node[vertex] (B2) at (4, 2) {B'};
 			\node[vertex] (C2) at (2, 0) {C'};
 			\node[vertex] (D2) at (4, 0) {D'};
-			\node[vertex] (P2) at (5.5, 1) {P'};
+			\node[vertex] (P2) at (5.5, 1) {$\mathcal{P'}$};
 			\node (G1) at (3, -1) {Graphe $G'$};
 	
 			\draw (S2) -- (C2) node[midway, below left] {1};
@@ -1006,12 +1234,12 @@ Ainsi le graphe $G$ ne sera pas pris car on ne peux pas accéder au puit depuis 
 		]
 	
 		% Les sommets
-		\node[vertex] (S) at (0.5, 1) {S};
+		\node[vertex] (S) at (0.5, 1) {$\mathcal{S}$};
 		\node[vertex] (A) at (2, 2) {A};
 		\node[vertex] (B) at (4, 2) {B};
 		\node[vertex] (C) at (2, 0) {C};
 		\node[vertex] (D) at (4, 0) {D};
-		\node[vertex] (P) at (5.5, 1) {P};
+		\node[vertex] (P) at (5.5, 1) {$\mathcal{P}$};
 			
 		% Les arêtes orientées
 		%\draw[->, bend left=15] (A) to (B);
@@ -1026,21 +1254,16 @@ Ainsi le graphe $G$ ne sera pas pris car on ne peux pas accéder au puit depuis 
 		\draw[->] (D) to node[midway, below right] {4} (P);
 	\end{tikzpicture}
 \end{center}
-
 Nous avons ainsi pu créer un jeu d’instances complet. Afin de généraliser davantage et de mieux comparer les résultats, plusieurs instances similaires (ayant la même taille et la même densité) sont créées. Pour connaître l’efficacité d’un algorithme sur une instance de ce type, on peut ainsi faire la moyenne des performances sur l’ensemble des instances de même taille et même densité.
-
 \subsection{Représentation des instances}
-
-Nous avons décidé de représenter les instances sous forme de fichiers texte. Chaque instance est représentée par un fichier contenant les informations suivantes :\\
-
+Nous avons décidé de représenter les instances sous forme de fichiers texte. Chaque instance est représentée par un fichier contenant les informations suivantes :
 \begin{itemize}
 	\item Le numéro de la source ;
 	\item Le numéro du puits ;
-	\item La liste des arcs du graphe, sous la forme : $x\ y\ c(xy)$ où $x$ et $y$ sont les numéros des sommets de l’arc, et $c(xy)$ est la capacité de l’arc.\\
+	\item La liste des arcs du graphe, sous la forme : $x\ y\ c(xy)$ où $x$ et $y$ sont les numéros des sommets de l’arc, et $c(xy)$ est la capacité de l’arc.
 \end{itemize}
 
-Le nombre de sommets ainsi que la densité du graphe sont indiqués dans le nom du fichier. Par exemple, voici les premières lignes du fichier \texttt{inst30\_0,1\_1}, où $30$ représente le nombre de sommets, $0{,}1$ la densité, et $1$ le numéro de l’instance (car plusieurs instances sont créées pour un même nombre de sommets et une même densité).\\
-
+Le nombre de sommets ainsi que la densité du graphe sont indiqués dans le nom du fichier. Par exemple, voici les premières lignes du fichier \texttt{inst30\_0,1\_1}, où $30$ représente le nombre de sommets, $0{,}1$ la densité, et $1$ le numéro de l’instance (car plusieurs instances sont créées pour un même nombre de sommets et une même densité).
 \begin{center}
 \noindent
 \begin{minipage}{0.6\linewidth}  % Réduit la largeur du bloc
@@ -1063,8 +1286,87 @@ Nous avons choisi de rester sur des tailles raisonnables afin que tous les algor
 \begin{center}
 $\frac{200 \times (200-1)}{2} \times 2 \times 0{,}9 = 35 820$ arêtes
 \end{center}
-
 Le $\frac{200 \times (200-1)}{2} \times 2$ correspondant à toutes les arêtes possibles. En effet $\frac{n \times (n-1)}{2}$ pour le graphe complet, $\times 2$ car les arêtes sont orientés. On multiplie par la densité pour savoir le nombre d'arête en moyenne, dans notre exemple la densité est de $0,9$.
+\section{Développement Logiciel}
+
+\subsection{Organisation du projet}
+
+\subsection{Présentation des classes}
+
+Dans cette section, nous présentons les différentes classes développées dans le cadre de ce projet, ainsi que leur rôle et leurs interactions.
+
+Les classes principales que nous avons implémentées sont les suivantes :
+
+\begin{itemize}
+    \item \colorbox{gray!20}{\textcolor{violet}{Vertex}}
+    \item \colorbox{gray!20}{\textcolor{violet}{Graph}}
+    \item \colorbox{gray!20}{\textcolor{violet}{FlowNetwork}}
+    \item \colorbox{gray!20}{\textcolor{violet}{FileFlowNetwork}}
+    \item \colorbox{gray!20}{\textcolor{violet}{RandomFlowNetwork}}
+    \item \colorbox{gray!20}{\textcolor{violet}{PL}}
+    \item \colorbox{gray!20}{\textcolor{violet}{Curve}}
+    \item \colorbox{gray!20}{\textcolor{violet}{Program}}
+\end{itemize}
+
+Nous détaillons maintenant chacune de ces classes en exposant leur conception, leurs fonctionnalités principales, ainsi que leur rôle dans le fonctionnement global du projet.
+
+\subsubsection{Vertex}
+
+La classe \textcolor{violet}{Vertex} représente un sommet dans un graphe. Chaque sommet est identifié par un nom ou une étiquette, généralement une chaîne de caractères. Cette classe permet d'identifier et de manipuler les nœuds du graphe. Deux sommets sont considérés comme égaux s'ils portent le même nom, ce qui autorise leur utilisation comme clés dans des dictionnaires, notamment pour stocker les arêtes, les capacités ou les flots.
+
+\subsubsection{Graph}
+
+La classe \textcolor{violet}{Graph} représente un graphe orienté pondéré, outils de base pour tous nos algorithmes. En effet la classe \textcolor{violet}{FlowNetwork}, qui représente un réseau le réseau de flot qu'on va utiliser, hérite de la classe \textcolor{violet}{Graph}. Un objet de \textcolor{violet}{Graph} est défini par deux dictionnaires : \textcolor{blue!60}{AdjVertices}, qui associe chaque sommet à l'ensemble de ses successeurs, et \textcolor{blue!60}{Edges}, qui stocke les arêtes du graphe avec leur capacité sous forme de couple de sommets.
+Quelques fonctions de bases sont codées, comme par exemple \textcolor{green!30!black}{NeighborsLeft} où \textcolor{green!30!black}{NeighborsRight}, qui retournent respectivement les voisins entrants et sortants d'un sommet donné, une fonction \textcolor{green!30!black}{Clone} qui clone le graphe et d'autres fonctionnalités classiques.
+
+\subsubsection{FlowNetwork}
+
+La classe \textcolor{violet}{FlowNetwork} est au cœur de la bibliothèque de calcul de flot maximal. Elle étend la structure de base \textcolor{violet}{Graph} en introduisant plusieurs notions fondamentales. C'est depuis cette classe que l'on va gérer tout les algorithmes de calcul de flot maximum qui consituent le coeur de ce projet. Nous nous proposons donc naturellement de détailler cette classe, qui est la plus importante.\\
+
+En plus de l'héritage de la classe \textcolor{violet}{Graph}, la classe \textcolor{violet}{FlowNetwork} introduit les attributs \textcolor{blue!60}{Source} et \textcolor{blue!60}{Puits}, qui représentent respectivement le sommet source et le sommet puits du réseau. Ces attributs sont essentiels pour les algorithmes de flot maximal, car ils définissent les points d'entrée et de sortie du réseau.\\
+
+Cette classe concentrant tout les algorithmes de calcul sur un réseau de flot, elle contient évidement tout les algorithmes de de calcul de flot maximum que nous avons implémentés. Nous en redonnons ici une liste non exhaustive :
+\begin{itemize}
+	\item \textcolor{green!30!black}{FordFulkerson}
+	\item \textcolor{green!30!black}{EdmondsKarp}
+	\item \textcolor{green!30!black}{Dinic}
+	\item \textcolor{green!30!black}{PushRelabel}
+\end{itemize}
+La résolution via la programmation linéaire fait l'objet d'une classe séparée, \textcolor{violet}{PL}, car cette méthode ne constitue pas réellement en elle même un algorithmes sur les réseaux de flot.\\
+
+Plusieurs fontions essentielles aux fonctionnement de ces algorithmes où à d'autres taches telles que la constructions d'instances on également été implémentées. En voici les plus importantes :
+\begin{itemize}
+	\item \textcolor{green!30!black}{DFS\_GetPathInLevelGraph} : implémente une recherche en profondeur (DFS) pour trouver un chemin augmentant dans un graphe résiduel (typiquement dans l'algorithme de FordFulkerson ou de Dinic).
+	\item \textcolor{green!30!black}{BFS\_GetLevels} : utilise une recherche en largeur (BFS) pour attribuer à chaque sommet son niveau (distance minimale en nombre d’arêtes depuis la source) dans un graphe.
+	\item \textcolor{green!30!black}{GetResidualGraph} : permet de récupérer le graphe résiduel du réseau de flot.
+	\item \textcolor{green!30!black}{GetMaxFlow} : permet de récupérer la valeur du flot maximum. L'interêt et les propriétés d'un tel graphes sont détaillés dans la section sur les algorithmes de flot maximum.
+	\item \textcolor{green!30!black}{IsConnected} : cette méthode n'est pas utilisée dans les algorithmes de flot maximum, mais elle a été très utile lors de la création des instances. En effet, elle permet de vérifier plusieurs propriétés sur le graphe qui sont essentielles pour s'assurer que le graphe est \og{}bien formé\fg{}. Comme détaillé dans la partie sur les instances, elle vérifie que tout sommet est accessible depuis la source et que tout sommet admet un chemin jusqu'au puits. Elle décide donc si un graphe est gardé comme instance ou jeté.
+	\item \textcolor{green!30!black}{CreateGraphFile} : permet de créer un fichier texte contenant la représentation du graphe. Cette méthode est utilisée lors de la création des instances, afin de pouvoir les sauvegarder et les réutiliser plus tard.
+\end{itemize}
+Pour plus de precisions sur le fonctionnement des méthodes relatives aux algorithmes de flot maximum, nous vous renvoyons à la \hyperref[sec:algos]{\textcolor{black}{section sur les algorithmes de flot maximum.}}
+
+\subsubsection{FileFlowNetwork}
+
+La classe \textcolor{violet}{FileFlowNetwork} a pour rôle de générer dynamiquement un réseau de flot (\textcolor{violet}{FlowNetwork}) à partir d’un fichier texte structuré. Elle lit dans ce fichier les informations nécessaires à la construction du graphe : l'identifiant du sommet source, celui du puits, puis une liste d’arêtes définies par deux sommets et une capacité. Le fichier est lu ligne par ligne, chaque sommet étant instancié sous forme d’objet \textcolor{violet}{Vertex}, et les arêtes ajoutées avec leur poids dans un objet \textcolor{violet}{Graph}. À la fin de la lecture, la méthode \textcolor{green!30!black}{Generate} de la classe construit et retourne une instance de \textcolor{violet}{FlowNetwork} contenant la topologie complète du graphe, prête à être utilisée dans les algorithmes de flot maximum.
+
+\subsubsection{RandomFlowNetwork}
+La classe \textcolor{violet}{RandomFlowNetwork} est responsable de la génération aléatoire de graphes orientés, qui sont ensuite utilisés comme instances pour les algorithmes de flot maximum. Elle crée un graphe orienté en ajoutant des sommets et des arêtes de manière aléatoire, tout en respectant une densité spécifiée. La classe permet également de définir une source et un puits, ainsi que d'assigner des capacités aux arêtes. Sa méthode \textcolor{green!30!black}{Generate} retourne un objet \textcolor{violet}{FlowNetwork} représentant le réseau de flot. La methode de génération de graphes aléatoires est détaillée dans la \hyperref[sec:creer_instances]{\textcolor{black}{section sur la création des instances}}.
+
+\subsubsection{PL}
+
+La classe \textcolor{violet}{PL} (Programmation Linéaire) a pour rôle de modéliser le problème du calcul du flot maximum sur un graphe donné sous la forme d’un système linéaire, puis de le résoudre à l’aide de solveurs spécialisés tels que Google OR-Tools ou Gurobi. Elle construit un modèle dans lequel chaque variable représente le flot sur une arête, les contraintes traduisent les capacités maximales des arêtes et les lois de conservation du flot en chaque sommet intermédiaire (autres que la source et le puits), et la fonction objectif vise à maximiser le flot total sortant de la source. La méthode \textcolor{green!30!black}{SolveWithOrTools} implémente cette logique avec OR-Tools, tandis que \textcolor{green!30!black}{SolveWithGurobi} l’implémente via l’API Gurobi. Une méthode \textcolor{green!30!black}{AfficherSysteme} est également disponible pour visualiser les variables, les contraintes et la fonction objectif du système linéaire généré. Pour plus de détails nous vous renvoyons à la \hyperref[sec:pl]{\textcolor{black}{section sur la programmation linéaire}}.
+
+\subsubsection{Curve}
+
+La classe \textcolor{violet}{Curve} est chargée de mesurer les performances temporelles de différents algorithmes de calcul du flot maximum sur un ensemble d’instances de graphes, puis de générer automatiquement des courbes de benchmark. Pour une densité donnée, la méthode \textcolor{green!30!black}{CreateCurves} parcourt tous les fichiers de graphes correspondants dans un dossier, instancie le réseau de flot associé, et exécute chaque algorithme de calcul fourni tout en mesurant le temps d’exécution. Ces temps sont ensuite agrégés en fonction du nombre de sommets du graphe, permettant ainsi de tracer des courbes de performance (temps en fonction du nombre de sommets) pour chaque méthode. La bibliothèque ScottPlot est utilisée pour la génération des graphiques, qui sont ensuite enregistrés au format PNG. Cette classe permet donc de produire les courbes qui nous permettent de visualiser la complexité pratique des algorithmes de flot maximum en fonction de la taille du graphe.
+
+\subsubsection{Program}
+
+Cette \textcolor{violet}{Program} classe principale constitue le point d'entrée du programme. C’est depuis ce fichier que l’on appelle les différentes classes développées dans le projet pour effectuer les diverses actions nécessaires : génération des instances aléatoires, résolution du problème de flot maximum à l’aide de plusieurs algorithmes, et création des courbes de performances. Elle orchestre ainsi l’ensemble du processus expérimental, de la construction des graphes jusqu’à l’analyse des résultats.
+
+\subsection{Langage et classes}
+
+\subsection{Tests}
 \section{Méthodologie Expérimentale}
 \section{Résultats et Discussion}
 \section{Revue de la Littérature}

@@ -19,6 +19,29 @@
 
 \refsection{0}
   \datalist[entry]{nty/global//global/global/global}
+<<<<<<< HEAD
+    \entry{hoffmankruskal1956}{inbook}{}{}
+      \name{author}{2}{}{%
+        {{hash=f2547a976973555cb9bda553c9be0c42}{%
+           family={Hoffman},
+           familyi={H\bibinitperiod},
+           given={Alan},
+           giveni={A\bibinitperiod}}}%
+        {{hash=cc2e637dfc0dcdda30b13123fedb16d0}{%
+           family={Kruskal},
+           familyi={K\bibinitperiod},
+           given={Joseph},
+           giveni={J\bibinitperiod}}}%
+      }
+      \strng{namehash}{d4ae80463d1698c0442f958a5bf11220}
+      \strng{fullhash}{d4ae80463d1698c0442f958a5bf11220}
+      \strng{fullhashraw}{d4ae80463d1698c0442f958a5bf11220}
+      \strng{bibnamehash}{d4ae80463d1698c0442f958a5bf11220}
+      \strng{authorbibnamehash}{d4ae80463d1698c0442f958a5bf11220}
+      \strng{authornamehash}{d4ae80463d1698c0442f958a5bf11220}
+      \strng{authorfullhash}{d4ae80463d1698c0442f958a5bf11220}
+      \strng{authorfullhashraw}{d4ae80463d1698c0442f958a5bf11220}
+=======
     \entry{cormen2009maxflow}{inbook}{}{}
       \name{author}{4}{}{%
         {{hash=835b8c52757d98c15859b416316d9820}{%
@@ -69,55 +92,6 @@
       \field{pages}{708\bibrangedash 766}
       \range{pages}{59}
     \endentry
-    \entry{GOLDSCHLAGER1982105}{article}{}{}
-      \name{author}{3}{}{%
-        {{hash=a21da9335bb84448526a9345b0f9159c}{%
-           family={Goldschlager},
-           familyi={G\bibinitperiod},
-           given={Leslie\bibnamedelima M.},
-           giveni={L\bibinitperiod\bibinitdelim M\bibinitperiod}}}%
-        {{hash=365686efc48f9ab2638863a70db782b3}{%
-           family={Shaw},
-           familyi={S\bibinitperiod},
-           given={Ralph\bibnamedelima A.},
-           giveni={R\bibinitperiod\bibinitdelim A\bibinitperiod}}}%
-        {{hash=87e52b6d57bacef7930a4b03e47d23b2}{%
-           family={Staples},
-           familyi={S\bibinitperiod},
-           given={John},
-           giveni={J\bibinitperiod}}}%
-      }
-      \strng{namehash}{9e219cb8ac41d566381af0c9edccb964}
-      \strng{fullhash}{9e219cb8ac41d566381af0c9edccb964}
-      \strng{fullhashraw}{9e219cb8ac41d566381af0c9edccb964}
-      \strng{bibnamehash}{9e219cb8ac41d566381af0c9edccb964}
-      \strng{authorbibnamehash}{9e219cb8ac41d566381af0c9edccb964}
-      \strng{authornamehash}{9e219cb8ac41d566381af0c9edccb964}
-      \strng{authorfullhash}{9e219cb8ac41d566381af0c9edccb964}
-      \strng{authorfullhashraw}{9e219cb8ac41d566381af0c9edccb964}
-      \field{sortinit}{G}
-      \field{sortinithash}{32d67eca0634bf53703493fb1090a2e8}
-      \field{labelnamesource}{author}
-      \field{labeltitlesource}{title}
-      \field{abstract}{The space complexity of the maximum flow problem is investigated. It is shown that the problem is log space complete for deterministic polynomial time. Thus the maximum flow problem probably has no algorithm which needs only O(logk n) storage space for any constant k. Another consequence is that there is probably no fast parallel algorithm for the maximum flow problem.}
-      \field{issn}{0304-3975}
-      \field{journaltitle}{Theoretical Computer Science}
-      \field{number}{1}
-      \field{title}{The maximum flow problem is log space complete for P}
-      \field{volume}{21}
-      \field{year}{1982}
-      \field{pages}{105\bibrangedash 111}
-      \range{pages}{7}
-      \verb{doi}
-      \verb https://doi.org/10.1016/0304-3975(82)90092-5
-      \endverb
-      \verb{urlraw}
-      \verb https://www.sciencedirect.com/science/article/pii/0304397582900925
-      \endverb
-      \verb{url}
-      \verb https://www.sciencedirect.com/science/article/pii/0304397582900925
-      \endverb
-    \endentry
     \entry{hoffman-1957}{book}{}{}
       \name{author}{2}{}{%
         {{hash=9d802f69fa4533dde0a4976708653077}{%
@@ -139,10 +113,23 @@
       \strng{authornamehash}{34b4cf6971d7d126a2597a865a309fa7}
       \strng{authorfullhash}{34b4cf6971d7d126a2597a865a309fa7}
       \strng{authorfullhashraw}{34b4cf6971d7d126a2597a865a309fa7}
+>>>>>>> e781032b7f5b0f2cd9031cee2db01ac1f9f091e8
       \field{sortinit}{H}
       \field{sortinithash}{23a3aa7c24e56cfa16945d55545109b5}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
+<<<<<<< HEAD
+      \field{isbn}{978-3-540-68274-5}
+      \field{journaltitle}{50 Years of Integer Programming 1958-2008: From the Early Years to the State-of-the-Art}
+      \field{month}{11}
+      \field{title}{Integral Boundary Points of Convex Polyhedra}
+      \field{volume}{38}
+      \field{year}{2010}
+      \field{pages}{49\bibrangedash 76}
+      \range{pages}{28}
+      \verb{doi}
+      \verb 10.1007/978-3-540-68279-0_3
+=======
       \field{booktitle}{Princeton University Press eBooks}
       \field{month}{12}
       \field{title}{{13. Integral Boundary Points of Convex Polyhedra}}
@@ -157,43 +144,7 @@
       \endverb
       \verb{url}
       \verb https://doi.org/10.1515/9781400881987-014
-      \endverb
-    \endentry
-    \entry{schrijver2002history}{article}{}{}
-      \name{author}{1}{}{%
-        {{hash=b45113388b1fa9c200ef1a41e9beb367}{%
-           family={Schrijver},
-           familyi={S\bibinitperiod},
-           given={Lex},
-           giveni={L\bibinitperiod}}}%
-      }
-      \strng{namehash}{b45113388b1fa9c200ef1a41e9beb367}
-      \strng{fullhash}{b45113388b1fa9c200ef1a41e9beb367}
-      \strng{fullhashraw}{b45113388b1fa9c200ef1a41e9beb367}
-      \strng{bibnamehash}{b45113388b1fa9c200ef1a41e9beb367}
-      \strng{authorbibnamehash}{b45113388b1fa9c200ef1a41e9beb367}
-      \strng{authornamehash}{b45113388b1fa9c200ef1a41e9beb367}
-      \strng{authorfullhash}{b45113388b1fa9c200ef1a41e9beb367}
-      \strng{authorfullhashraw}{b45113388b1fa9c200ef1a41e9beb367}
-      \field{sortinit}{S}
-      \field{sortinithash}{b164b07b29984b41daf1e85279fbc5ab}
-      \field{labelnamesource}{author}
-      \field{labeltitlesource}{title}
-      \field{journaltitle}{Mathematical Programming}
-      \field{number}{3}
-      \field{title}{On the History of the Transportation and Maximum Flow Problems}
-      \field{volume}{91}
-      \field{year}{2002}
-      \field{pages}{437\bibrangedash 445}
-      \range{pages}{9}
-      \verb{doi}
-      \verb 10.1007/s101070100259
-      \endverb
-      \verb{urlraw}
-      \verb https://homepages.cwi.nl/~lex/files/histtrpclean.pdf
-      \endverb
-      \verb{url}
-      \verb https://homepages.cwi.nl/~lex/files/histtrpclean.pdf
+>>>>>>> e781032b7f5b0f2cd9031cee2db01ac1f9f091e8
       \endverb
     \endentry
   \enddatalist

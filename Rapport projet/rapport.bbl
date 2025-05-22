@@ -19,6 +19,222 @@
 
 \refsection{0}
   \datalist[entry]{nty/global//global/global/global}
+    \entry{barick2024effectspacetimegeometryneutrino}{misc}{}{}
+      \name{author}{3}{}{%
+        {{hash=1bf45fa89c7d9ce461a11d3542af99ac}{%
+           family={Barick},
+           familyi={B\bibinitperiod},
+           given={Riya},
+           giveni={R\bibinitperiod}}}%
+        {{hash=bc801cd4a1fa02f5ac4b8eaea3db2291}{%
+           family={Ghose},
+           familyi={G\bibinitperiod},
+           given={Indrajit},
+           giveni={I\bibinitperiod}}}%
+        {{hash=ca58ce6da0bb5b169a77ebeb71c12db1}{%
+           family={Lahiri},
+           familyi={L\bibinitperiod},
+           given={Amitabha},
+           giveni={A\bibinitperiod}}}%
+      }
+      \strng{namehash}{6031dce83a75fecf235336e160cbeebf}
+      \strng{fullhash}{6031dce83a75fecf235336e160cbeebf}
+      \strng{fullhashraw}{6031dce83a75fecf235336e160cbeebf}
+      \strng{bibnamehash}{6031dce83a75fecf235336e160cbeebf}
+      \strng{authorbibnamehash}{6031dce83a75fecf235336e160cbeebf}
+      \strng{authornamehash}{6031dce83a75fecf235336e160cbeebf}
+      \strng{authorfullhash}{6031dce83a75fecf235336e160cbeebf}
+      \strng{authorfullhashraw}{6031dce83a75fecf235336e160cbeebf}
+      \field{sortinit}{B}
+      \field{sortinithash}{d7095fff47cda75ca2589920aae98399}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{eprintclass}{hep-ph}
+      \field{eprinttype}{arXiv}
+      \field{title}{Effect of spacetime geometry on neutrino oscillations}
+      \field{year}{2024}
+      \verb{eprint}
+      \verb 2302.10945
+      \endverb
+      \verb{urlraw}
+      \verb https://arxiv.org/abs/2302.10945
+      \endverb
+      \verb{url}
+      \verb https://arxiv.org/abs/2302.10945
+      \endverb
+    \endentry
+    \entry{chen2022maximumflowminimumcostflow}{misc}{}{}
+      \name{author}{6}{}{%
+        {{hash=685d97480ebafb5a158e7c3dfdcb69a8}{%
+           family={Chen},
+           familyi={C\bibinitperiod},
+           given={Li},
+           giveni={L\bibinitperiod}}}%
+        {{hash=cfcc1feaf32e2c05fee1b4808b79af5d}{%
+           family={Kyng},
+           familyi={K\bibinitperiod},
+           given={Rasmus},
+           giveni={R\bibinitperiod}}}%
+        {{hash=76c44885824cd2c36754efe62769df21}{%
+           family={Liu},
+           familyi={L\bibinitperiod},
+           given={Yang\bibnamedelima P.},
+           giveni={Y\bibinitperiod\bibinitdelim P\bibinitperiod}}}%
+        {{hash=65d2f58a2df0890a494503815ccad81b}{%
+           family={Peng},
+           familyi={P\bibinitperiod},
+           given={Richard},
+           giveni={R\bibinitperiod}}}%
+        {{hash=26efc7cfcc96b5140a0b96408d90b5b4}{%
+           family={Gutenberg},
+           familyi={G\bibinitperiod},
+           given={Maximilian\bibnamedelima Probst},
+           giveni={M\bibinitperiod\bibinitdelim P\bibinitperiod}}}%
+        {{hash=58071d26b9ea8e6a87fe158890d7c57a}{%
+           family={Sachdeva},
+           familyi={S\bibinitperiod},
+           given={Sushant},
+           giveni={S\bibinitperiod}}}%
+      }
+      \strng{namehash}{d0145314fb6db74c3c705bc6b2c8f435}
+      \strng{fullhash}{7ac26092a5fb721a64992f04146b559b}
+      \strng{fullhashraw}{7ac26092a5fb721a64992f04146b559b}
+      \strng{bibnamehash}{d0145314fb6db74c3c705bc6b2c8f435}
+      \strng{authorbibnamehash}{d0145314fb6db74c3c705bc6b2c8f435}
+      \strng{authornamehash}{d0145314fb6db74c3c705bc6b2c8f435}
+      \strng{authorfullhash}{7ac26092a5fb721a64992f04146b559b}
+      \strng{authorfullhashraw}{7ac26092a5fb721a64992f04146b559b}
+      \field{sortinit}{C}
+      \field{sortinithash}{4d103a86280481745c9c897c925753c0}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{eprintclass}{cs.DS}
+      \field{eprinttype}{arXiv}
+      \field{title}{Maximum Flow and Minimum-Cost Flow in Almost-Linear Time}
+      \field{year}{2022}
+      \verb{eprint}
+      \verb 2203.00671
+      \endverb
+      \verb{urlraw}
+      \verb https://arxiv.org/abs/2203.00671
+      \endverb
+      \verb{url}
+      \verb https://arxiv.org/abs/2203.00671
+      \endverb
+    \endentry
+    \entry{article}{article}{}{}
+      \name{author}{1}{}{%
+        {{hash=55a69041bb4348d49ae6e30382b546c5}{%
+           family={Dinitz},
+           familyi={D\bibinitperiod},
+           given={Yefim},
+           giveni={Y\bibinitperiod}}}%
+      }
+      \strng{namehash}{55a69041bb4348d49ae6e30382b546c5}
+      \strng{fullhash}{55a69041bb4348d49ae6e30382b546c5}
+      \strng{fullhashraw}{55a69041bb4348d49ae6e30382b546c5}
+      \strng{bibnamehash}{55a69041bb4348d49ae6e30382b546c5}
+      \strng{authorbibnamehash}{55a69041bb4348d49ae6e30382b546c5}
+      \strng{authornamehash}{55a69041bb4348d49ae6e30382b546c5}
+      \strng{authorfullhash}{55a69041bb4348d49ae6e30382b546c5}
+      \strng{authorfullhashraw}{55a69041bb4348d49ae6e30382b546c5}
+      \field{sortinit}{D}
+      \field{sortinithash}{6f385f66841fb5e82009dc833c761848}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Soviet Math. Dokl.}
+      \field{month}{01}
+      \field{title}{Algorithm for Solution of a Problem of Maximum Flow in Networks with Power Estimation}
+      \field{volume}{11}
+      \field{year}{1970}
+      \field{pages}{1277\bibrangedash 1280}
+      \range{pages}{4}
+    \endentry
+    \entry{10.1145/321694.321699}{article}{}{}
+      \name{author}{2}{}{%
+        {{hash=4512d981a2fac684e867257fcb2c5419}{%
+           family={Edmonds},
+           familyi={E\bibinitperiod},
+           given={Jack},
+           giveni={J\bibinitperiod}}}%
+        {{hash=5290385c419686f6312edeb3578dc9cf}{%
+           family={Karp},
+           familyi={K\bibinitperiod},
+           given={Richard\bibnamedelima M.},
+           giveni={R\bibinitperiod\bibinitdelim M\bibinitperiod}}}%
+      }
+      \list{location}{1}{%
+        {New York, NY, USA}%
+      }
+      \list{publisher}{1}{%
+        {Association for Computing Machinery}%
+      }
+      \strng{namehash}{807ad16e721b4ded426da0566a9e8600}
+      \strng{fullhash}{807ad16e721b4ded426da0566a9e8600}
+      \strng{fullhashraw}{807ad16e721b4ded426da0566a9e8600}
+      \strng{bibnamehash}{807ad16e721b4ded426da0566a9e8600}
+      \strng{authorbibnamehash}{807ad16e721b4ded426da0566a9e8600}
+      \strng{authornamehash}{807ad16e721b4ded426da0566a9e8600}
+      \strng{authorfullhash}{807ad16e721b4ded426da0566a9e8600}
+      \strng{authorfullhashraw}{807ad16e721b4ded426da0566a9e8600}
+      \field{sortinit}{E}
+      \field{sortinithash}{8da8a182d344d5b9047633dfc0cc9131}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{issn}{0004-5411}
+      \field{journaltitle}{J. ACM}
+      \field{month}{4}
+      \field{number}{2}
+      \field{title}{Theoretical Improvements in Algorithmic Efficiency for Network Flow Problems}
+      \field{volume}{19}
+      \field{year}{1972}
+      \field{pages}{248\bibrangedash 264}
+      \range{pages}{17}
+      \verb{doi}
+      \verb 10.1145/321694.321699
+      \endverb
+      \verb{urlraw}
+      \verb https://doi.org/10.1145/321694.321699
+      \endverb
+      \verb{url}
+      \verb https://doi.org/10.1145/321694.321699
+      \endverb
+    \endentry
+    \entry{Ford_Fulkerson_1956}{article}{}{}
+      \name{author}{2}{}{%
+        {{hash=8ac1d092264588e515f04a6e0e9da546}{%
+           family={Ford},
+           familyi={F\bibinitperiod},
+           given={L.\bibnamedelimi R.},
+           giveni={L\bibinitperiod\bibinitdelim R\bibinitperiod}}}%
+        {{hash=3e344e6adb502649042816704bfa34fa}{%
+           family={Fulkerson},
+           familyi={F\bibinitperiod},
+           given={D.\bibnamedelimi R.},
+           giveni={D\bibinitperiod\bibinitdelim R\bibinitperiod}}}%
+      }
+      \strng{namehash}{28d93f4f29b3562899aa306b2fd14d28}
+      \strng{fullhash}{28d93f4f29b3562899aa306b2fd14d28}
+      \strng{fullhashraw}{28d93f4f29b3562899aa306b2fd14d28}
+      \strng{bibnamehash}{28d93f4f29b3562899aa306b2fd14d28}
+      \strng{authorbibnamehash}{28d93f4f29b3562899aa306b2fd14d28}
+      \strng{authornamehash}{28d93f4f29b3562899aa306b2fd14d28}
+      \strng{authorfullhash}{28d93f4f29b3562899aa306b2fd14d28}
+      \strng{authorfullhashraw}{28d93f4f29b3562899aa306b2fd14d28}
+      \field{sortinit}{F}
+      \field{sortinithash}{2638baaa20439f1b5a8f80c6c08a13b4}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Canadian Journal of Mathematics}
+      \field{title}{Maximal Flow Through a Network}
+      \field{volume}{8}
+      \field{year}{1956}
+      \field{pages}{399\bibrangedash 404}
+      \range{pages}{6}
+      \verb{doi}
+      \verb 10.4153/CJM-1956-045-5
+      \endverb
+    \endentry
     \entry{GOLDSCHLAGER1982105}{article}{}{}
       \name{author}{3}{}{%
         {{hash=a21da9335bb84448526a9345b0f9159c}{%

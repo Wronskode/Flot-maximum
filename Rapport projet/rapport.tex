@@ -268,7 +268,7 @@ Nous prendrons l'exemple suivant pour illustrer les différents algorithmes :
 \end{tikzpicture}\end{center}
 
 
-\subsection{L'algorithme de Ford-Fulkerson}
+\subsection{L'algorithme de Ford-Fulkerson\cite{Ford_Fulkerson_1956}}
 
 \subsubsection{Contexte historique}
 
@@ -500,7 +500,7 @@ On obtient à droite le nouveau réseau résiduel $N_f$ :
 Dans ce dernier réseau résiduel, si nous partons de la source $S$ nous ne pouvons atteindre que les sommets $A$ et $C$. Comme nous ne pouvons plus atteindre le puits $P$, cela signifie que le flot obtenu est maximal.
 
 Finalement la coupe minimale de ce réseau est l'ensemble $\{S,A,C\}$ et son flot maximal est de valeur $5$.
-\subsection{L'algorithme d'Edmonds-Karp}
+\subsection{L'algorithme d'Edmonds-Karp\cite{10.1145/321694.321699}}
 
 \subsubsection{Motivations et historique}
 
@@ -738,7 +738,7 @@ Dans ce dernier réseau résiduel, si nous partons de la source $S$ nous ne pouv
 
 Finalement la coupe minimale de ce réseau est l'ensemble $\{S,A,C\}$ et son flot maximal est de valeur $5$.\\
 
-\subsection{L'algorithme de Dinic}
+\subsection{L'algorithme de Dinic\cite{article}}
 
 \subsubsection{Histoire et contexte}
 
@@ -1440,11 +1440,11 @@ Cette \textcolor{violet}{Program} classe principale constitue le point d'entrée
 \section{Résultats et Discussion}
 \section{Revue de la littérature avancée}
 
-Les algorithmes classiques de flot maximal comme ceux de Ford-Fulkerson, Dinic ou Push-Relabel ont longtemps constitué l’état de l’art pratique et théorique. Cependant, des avancées majeures ont été réalisées dans la dernière décennie en algorithmique théorique, avec l’apparition d’algorithmes extrêmement rapides reposant sur des outils sophistiqués d’optimisation, d’algèbre linéaire et de structures de graphes dynamiques.
+Les algorithmes classiques de flot maximal comme ceux de Ford-Fulkerson, Dinic ou Poussage-Réétiquetage ont longtemps constitué l’état de l’art pratique et théorique. Cependant, des avancées majeures ont été réalisées dans la dernière décennie en algorithmique théorique, avec l’apparition d’algorithmes extrêmement rapides reposant sur des outils sophistiqués d’optimisation, d’algèbre linéaire et de structures de graphes dynamiques.
 
 Ces algorithmes atteignent pour la première fois une complexité proche ou quasi-linéaire, dans certains cas, en combinant des approches structurelles (arborescences, décompositions récursives), des techniques de descente de potentiel (interior point methods), ou encore des méthodes de résolution de systèmes linéaires dans les graphes.
 
-\subsection{Algorithme BLNPSSSW (2020)}
+\subsection{Algorithme BLNPSSSW (2020)\cite{chen2022maximumflowminimumcostflow}}
 
 L’algorithme proposé par \textbf{Bernstein, Liu, Nanongkai, Probst Gutenberg, Sidford, Spinrad, Sun et Wang} en 2020 marque une percée dans l’optimisation du flot maximal. Il atteint une complexité de :
 \[
@@ -1458,10 +1458,11 @@ Leur approche repose sur la réduction du problème de flot maximum à des probl
     \item descente de potentiel (interior-point methods),
     \item préconditionnement et sparsification de graphes.
 \end{itemize}
+Ici \[\tilde{\mathcal{O}}\] indique une complexité asymptotique qui ignore certains facteurs logarithmiques.
 
 C’est l’un des premiers résultats à montrer qu’on pouvait battre rigoureusement la barrière des $\mathcal{O}(m \sqrt{n})$ pour les graphes généraux.
 
-\subsection{Algorithme de Gao-Liu-Peng (2021)}
+\subsection{Algorithme de Gao-Liu-Peng (2021)\cite{barick2024effectspacetimegeometryneutrino}}
 
 Proposé par \textbf{Gao, Liu et Peng}, cet algorithme repose sur l’observation que le problème de flot maximal peut être résolu à l’aide de méthodes de préconditionnement et de raccourcissement de chemins dans les graphes. En appliquant une stratégie d’approximation contrôlée, les auteurs parviennent à une complexité :
 \[
@@ -1471,7 +1472,7 @@ avec des garanties sur l’erreur relative du flot obtenu.
 
 Leur méthode repose notamment sur des techniques hybrides entre les algorithmes de flot bloquant et la résolution approchée de systèmes linéaires associés aux graphes.
 
-\subsection{Algorithme de Chen, Kyng, Liu, Peng, Gutenberg, Sachdeva (2022)}
+\subsection{Algorithme de Chen, Kyng, Liu, Peng, Gutenberg, Sachdeva (2022)\cite{chen2022maximumflowminimumcostflow}}
 
 Ce collectif d’auteurs a contribué à généraliser et raffiner les algorithmes de flot maximal en s’appuyant sur des outils puissants de l’algèbre linéaire numérique, notamment les solveurs Laplaciens.
 
@@ -1483,29 +1484,9 @@ dans certains cas, avec de très bonnes constantes pratiques.
 
 Leur travail fait partie d’une série d’efforts visant à transposer les méthodes numériques continues (optimisation convexe, gradients, projections) à des problèmes discrets de flot.
 
-\subsection{Travaux récents de Bernstein, Blikstad, Saranurak, Tu (2023)}
-
-En 2023, une nouvelle avancée est publiée par \textbf{Bernstein, Blikstad, Saranurak et Tu} qui propose un algorithme atteignant :
-\[
-\mathcal{O}\left(n^{2 + o(1)} \log U\right)
-\]
-pour des classes spécifiques de graphes, notamment les \textit{bounded genus graphs} ou ceux admettant des séparateurs efficaces.
-
-Leur travail combine :
-\begin{itemize}
-    \item des techniques de \textit{vertex sparsification},
-    \item la décomposition récursive des graphes,
-    \item la réutilisation de flots partiels,
-    \item et une architecture algorithmique à base d’oracles dynamiques.
-\end{itemize}
-
-Il s’agit d’une des tentatives les plus abouties pour traiter le flot maximum dans des contextes très particuliers, tout en garantissant une efficacité presque linéaire.
-
 \subsection{Conclusion}
 
 Ces algorithmes récents montrent qu’il est désormais possible d’approcher la complexité quasi-linéaire pour le problème de flot maximal, dans certains modèles. Toutefois, leur complexité théorique s’accompagne souvent d’une complexité d’implémentation élevée, ce qui limite leur adoption dans les applications courantes.
-
-Dans le cadre de ce TER, nous nous sommes concentrés sur l’algorithme de Dinic pour sa valeur pédagogique et son efficacité structurelle, mais il est important de souligner que la recherche algorithmique continue de produire des méthodes de plus en plus puissantes, qui pourraient bientôt devenir des standards pratiques.
 
 \section{Conclusion et Perspectives}
 \printbibliography[heading=bibintoc]

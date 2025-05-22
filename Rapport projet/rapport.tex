@@ -270,8 +270,14 @@ Nous prendrons l'exemple suivant pour illustrer les différents algorithmes :
 
 \subsection{L'algorithme de Ford-Fulkerson}
 
+\subsubsection{Contexte historique}
+
+L’algorithme de Ford-Fulkerson a été introduit en 1956 par L. R. Ford Jr. et D. R. Fulkerson. Il s’agit d’un des premiers algorithmes systématiques permettant de résoudre le problème du flot maximal dans un réseau de transport. Ce problème consiste à envoyer le maximum de « flot » d’un sommet source vers un sommet puits dans un graphe orienté, tout en respectant des capacités sur les arêtes.
+
+Le principe fondamental de Ford-Fulkerson repose sur l’idée intuitive suivante : tant qu’il existe un chemin dans le graphe où du flot peut encore être envoyé (appelé \textit{chemin augmentant}), alors on peut accroître le flot total.
 \subsubsection{Fonctionnement général}
 L'algorithme de Ford-Fulkerson est le plus connu parmi tous. Celui-ci consiste à trouver un chemin améliorant entre la source et le puits afin d'augmenter la valeur du flot. Pour cela nous aurons besoin du graphe résiduel de $(G, f)$ qui nous permettra de savoir les capacités restantes disponibles.
+
 \subsubsection{Algorithme}
 % Pour tout arc $xy$ du graphe $G$: on initialise la valeur du flot de $xy$ à $0$.\\
 % Tant qu'il existe un chemin améliorant $C$ dans le graphe résiduel de $G$ et $f$:
@@ -303,10 +309,26 @@ L'algorithme de Ford-Fulkerson est le plus connu parmi tous. Celui-ci consiste �
 \State \Return $f$
 \end{algorithmic}
 \end{algorithm}
+\begin{definition}
+	Le graphe résiduel est une structure clé de l’algorithme. Pour chaque arête $(u,v)$ de capacité $c(u,v)$ et flot actuel $f(u,v)$, on définit une capacité résiduelle $c_f(u,v) = c(u,v) - f(u,v)$. De plus, une arête inverse $(v,u)$ est introduite avec capacité résiduelle $f(u,v)$, permettant d’annuler du flot si nécessaire.
+\end{definition}
 \subsubsection{Complexité}
-Un chemin améliorant peut être trouvé en $O(|A|)$ avec une recherche en profondeur ou en largeur par exemple, et un tel chemin augmente le flot d'au moins une unité, et d'au plus $|f^\star|$, où $f^\star$ représente un flot maximum. En notant $n$ le nombre de sommets et $m$ le nombre d'arcs, on a donc une complexité de $O(m|f^\star|)$ pour l'algorithme de Ford-Fulkerson \cite{cormen2009maxflow}.
+La complexité de l’algorithme dépend du choix des chemins augmentants :
+\begin{itemize}
+    \item Si on choisit les chemins de manière arbitraire (DFS par exemple), la complexité est $\mathcal{O}(F \cdot E)$, où $F$ est la valeur du flot maximal (supposée entière) et $E$ le nombre d’arêtes.
+    \item En l’absence de capacité entière, l’algorithme peut ne jamais converger (phénomène d’oscillation du flot par petits incréments).
+\end{itemize}
+Cette dépendance à la valeur du flot maximal rend l’algorithme peu efficace dans les cas où les capacités sont très grandes.
 \subsubsection{Avantages/inconvénients}
-L'algorithme est facile à implémenter mais il n'est pas efficace dans le cas général. En effet, il peut ne pas se terminer si les capacités sont irrationnelles. De plus sa complexité n'est pas optimale et dépend de la valeur du flot maximum, nous verrons plus tard qu'il existe des algorithmes plus efficaces.
+\textbf{Avantages :}
+\begin{itemize}
+    \item Simple à implémenter mais c'est aussi une très bonne base pour dériver d'autres algorithmes plus efficaces et il fonctionne bien dans des cas où les capacités sont petites et entières.
+\end{itemize}
+
+\textbf{Inconvénients :}
+\begin{itemize}
+    \item Pas de borne de complexité polynomiale sans restriction sur les données mais il peut aussi être lent en pratique à cause du choix des chemins et il est possible qu'il ne se termine jamais si les capacités ne sont pas entières.
+\end{itemize}
 \subsubsection{Application sur l'exemple}
 Tout d'abord, on a le chemin améliorant : $SABP$ avec une valeur de flot améliorant égal à $2$.\\
 On obtient donc à droite le réseau résiduel $N_f$ :
@@ -479,12 +501,22 @@ Dans ce dernier réseau résiduel, si nous partons de la source $S$ nous ne pouv
 
 Finalement la coupe minimale de ce réseau est l'ensemble $\{S,A,C\}$ et son flot maximal est de valeur $5$.
 \subsection{L'algorithme d'Edmonds-Karp}
+
+\subsubsection{Motivations et historique}
+
+L’algorithme d’Edmonds-Karp, introduit en 1972 par Jack Edmonds et Richard M. Karp, est une amélioration déterministe de l’algorithme de Ford-Fulkerson. Il s’inscrit dans un objectif fondamental de la théorie des graphes : rendre les algorithmes plus efficaces et prédictibles, en particulier dans les cas pratiques.
+
+L’idée principale est de toujours choisir le chemin augmentant le plus court en nombre d’arêtes. Cette stratégie simple permet d’établir une borne polynomiale sur le nombre d’itérations.
 \subsubsection{Fonctionnement général}
 L'algorithme d'Edmonds-Karp est une spécificité de celui de Ford-Fulkerson. Celui-ci consiste à trouver le plus court chemin améliorant entre la source et le puits afin d'augmenter la valeur du flot. Pour le trouver, il suffit d'utiliser un parcours en largeur.
 \subsubsection{Algorithme}
 L'algorithme d'Edmonds-Karp est une variante de l'algorithme de Ford-Fulkerson. Il utilise un parcours en largeur pour trouver le plus court chemin améliorant dans le réseau résiduel, là où l'algorithme de Ford-Fulkerson peut utiliser n'importe quel chemin améliorant.
 \subsubsection{Complexité}
-La complexité de l'algorithme d'Edmonds-Karp est de $O(|A|^2|V|)$\cite{cormen2009maxflow}.
+Contrairement à Ford-Fulkerson, Edmonds-Karp garantit une borne polynomiale. La clé est que le nombre de fois qu’une arête peut être saturée est borné.
+La complexité globale est donc $\mathcal{O}(V^2 \cdot E)$.
+
+
+L’idée est que la distance (en nombre d’arêtes) entre la source et un sommet dans le graphe résiduel ne diminue jamais. Chaque fois qu’une arête devient saturée, elle ne contribue plus à des chemins courts, donc au plus $\mathcal{O}(V \cdot E)$ saturations peuvent se produire.
 % Pour prouver la complexité de l'algorithme d'Edmonds-Karp, nous avons besoin d'un lemme :
 % \begin{lemma}
 % 	Si l'algorithme d'Edmonds-Karp est appliqué à un réseau de flot $G = (V, A, c, s, t)$, alors pour tous les sommets $v\in V\setminus \{s, t\}$, la plus courte distance $\delta_f(u, v)$ dans le réseau résiduel $N_f$ augmente à chaque itération de l'algorithme.
@@ -515,7 +547,15 @@ La complexité de l'algorithme d'Edmonds-Karp est de $O(|A|^2|V|)$\cite{cormen20
 % 	Ce qui contredit le fait que $\delta_{f'}(s, v) < \delta_f(s, v)$.
 % \end{proof}
 \subsubsection{Avantages/inconvénients}
-La complexité de l'algorithme d'Edmonds-Karp ne dépend plus de la valeur du flot maximum, mais du nombre d'arcs et de sommets. De plus cet algorithme est sûr de se terminer, même si les capacités sont irrationnelles, mais sa complexité n'est toujours pas optimale.
+\textbf{Avantages :}
+\begin{itemize}
+    \item Garantie de terminaison et de complexité polynomiale. car elle ne dépend plus de la valeur du flot maximal, mais du nombre d'arcs et de sommets.Cette Algorithme a un comportement déterministe il est donc sûr de terminer tout en étant simple à implémenter et à analyser.
+\end{itemize}
+
+\textbf{Inconvénients :}
+\begin{itemize}
+    \item Moins efficace que des algorithmes plus avancés comme Dinic ou Poussage-Réétiquetage sur les grands graphes.Il peut aussieffectuer un nombre élevé d’itérations si le graphe contient beaucoup de chemins courts.
+\end{itemize}
 \subsubsection{Application sur l'exemple}
 Tout d'abord, on a le chemin améliorant : $SABP$ de taille $3$ avec une valeur de flot améliorant égal à $2$.\\
 On obtient donc à droite le réseau résiduel $N_f$ :
@@ -700,6 +740,14 @@ Finalement la coupe minimale de ce réseau est l'ensemble $\{S,A,C\}$ et son flo
 
 \subsection{L'algorithme de Dinic}
 
+\subsubsection{Histoire et contexte}
+
+L’algorithme de Dinic (ou Dinitz), développé par le chercheur israélien Yefim Dinitz en 1970, constitue une avancée majeure dans la résolution efficace du problème de flot maximal. Présenté dans sa thèse, l’algorithme a introduit deux idées fondamentales : la construction d’un graphe de niveaux (\textit{level graph}) et l’utilisation de chemins bloquants (\textit{blocking flows}).
+
+Contrairement aux approches précédentes qui se contentaient de rechercher des chemins augmentants sans optimiser leur structure, Dinic exploite une stratégie plus globale à chaque phase d’augmentation, ce qui le rend beaucoup plus efficace, notamment sur les graphes denses.
+
+L’algorithme de Dinic a été conçu pour pallier certaines limites de Ford-Fulkerson, notamment son inefficacité sur certains graphes où les capacités sont entières mais faibles. L'objectif était d’accélérer la recherche de chemins augmentants en structurant le graphe résiduel, de manière à maximiser le flot plus rapidement. L’idée clé de Dinic est de travailler \textit{par phases}, où chaque phase consiste à construire un \textit{graphe de niveaux} (level graph) puis à y envoyer un \textit{flot bloquant} (blocking flow). Cette approche permet d’augmenter le flot de manière plus globale et stratégique.
+
 \subsubsection{Fonctionnement général}
 L'algorithme de Dinic est semblable à celui d'Edmonds-Karp. Comme lui, il utilise des plus courts chemins améliorants entre la source et le puits afin d'augmenter la valeur du flot. \\Pour les trouver, il faudra étiqueter les sommets en fonction de leur distance par rapport à la source et garder les arcs qui relient un sommet à un sommet de distance immédiatement supérieure. Ceci nous donnera le réseau de niveau $N_L$ obtenu à partir du réseau résiduel $N_f$.\\
 Nous aurons également besoin du flot bloquant.
@@ -724,7 +772,28 @@ Retourner $f$.\\
 
 \subsubsection{Complexité}
 
+La complexité dépend de la nature du graphe :
+\begin{itemize}
+    \item \textbf{Cas général} : $\mathcal{O}(V^2 E)$. Il y a au plus $V - 1$ niveaux possibles, donc au plus $V$ phases. Chaque phase utilise un BFS en $\mathcal{O}(E)$ et une recherche de flot bloquant pouvant prendre $\mathcal{O}(E)$ DFS. D’où un coût de $\mathcal{O}(E^2)$ par phase, et $\mathcal{O}(V \cdot E^2)$ au total. Mais cette borne est souvent pessimiste.
+\end{itemize}
+
 \subsubsection{Avantages/inconvénients}
+\textbf{Avantages :}
+\begin{itemize}
+    \item Meilleure complexité asymptotique que Ford-Fulkerson et Edmonds-Karp dans de nombreux cas.
+    \item Exploite des structures efficaces (graphe de niveaux, DFS optimisé).
+    \item Permet un gain significatif en pratique sur des grands graphes.
+    \item Très performant sur les graphes denses, et compétitif sur les graphes unitaires.
+\end{itemize}
+
+\textbf{Inconvénients :}
+\begin{itemize}
+    \item Implémentation plus complexe que les autres algorithmes de base.
+    \item Moins efficace que Push-Relabel dans certains cas spécifiques.
+    \item Utilise plus de mémoire que Ford-Fulkerson, car maintient plus de structures intermédiaires.
+\end{itemize}
+
+L’algorithme de Dinic est aujourd’hui largement utilisé dans les solveurs de flot maximal, notamment lorsqu’on a affaire à des réseaux de grande taille ou dans des applications à contraintes unitaires. Il sert également de base à d’autres algorithmes avancés, et est souvent utilisé dans les compétitions algorithmiques et l’optimisation combinatoire.
 
 \subsubsection{Application sur l'exemple}
 Au début le flot est nul, le réseau résiduel $N_f$ à droite est donc le même que le réseau de flot $N$.
@@ -1369,7 +1438,75 @@ Cette \textcolor{violet}{Program} classe principale constitue le point d'entrée
 \subsection{Tests}
 \section{Méthodologie Expérimentale}
 \section{Résultats et Discussion}
-\section{Revue de la Littérature}
+\section{Revue de la littérature avancée}
+
+Les algorithmes classiques de flot maximal comme ceux de Ford-Fulkerson, Dinic ou Push-Relabel ont longtemps constitué l’état de l’art pratique et théorique. Cependant, des avancées majeures ont été réalisées dans la dernière décennie en algorithmique théorique, avec l’apparition d’algorithmes extrêmement rapides reposant sur des outils sophistiqués d’optimisation, d’algèbre linéaire et de structures de graphes dynamiques.
+
+Ces algorithmes atteignent pour la première fois une complexité proche ou quasi-linéaire, dans certains cas, en combinant des approches structurelles (arborescences, décompositions récursives), des techniques de descente de potentiel (interior point methods), ou encore des méthodes de résolution de systèmes linéaires dans les graphes.
+
+\subsection{Algorithme BLNPSSSW (2020)}
+
+L’algorithme proposé par \textbf{Bernstein, Liu, Nanongkai, Probst Gutenberg, Sidford, Spinrad, Sun et Wang} en 2020 marque une percée dans l’optimisation du flot maximal. Il atteint une complexité de :
+\[
+\tilde{\mathcal{O}}((E+ V^{3/2} - \varepsilon)log U)
+\]
+pour un certain $\varepsilon > 0$, soit une amélioration significative par rapport aux bornes précédentes.
+
+Leur approche repose sur la réduction du problème de flot maximum à des problèmes de circulation avec capacités, qui sont ensuite résolus par une combinaison de techniques :
+\begin{itemize}
+    \item résolution de systèmes linéaires dans des matrices de Laplace,
+    \item descente de potentiel (interior-point methods),
+    \item préconditionnement et sparsification de graphes.
+\end{itemize}
+
+C’est l’un des premiers résultats à montrer qu’on pouvait battre rigoureusement la barrière des $\mathcal{O}(m \sqrt{n})$ pour les graphes généraux.
+
+\subsection{Algorithme de Gao-Liu-Peng (2021)}
+
+Proposé par \textbf{Gao, Liu et Peng}, cet algorithme repose sur l’observation que le problème de flot maximal peut être résolu à l’aide de méthodes de préconditionnement et de raccourcissement de chemins dans les graphes. En appliquant une stratégie d’approximation contrôlée, les auteurs parviennent à une complexité :
+\[
+\tilde{\mathcal{O}}\left(E^{\frac{3}{2} - \frac{1}{32\delta}} \log U\right)
+\]
+avec des garanties sur l’erreur relative du flot obtenu.
+
+Leur méthode repose notamment sur des techniques hybrides entre les algorithmes de flot bloquant et la résolution approchée de systèmes linéaires associés aux graphes.
+
+\subsection{Algorithme de Chen, Kyng, Liu, Peng, Gutenberg, Sachdeva (2022)}
+
+Ce collectif d’auteurs a contribué à généraliser et raffiner les algorithmes de flot maximal en s’appuyant sur des outils puissants de l’algèbre linéaire numérique, notamment les solveurs Laplaciens.
+
+L’approche consiste à ramener le flot maximum à un problème de minimisation de potentiel dans un graphe résiduel, résolu par une succession de systèmes linéaires approchés. Les résultats atteignent des complexités du type :
+\[
+\mathcal{O}\left(E^{1 + o(1)} \log U\right)
+\]
+dans certains cas, avec de très bonnes constantes pratiques.
+
+Leur travail fait partie d’une série d’efforts visant à transposer les méthodes numériques continues (optimisation convexe, gradients, projections) à des problèmes discrets de flot.
+
+\subsection{Travaux récents de Bernstein, Blikstad, Saranurak, Tu (2023)}
+
+En 2023, une nouvelle avancée est publiée par \textbf{Bernstein, Blikstad, Saranurak et Tu} qui propose un algorithme atteignant :
+\[
+\mathcal{O}\left(n^{2 + o(1)} \log U\right)
+\]
+pour des classes spécifiques de graphes, notamment les \textit{bounded genus graphs} ou ceux admettant des séparateurs efficaces.
+
+Leur travail combine :
+\begin{itemize}
+    \item des techniques de \textit{vertex sparsification},
+    \item la décomposition récursive des graphes,
+    \item la réutilisation de flots partiels,
+    \item et une architecture algorithmique à base d’oracles dynamiques.
+\end{itemize}
+
+Il s’agit d’une des tentatives les plus abouties pour traiter le flot maximum dans des contextes très particuliers, tout en garantissant une efficacité presque linéaire.
+
+\subsection{Conclusion}
+
+Ces algorithmes récents montrent qu’il est désormais possible d’approcher la complexité quasi-linéaire pour le problème de flot maximal, dans certains modèles. Toutefois, leur complexité théorique s’accompagne souvent d’une complexité d’implémentation élevée, ce qui limite leur adoption dans les applications courantes.
+
+Dans le cadre de ce TER, nous nous sommes concentrés sur l’algorithme de Dinic pour sa valeur pédagogique et son efficacité structurelle, mais il est important de souligner que la recherche algorithmique continue de produire des méthodes de plus en plus puissantes, qui pourraient bientôt devenir des standards pratiques.
+
 \section{Conclusion et Perspectives}
 \printbibliography[heading=bibintoc]
 \end{document}

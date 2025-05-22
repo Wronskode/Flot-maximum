@@ -507,7 +507,7 @@ L’idée principale est de toujours choisir le chemin augmentant le plus court 
 \subsubsection{Fonctionnement général}
 L'algorithme d'Edmonds-Karp est une spécificité de celui de Ford-Fulkerson. Celui-ci consiste à trouver le plus court chemin améliorant entre la source et le puits afin d'augmenter la valeur du flot. Pour le trouver, il suffit d'utiliser un parcours en largeur.
 \subsubsection{Algorithme}
-L'algorithme d'Edmonds-Karp est une variante de l'algorithme de Ford-Fulkerson. Il utilise un parcours en largeur pour trouver le plus court chemin améliorant dans le réseau résiduel, là où l'algorithme de Ford-Fulkerson peut utiliser n'importe quel chemin améliorant.
+L'algorithme d'Edmonds-Karp est une spécificité de l'algorithme de Ford-Fulkerson. Il utilise un parcours en largeur pour trouver le plus court chemin améliorant dans le réseau résiduel, là où l'algorithme de Ford-Fulkerson peut utiliser n'importe quel chemin améliorant.
 \subsubsection{Complexité}
 Contrairement à Ford-Fulkerson, Edmonds-Karp garantit une borne polynomiale, en effet la complexité ne dépend plus de la valeur du flot maximum, mais uniquement de $n$. La clé est que le nombre de fois qu’une arête peut être saturée est borné.
 La complexité globale est donc $\mathcal{O}(V^2 \cdot E)$.
@@ -790,7 +790,7 @@ La complexité dépend de la nature du graphe :
     \item Moins efficace que Push-Relabel dans certains cas spécifiques.
     \item Utilise plus de mémoire que Ford-Fulkerson, car maintient plus de structures intermédiaires.
 \end{itemize}
-L’algorithme de Dinic est aujourd’hui largement utilisé dans les solveurs de flot maximal, notamment lorsqu’on a affaire à des réseaux de grande taille ou dans des applications à contraintes unitaires. Il sert également de base à d’autres algorithmes avancés, et est souvent utilisé dans les compétitions algorithmiques et l’optimisation combinatoire.
+L’algorithme de Dinic est aujourd’hui largement utilisé dans les solveurs de flot maximal, notamment lorsqu’on a affaire à des réseaux de grande taille ou dans des applications à contraintes unitaires. Il sert également de base à d’autres algorithmes avancés, et est souvent utilisé dans les compétitions algorithmiques et l’optimisation combinatoire\cite{article}.
 \subsubsection{Application sur l'exemple}
 Au début le flot est nul, le réseau résiduel $N_f$ à droite est donc le même que le réseau de flot $N$.
 
@@ -1479,10 +1479,11 @@ Leur approche repose sur la réduction du problème de flot maximum à des probl
     \item descente de potentiel (interior-point methods),
     \item préconditionnement et sparsification de graphes.
 \end{itemize}
-Ici \[\tilde{\mathcal{O}}\] indique une complexité asymptotique qui ignore certains facteurs logarithmiques.
-
+Ici \[\tilde{\mathcal{O}}\] indique une complexité asymptotique qui ignore certains facteurs logarithmiques. Plus précisément, la définition exacte est la suivante :
+\begin{definition} Soit $f: \mathbb{N} \to \mathbb{R}^+$ et $g: \mathbb{N} \to \mathbb{R}^+$ deux fonctions. Si $g$ est polynomiale en $n$, on dit que
+	$f(n) = \tilde{\mathcal{O}}(g(n))$ si  $f(n) = \mathcal{O}(g(n) \log^k n)$ pour un $k \in \mathbb{N}$.
+\end{definition}
 C’est l’un des premiers résultats à montrer qu’on pouvait battre rigoureusement la barrière des $\mathcal{O}(m \sqrt{n})$ pour les graphes généraux.
-
 \subsection{Algorithme de Gao-Liu-Peng (2021)}
 
 Proposé par \textbf{Gao, Liu et Peng}, cet algorithme repose sur l’observation que le problème de flot maximal peut être résolu à l’aide de méthodes de préconditionnement et de raccourcissement de chemins dans les graphes\cite{barick2024effectspacetimegeometryneutrino}. En appliquant une stratégie d’approximation contrôlée, les auteurs parviennent à une complexité :

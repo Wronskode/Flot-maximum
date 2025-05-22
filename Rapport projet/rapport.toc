@@ -48,17 +48,18 @@
 \contentsline {subsubsection}{\numberline {6.2.3}FlowNetwork}{20}{subsubsection.6.2.3}%
 \contentsline {subsubsection}{\numberline {6.2.4}FileFlowNetwork}{21}{subsubsection.6.2.4}%
 \contentsline {subsubsection}{\numberline {6.2.5}RandomFlowNetwork}{21}{subsubsection.6.2.5}%
-\contentsline {subsubsection}{\numberline {6.2.6}PL}{21}{subsubsection.6.2.6}%
-\contentsline {subsubsection}{\numberline {6.2.7}Curve}{22}{subsubsection.6.2.7}%
-\contentsline {subsubsection}{\numberline {6.2.8}Program}{22}{subsubsection.6.2.8}%
-\contentsline {subsection}{\numberline {6.3}Langage et classes}{22}{subsection.6.3}%
-\contentsline {subsection}{\numberline {6.4}Tests}{22}{subsection.6.4}%
-\contentsline {section}{\numberline {7}Méthodologie Expérimentale}{22}{section.7}%
-\contentsline {section}{\numberline {8}Résultats et Discussion}{22}{section.8}%
-\contentsline {section}{\numberline {9}Revue de la littérature avancée}{22}{section.9}%
+\contentsline {subsubsection}{\numberline {6.2.6}Flow}{22}{subsubsection.6.2.6}%
+\contentsline {subsubsection}{\numberline {6.2.7}PL}{22}{subsubsection.6.2.7}%
+\contentsline {subsubsection}{\numberline {6.2.8}Curve}{22}{subsubsection.6.2.8}%
+\contentsline {subsubsection}{\numberline {6.2.9}Program}{22}{subsubsection.6.2.9}%
+\contentsline {subsection}{\numberline {6.3}Langage et classes}{23}{subsection.6.3}%
+\contentsline {subsection}{\numberline {6.4}Tests}{23}{subsection.6.4}%
+\contentsline {section}{\numberline {7}Méthodologie Expérimentale}{23}{section.7}%
+\contentsline {section}{\numberline {8}Résultats et Discussion}{23}{section.8}%
+\contentsline {section}{\numberline {9}Revue de la littérature avancée}{23}{section.9}%
 \contentsline {subsection}{\numberline {9.1}Algorithme BLNPSSSW (2020)\blx@tocontentsinit {0}\cite {chen2022maximumflowminimumcostflow}}{23}{subsection.9.1}%
 \contentsline {subsection}{\numberline {9.2}Algorithme de Gao-Liu-Peng (2021)\blx@tocontentsinit {0}\cite {barick2024effectspacetimegeometryneutrino}}{23}{subsection.9.2}%
-\contentsline {subsection}{\numberline {9.3}Algorithme de Chen, Kyng, Liu, Peng, Gutenberg, Sachdeva (2022)\blx@tocontentsinit {0}\cite {chen2022maximumflowminimumcostflow}}{23}{subsection.9.3}%
+\contentsline {subsection}{\numberline {9.3}Algorithme de Chen, Kyng, Liu, Peng, Gutenberg, Sachdeva (2022)\blx@tocontentsinit {0}\cite {chen2022maximumflowminimumcostflow}}{24}{subsection.9.3}%
 \contentsline {subsection}{\numberline {9.4}Conclusion}{24}{subsection.9.4}%
 \contentsline {section}{\numberline {10}Conclusion et Perspectives}{24}{section.10}%
 \contentsline {section}{R\'ef\'erences}{24}{section*.3}%

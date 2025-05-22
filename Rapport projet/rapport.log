@@ -1,4 +1,4 @@
-This is LuaHBTeX, Version 1.21.0 (MiKTeX 25.2) (format=lualatex 2025.3.20)  22 MAY 2025 18:50
+This is LuaHBTeX, Version 1.21.0 (MiKTeX 25.2) (format=lualatex 2025.3.20)  22 MAY 2025 19:27
  restricted system commands enabled.
  file:line:error style messages enabled.
 **"c:/Users/adrie/Desktop/Master/S8/TER/Rapport/Flot-maximum/Rapport projet/rap
@@ -1928,7 +1928,7 @@ Package hyperref Info: Link coloring ON on input line 36.
 
 \openout5 = rapport.out
 \c@lstlisting=\count560
-<UM1.jpg, id=254, 811.03pt x 296.10625pt>
+<UM1.jpg, id=258, 811.03pt x 296.10625pt>
 File: UM1.jpg Graphic file (type jpg)
 <use UM1.jpg>
 Package luatex.def Info: UM1.jpg  used on input line 41.
@@ -2062,127 +2062,132 @@ Underfull \hbox (badness 10000) in paragraph at lines 771--772
 [11]
 Package mdframed Info: mdframed detected package amsthm 
  changed the theorem header of amsthm
-(mdframed)              on input line 1064.
+(mdframed)              on input line 1066.
 Package mdframed Info: mdframed detected package amsthm 
  changed the theorem header of amsthm
-(mdframed)              on input line 1089.
+(mdframed)              on input line 1091.
 Package hyperref Info: bookmark level for unknown remark defaults to 0 on input
- line 1089.
+ line 1091.
 
 
 [12]
 Package mdframed Info: mdframed detected package amsthm 
  changed the theorem header of amsthm
-(mdframed)              on input line 1099.
+(mdframed)              on input line 1101.
 Package hyperref Info: bookmark level for unknown theorem defaults to 0 on inpu
-t line 1099.
+t line 1101.
 Package mdframed Info: mdframed detected package amsthm 
  changed the theorem header of amsthm
-(mdframed)              on input line 1102.
+(mdframed)              on input line 1104.
 Package hyperref Info: bookmark level for unknown replacementproof defaults to 
-0 on input line 1102.
+0 on input line 1104.
 
 
 [13]
 Package mdframed Info: mdframed detected package amsthm 
  changed the theorem header of amsthm
-(mdframed)              on input line 1134.
+(mdframed)              on input line 1136.
 Package mdframed Info: mdframed detected package amsthm 
  changed the theorem header of amsthm
-(mdframed)              on input line 1137.
+(mdframed)              on input line 1139.
 Package mdframed Info: mdframed detected package amsthm 
  changed the theorem header of amsthm
-(mdframed)              on input line 1140.
-Package mdframed Info: mdframed detected package amsthm 
- changed the theorem header of amsthm
-(mdframed)              on input line 1158.
+(mdframed)              on input line 1142.
 Package mdframed Info: mdframed detected package amsthm 
  changed the theorem header of amsthm
 (mdframed)              on input line 1160.
 Package mdframed Info: mdframed detected package amsthm 
  changed the theorem header of amsthm
-(mdframed)              on input line 1166.
+(mdframed)              on input line 1162.
+Package mdframed Info: mdframed detected package amsthm 
+ changed the theorem header of amsthm
+(mdframed)              on input line 1168.
 
 
 [14]
 Package mdframed Info: mdframed detected package amsthm 
  changed the theorem header of amsthm
-(mdframed)              on input line 1173.
+(mdframed)              on input line 1175.
 Package mdframed Info: mdframed detected package amsthm 
  changed the theorem header of amsthm
-(mdframed)              on input line 1184.
+(mdframed)              on input line 1186.
 Package mdframed Info: mdframed detected package amsthm 
  changed the theorem header of amsthm
-(mdframed)              on input line 1191.
+(mdframed)              on input line 1193.
 
 
 [15]
-Underfull \hbox (badness 10000) in paragraph at lines 1208--1209
+Underfull \hbox (badness 10000) in paragraph at lines 1213--1214
 
  []
 
 
-Overfull \hbox (6.88739pt too wide) in paragraph at lines 1218--1219
+Overfull \hbox (6.88739pt too wide) in paragraph at lines 1223--1224
 []\TU/lmr/m/n/10 Soit on uti-lise une den-sité, c’est-à-dire une pro-por-tio
 n du nombre maxi-mal de connexions
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1241--1242
+Underfull \hbox (badness 10000) in paragraph at lines 1246--1247
 
  []
 
 
 
 [16]
+Underfull \hbox (badness 10000) in paragraph at lines 1255--1256
+
+ []
+
+
 
 [17
 Missing character: There is no 2 (U+0032) in font nullfont!
 Missing character: There is no ; (U+003B) in font nullfont!
 ]
-Underfull \hbox (badness 10000) in paragraph at lines 1363--1364
+Underfull \hbox (badness 10000) in paragraph at lines 1367--1368
 
  []
 
-<Gantt2.png, id=491, 724.50674pt x 263.18324pt>
+<Gantt2.png, id=495, 724.50674pt x 263.18324pt>
 File: Gantt2.png Graphic file (type png)
 <use Gantt2.png>
-Package luatex.def Info: Gantt2.png  used on input line 1367.
+Package luatex.def Info: Gantt2.png  used on input line 1371.
 (luatex.def)             Requested size: 418.25368pt x 151.93156pt.
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1372--1373
+Underfull \hbox (badness 10000) in paragraph at lines 1376--1377
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1374--1375
+Underfull \hbox (badness 10000) in paragraph at lines 1378--1379
 
  []
 
 
 
 [18]
-Underfull \hbox (badness 10000) in paragraph at lines 1376--1377
+Underfull \hbox (badness 10000) in paragraph at lines 1380--1381
 
  []
 
 
 
 [19<./Gantt2.png>]
-Underfull \hbox (badness 10000) in paragraph at lines 1412--1413
+Underfull \hbox (badness 10000) in paragraph at lines 1417--1418
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1414--1415
+Underfull \hbox (badness 10000) in paragraph at lines 1419--1420
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1423--1424
+Underfull \hbox (badness 10000) in paragraph at lines 1428--1429
 
  []
 
@@ -2190,37 +2195,34 @@ Underfull \hbox (badness 10000) in paragraph at lines 1423--1424
 
 [20]
 
-LaTeX Warning: Hyper reference `sec:pl' on page 21 undefined on input line 1445
-.
-
-
-
 [21]
 
 [22]
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `\cite' on input line 1466.
+(hyperref)                removing `\cite' on input line 1475.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `\cite' on input line 1484.
+(hyperref)                removing `\cite' on input line 1493.
 
 
-Overfull \hbox (14.41385pt too wide) in paragraph at lines 1494--1494
+
+[23]
+Overfull \hbox (14.41385pt too wide) in paragraph at lines 1503--1503
 []\TU/lmr/bx/n/12 Al-go-rithme de Chen, Kyng, Liu, Peng, Gu-ten-berg, Sa-ch-deva
  (2022)[[][][]2[][]] 
  []
 
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `\cite' on input line 1494.
+(hyperref)                removing `\cite' on input line 1503.
 
 
 
-[23]
+[24]
 
-[24] (./rapport.aux)
+[25] (./rapport.aux)
  ***********
 LaTeX2e <2024-11-01> patch level 2
 L3 programming layer <2025-01-18>
@@ -2229,25 +2231,22 @@ L3 programming layer <2025-01-18>
 
 LaTeX Font Warning: Some font shapes were not available, defaults substituted.
 
-
-LaTeX Warning: There were undefined references.
-
 Package rerunfilecheck Info: File `rapport.out' has not changed.
-(rerunfilecheck)             Checksum: 92F292D2D2627A6FE9E9332918A1E350;11608.
+(rerunfilecheck)             Checksum: 0FE136E8760764B23988556020940653;11696.
 Package logreq Info: Writing requests to 'rapport.run.xml'.
 
 \openout1 = rapport.run.xml
 )
 
 Here is how much of LuaTeX's memory you used:
- 50569 strings out of 475506
+ 50571 strings out of 475506
  195335,2373549 words of node,token memory allocated
- 5319 words of node memory still in use:
-   7 hlist, 2 vlist, 2 rule, 276 glue, 4 kern, 1 penalty, 2 glyph, 1134 attribut
-e, 113 glue_spec, 164 attribute_list, 2 write, 3 pdf_action nodes
-   avail lists: 1:18,2:21004,3:3663,4:205,5:506,6:160,7:8352,8:66,9:1410,10:23,1
-1:671,12:2
- 72239 multiletter control sequences out of 65536+600000
+ 5349 words of node memory still in use:
+   7 hlist, 2 vlist, 2 rule, 278 glue, 4 kern, 1 penalty, 2 glyph, 1141 attribut
+e, 113 glue_spec, 165 attribute_list, 2 write, 3 pdf_action nodes
+   avail lists: 1:18,2:20995,3:3663,4:205,5:506,6:161,7:7753,8:66,9:1410,10:23,1
+1:625,12:2
+ 72240 multiletter control sequences out of 65536+600000
  58 fonts using 4813999 bytes
  89i,13n,99p,1228b,2983s stack positions out of 10000i,1000n,20000p,200000b,200000s
 <c:/users/adrie/appdata/local/programs/miktex/fonts/opentype/public/lm/lmmono9-r
@@ -2276,9 +2275,9 @@ iKTeX/fonts/type1/public/amsfonts/cm/cmr7.pfb><C:/Users/adrie/AppData/Local/Prog
 rams/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy10.pfb><C:/Users/adrie/AppData/Lo
 cal/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy7.pfb><C:/Users/adrie/App
 Data/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/symbols/msbm10.pfb>
-Output written on rapport.pdf (27 pages, 430555 bytes).
+Output written on rapport.pdf (28 pages, 432918 bytes).
 
-PDF statistics: 687 PDF objects out of 1000 (max. 8388607)
- 142 named destinations out of 1000 (max. 131072)
- 512 words of extra memory for PDF output out of 10000 (max. 100000000)
+PDF statistics: 699 PDF objects out of 1000 (max. 8388607)
+ 143 named destinations out of 1000 (max. 131072)
+ 520 words of extra memory for PDF output out of 10000 (max. 100000000)
 

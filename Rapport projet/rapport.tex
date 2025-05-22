@@ -1040,6 +1040,8 @@ Finalement la coupe minimale de ce réseau est l'ensemble $\{S,A,C\}$ et son flo
 %Faire un graphique qui montre la courbe du temps de calculs de chaque algo en fonction du nombre de sommet
 
 \section{Programmation linéaire}
+\label{sec:pl}
+
 \subsection{Introduction à la programmation linéaire}
 La programmation linéaire est un outil mathématique qui permet de résoudre des problèmes d'optimisation où l'objectif et les contraintes sont exprimés par des fonctions linéaires.
 Elle est utilisée dans de nombreux domaines tels que l'économie, la logistique, la gestion des ressources, etc.
@@ -1201,11 +1203,14 @@ Ainsi, nous comprenons que le flot maximum est un problème d'optimisation très
 On peut aussi remarquer que la modélisation du problème de coupe minimum sous forme de programme linéaire est en fait le problème \emph{dual} du problème de flot maximum. En d'autres termes, ces deux problèmes ne sont en réalité qu'un seul et même problème, mais sous deux perspectives différentes, l'un exprimé comme une maximisation et l'autre comme une minimisation.
 \subsection{Solveurs de programmation linéaire}
 Nous avons utilisé deux solveurs de programmation linéaire : \texttt{Gurobi} et \texttt{SCIP}, ces deux solveurs sont très performants et permettent de résoudre des problèmes de grande taille rapidement. \texttt{Gurobi} est un solveur commercial, réputé pour être l'un des plus rapides du marché, tandis que \texttt{SCIP} est un solveur open-source qui est probablement le meilleur dans sa catégorie.
+
+
 \section{Création des instances}
-Afin de pouvoir tester et comparer nos algorithmes, nous avons eu besoins d'instances de graphe de tailles et de formes differentes afin de pouvoir comparer comment se comportent nos algorithmes. Comme nous n'avons pas trouvé d'instances de graphes suffisamment grandes en ligne, nous avons décidé de créer nos propres instances. Cette partie détaille ce processus de création et présente les differentes instances que nous avons pu créer ainsi que les choix que nous avons faits.
+
+Afin de pouvoir tester et comparer nos algorithmes, nous avons eu besoin d'instances de graphes de tailles et de formes différentes afin de pouvoir comparer comment se comportent nos algorithmes. Comme nous n'avons pas trouvé d'instances de graphes suffisamment grandes en ligne, nous avons décidé de créer nos propres instances. Cette partie détaille ce processus de création et présente les différentes instances que nous avons pu créer ainsi que les choix que nous avons faits.
 
 \subsection{La classe RandomFlowNetwork}
-Afin de créer un grand nombre d'instances, nous avons du commencé par générer des graphes de manière aléatoire. Pour cela nous avons créé une classe \texttt{RandomFlowNetwork}.\\
+Afin de créer un grand nombre d'instances, nous avons dû commencer par générer des graphes de manière aléatoire. Pour cela, nous avons créé une classe \textcolor{violet}{RandomFlowNetwork}.\\
 
 Cette classe permet de générer un réseau de flot orienté en plusieurs étapes :
 
@@ -1238,17 +1243,16 @@ En résumé, cette classe construit un graphe orienté aléatoire, puis désigne
 \subsection{Tests sur les graphes générés}
 \label{sec:creer_instances}
 
-Les graphes étant générés aléatoirement, on peut obtenir des graphes non connexes, des sommets non reliés à la source ou au puits, etc. Tout cela fausseraient les instances. En effet, si le graphe n’est pas connexe, cela pourrait fausser les résultats : un graphe de taille $1000$ pourrait se résumer à un de taille $100$, ce que l’on ne souhaite pas. On pourrait même tomber sur des graphes où nos algorithmes ne convergeraient pas, par exemple si la source et le puits ne sont pas reliés.\\
+Les graphes étant générés aléatoirement, on peut obtenir des graphes non connexes, des sommets non reliés à la source ou au puits, etc. Tout cela fausserait les instances. En effet, si le graphe n’est pas connexe, cela pourrait fausser les résultats : un graphe de taille $1000$ pourrait se résumer à un de taille $100$ (si il n'est pas connexe par exemple), ce que l’on ne souhaite pas. On pourrait même tomber sur des graphes où nos algorithmes ne convergeraient pas, par exemple si la source et le puits ne sont pas reliés.\\
 
-On va donc devoir créer un ensemble de tests sur nos graphes afin de s’assurer qu’ils soient bien formés et propices à être utilisées comme instances. Cela pourra prendre du temps car nous générons les graphes aléatoirement et n’en conservons qu’une petite partie, mais ce n’est pas très grave, car le jeu d’instances n’a besoin d’être créé qu’une seule fois. Il n’est pas nécessaire que le code qui permet sa création soit bien optimisé : on le lance un soir et on récupère les instances le lendemain dans le pire des cas.
-Nous avons donc implémenté une fonction \texttt{IsConnected} qui permet de vérifier les trois critères suivants sur le graphe :
+On va donc devoir créer un ensemble de tests sur nos graphes afin de s’assurer qu’ils soient bien formés et propices à être utilisées comme instances. Cela pourra prendre du temps car nous générons les graphes aléatoirement et n’en conservons qu’une petite partie. Cependant ce n’est pas très grave car le jeu d’instances n’a besoin d’être créé qu’une seule fois. Il n’est donc pas nécessaire que le code qui permet sa création soit bien optimisé : on le lance un soir et on récupère les instances le lendemain dans le pire des cas.
+Nous avons donc implémenté une fonction \textcolor{green!60!black}{IsConnected} qui permet de vérifier les deux critères suivants sur le graphe :
 \begin{enumerate}
 	\item Depuis la source, on peut atteindre n'importe quel sommet du graphe.
 	\item Depuis n'importe quel sommet du graphe, on peut atteindre le puits.
-	\item Le graphe est connexe.
 \end{enumerate}
 
-Cela nous permet de nous assurer que le graphe que nous avons généré est bien formé. En effet, l'algorithme convergera car le premier point nous assure qu'on peut créer un flot sur ce graphe (la source est bien connectée au puits). Les points 2 et 3 nous permettent d'être sûrs que sur un graphe de taille $n$, chaque sommet aura bien son importance et sera bien pris en compte par le calcul. Le graphe ne peut donc pas se résumer à une version plus petite de lui-même.
+Évidement, la vérification de ces deux propriétés implique la connexité du graphe. Ces tests permetent donc de nous assurer que le graphe que nous avons généré est bien formé. En effet, les algorithmes de flot convergerons sur nos graphes car le premier point nous assure qu'on peut créer un flot sur ce graphe (la source est bien connectée au puits). Les points 2 et 3 nous permettent d'être sûrs que sur un graphe de taille $n$, chaque sommet aura bien son importance et sera bien pris en compte par le calcul. Le graphe ne peut donc pas se résumer à une version plus petite de lui-même. Nous donnons ici quelques exemples de graphes générés aléatoirement et si ils sont valides ou non :\\
 \begin{center}
 	\begin{tikzpicture}[
 		vertex/.style={circle, draw, fill=blue!20, minimum size=15pt, inner sep=1pt},
@@ -1391,6 +1395,7 @@ Les classes principales que nous avons implémentées sont les suivantes :
     \item \textcolor{violet}{FlowNetwork}
     \item \textcolor{violet}{FileFlowNetwork}
     \item \textcolor{violet}{RandomFlowNetwork}
+    \item \item \textcolor{violet}{Flow}
     \item \textcolor{violet}{PL}
     \item \textcolor{violet}{Curve}
     \item \textcolor{violet}{Program}
@@ -1439,6 +1444,10 @@ La classe \textcolor{violet}{FileFlowNetwork} a pour rôle de générer dynamiqu
 
 \subsubsection{RandomFlowNetwork}
 La classe \textcolor{violet}{RandomFlowNetwork} est responsable de la génération aléatoire de graphes orientés, qui sont ensuite utilisés comme instances pour les algorithmes de flot maximum. Elle crée un graphe orienté en ajoutant des sommets et des arêtes de manière aléatoire, tout en respectant une densité spécifiée. La classe permet également de définir une source et un puits, ainsi que d'assigner des capacités aux arêtes. Sa méthode \textcolor{green!60!black}{Generate} retourne un objet \textcolor{violet}{FlowNetwork} représentant le réseau de flot. La methode de génération de graphes aléatoires est détaillée dans la \hyperref[sec:creer_instances]{\textcolor{black}{section sur la création des instances}}.
+
+\subsubsection{Flow}
+
+La classe \textcolor{violet}{Flow} est utilisée pour représenter un flot, soit la fonction $f : V^2 \to \mathbb{R}$ que nous étudions. Cette classe permet de stocker et de manipuler les flots calculés par les différents algorithmes de flot maximum.
 
 \subsubsection{PL}
 

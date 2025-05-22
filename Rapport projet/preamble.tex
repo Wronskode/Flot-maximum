@@ -79,7 +79,7 @@
 % theorems
 \usepackage{thmtools}
 \usepackage[framemethod=TikZ]{mdframed}
-\mdfsetup{skipabove=1em,skipbelow=0em, innertopmargin=5pt, innerbottommargin=6pt}
+\mdfsetup{skipabove=1em,skipbelow=1em, innertopmargin=5pt, innerbottommargin=6pt}
 
 
 \theoremstyle{definition}
@@ -162,16 +162,6 @@
 
 \declaretheorem[style=thmblueline, numbered=no, name=Remarque]{remark}
 \declaretheorem[style=thmblueline, numbered=no, name=Note]{note}
-
-\newtheorem*{uovt}{UOVT}
-\newtheorem*{notation}{Notation}
-\newtheorem*{previouslyseen}{As previously seen}
-\newtheorem*{problem}{Problem}
-\newtheorem*{observe}{Observe}
-\newtheorem*{property}{Property}
-\newtheorem*{intuition}{Intuition}
-
-
 \usepackage{etoolbox}
 \AtEndEnvironment{vb}{\null\hfill$\diamond$}%
 \AtEndEnvironment{intermezzo}{\null\hfill$\diamond$}%

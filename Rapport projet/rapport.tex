@@ -119,7 +119,7 @@ Le problème du flot maximum se définit sur un graphe orienté $G = (V, E)$, o�
 Le problème du flot maximum consiste donc à trouver un flot $f$ dans un réseau de flot, respectant les contraintes ci-dessus et maximisant $|f|$. Dans notre cas particulier, nous allons nous intéresser à des graphes orientés avec un flot entier et des capacités entières.
 \paragraph{Applications :} Le flot maximum possède de nombreuses applications concrètes : planification logistique, réseaux de transport (par exemple pour maximiser le trafic dans un réseau routier), routage dans les réseaux de communication, allocation de ressources, et même en algorithmique pour résoudre d’autres problèmes puisque le problème du flot maximum est \textsc{P-complet}. C'est-à-dire qu'il se résout en temps polynomial, et que tout problème polynomial peut s'y réduire par une réduction en espace logarithmique\cite{GOLDSCHLAGER1982105}.
 
-Durant la guerre froide, le problème de flot maximum a été utilisé par l'US Air Force pour impacter au maximum le réseau ferré soviétique\cite{schrijver2002history}.
+Durant la guerre froide, le problème du flot maximum a été utilisé par l'US Air Force pour identifier les portions du réseau ferré soviétique à cibler\cite{schrijver2002history}.
 \subsection{Exemple}
 \begin{figure}[H]
 	\begin{center}
@@ -158,7 +158,7 @@ Dans cet exemple, le sommet $A$ reçoit deux unités depuis la source et les env
 \section{Définitions générales}
 
 \subsection{Réseau résiduel}
-
+La plupart des algorithmes de flot maximum utilisent le réseau résiduel pour trouver des chemins améliorants. Définissons la notion de réseau résiduel et de chemin améliorant :
 \begin{definition}[Réseau résiduel]\,
 Soit $G$ un graphe avec $s$, $p$ et $c$ respectivement la source, le puits et la fonction de capacité associés au graphe $G$. Notons $N = (G,s,p,c)$ un réseau de flot dans $G$ avec un flot $f$.\\
 Le réseau résiduel de $N$ et d'un flot $f$, noté $N_f$, est construit de la manière suivante :\\
@@ -206,7 +206,7 @@ Ceci nous donne $N_f = (G',s,p,c')$.
 		\caption{Réseau résiduel de l'exemple précédent.}
 	\end{center}
 \end{figure}
-Comme on peut le voir, le réseau résiduel est un graphe obtenu à partir d'un réseau de flot et d'un flot, et la plupart des algorithmes de flot maximum utilisent le réseau résiduel pour trouver des chemins améliorants.
+Comme on peut le voir, le réseau résiduel est un graphe obtenu à partir d'un réseau de flot et d'un flot.
 \end{eg}
 \subsection{Chemin et flot améliorants}
 \begin{definition}[Chemin améliorant]\,
@@ -238,7 +238,6 @@ Le problème de la coupe minimum est la minimisation de la capacité $c(S, T)$, 
 \label{sec:algos}
 
 Nous prendrons l'exemple suivant pour illustrer les différents algorithmes :
-
 \begin{center}
 \begin{tikzpicture}[
 	vertex/.style={circle, draw, fill=blue!20, inner sep=2pt},
@@ -266,8 +265,6 @@ Nous prendrons l'exemple suivant pour illustrer les différents algorithmes :
     \draw[->] (D) to node[midway, below left] {1} (A);
     \draw[->] (D) to node[midway, below right] {4} (P);
 \end{tikzpicture}\end{center}
-
-
 \subsection{L'algorithme de Ford-Fulkerson}
 
 \subsubsection{Contexte historique}
@@ -1127,10 +1124,61 @@ Nous avons également comparé nos algorithmes avec les meilleurs solveurs de pr
 \]
 
 La fonction à maximiser est la somme des flots sortants du sommet source $s$, par conservation du flot, c'est aussi égal à la somme des flots entrants dans le sommet puits. La première contrainte assure la conservation du flot pour chaque sommet, sauf pour la source et le puits. La deuxième contrainte assure que le flot sur chaque arête ne dépasse pas sa capacité et la dernière contrainte assure que le flot est positif ou nul.
+\begin{eg}
+	Illustrons avec l'exemple du début :
 
+	\begin{center}
+\begin{tikzpicture}[
+	vertex/.style={circle, draw, fill=blue!20, inner sep=2pt},
+	every edge/.style={draw, ->, thick}, % Ajout de flèches
+	->,>=stealth % Style explicite de flèches (stealth' pour une tête nette)
+	]
+    \node[vertex] (S) at (0.5, 1) {$\mathcal{S}$};
+    \node[vertex] (A) at (2, 2) {A};
+	\node[vertex] (B) at (4, 2) {B};
+	\node[vertex] (C) at (2, 0) {C};
+	\node[vertex] (D) at (4, 0) {D};
+	\node[vertex] (P) at (5.5, 1) {$\mathcal{P}$};
+    \draw[->] (S) to node[midway, above left] {4} (A);
+    \draw[->] (S) to node[midway, below left] {3} (C);
+	\draw[->] (A) to node[midway, above] {3} (B);
+	\draw[->] (A) to node[midway, left] {2} (C);
+    \draw[->] (B) to node[midway, right] {3} (D);
+	\draw[->] (B) to node[midway, above right] {2} (P);
+	\draw[->] (C) to node[midway, below] {2} (D);
+    \draw[->] (D) to node[midway, below left] {1} (A);
+    \draw[->] (D) to node[midway, below right] {4} (P);
+\end{tikzpicture}\end{center}
+
+\[
+		\begin{aligned}
+			\text{Maximiser} \quad &f(s, a)+f(s, c) \\
+			\text{Sous les contraintes} \quad
+			&
+			 \begin{cases}
+				f(s, a) - f(a, b)-f(a,c) = 0 \\
+				f(s, c)+f(a,c) - f(c, d) = 0 \\
+				f(a, b) - f(b, d) - f(b, p) = 0 \\
+				f(c, d) +f(b, d) - f(d, a) - f(d, p) = 0 \\
+				f(s, a) \leq 4 \\
+				f(s, c) \leq 3 \\
+				f(a, b) \leq 3 \\
+				f(a, c) \leq 2 \\
+				f(b, d) \leq 3 \\
+				f(b, p) \leq 2 \\
+				f(c, d) \leq 2 \\
+				f(d, a) \leq 1 \\
+				f(d, p) \leq 4 \\
+				f(x, y) \geq 0 \quad \forall (x, y) \in E \\
+ 			\end{cases}
+		\end{aligned}
+\]
+\end{eg}
 \begin{remark}
-	Une remarque importante est que les variables de flot $f(u, v)$ sont réelles, donc a priori, rien n'assure que la solution optimale soit entière.
+	Une remarque importante est que les variables de flot $f(u, v)$ sont réelles (il n'y a pas de condition $f(x,y)\in \mathbb{N}$), donc a priori, rien n'assure que la solution optimale soit entière.
 \end{remark}
+
+Pour montrer que la solution optimale est entière, nous allons utiliser le théorème de Hoffman et Kruskal sur les matrices totalement unimodulaires.
 \subsection{Matrices totalement unimodulaires}
 \begin{definition}[Matrice totalement unimodulaire]
 Soit $M$ une matrice, on dit qu'elle est \emph{totalement unimodulaire} si pour toute sous-matrice carrée $N$ de $M$, le déterminant de $N$ est égal à $0$, $1$ ou $-1$.
@@ -1198,7 +1246,7 @@ Ainsi, nous comprenons que le flot maximum est un problème d'optimisation très
 
 On peut aussi remarquer que la modélisation du problème de coupe minimum sous forme de programme linéaire est en fait le problème \emph{dual} du problème de flot maximum. En d'autres termes, ces deux problèmes ne sont en réalité qu'un seul et même problème, mais sous deux perspectives différentes, l'un exprimé comme une maximisation et l'autre comme une minimisation.
 \subsection{Solveurs de programmation linéaire}
-Nous avons utilisé deux solveurs de programmation linéaire : \texttt{Gurobi} et \texttt{SCIP}, ces deux solveurs sont très performants et permettent de résoudre des problèmes de grande taille rapidement. \texttt{Gurobi} est un solveur commercial, réputé pour être l'un des plus rapides du marché, tandis que \texttt{SCIP} est un solveur open-source qui est probablement le meilleur dans sa catégorie.
+Nous avons utilisé deux solveurs de programmation linéaire : \texttt{Gurobi} et \texttt{SCIP}, ces deux solveurs sont très performants et permettent de résoudre des problèmes de grande taille rapidement. \texttt{Gurobi} est un solveur commercial, réputé pour être l'un des plus rapides du marché, tandis que \texttt{SCIP} est un solveur open-source qui est probablement l'un des meilleurs dans sa catégorie.
 
 
 \section{Création des instances}

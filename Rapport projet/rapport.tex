@@ -76,7 +76,7 @@ Rodolphe Giroudeau
 \end{center}
 \newpage
 \begin{abstract}	
-Le problème du flot maximum est un problème d'optimisation classique en informatique et en recherche opérationnelle. Étant donné un réseau de flot, l'objectif est de déterminer la quantité maximale de flot qui peut être envoyée d'une source à un puits, tout en respectant les contraintes de capacité des arcs et de conservation du flot. Ce problème a de nombreuses applications pratiques, notamment dans la planification logistique, les réseaux de transport et les réseaux de communication. 
+Le problème du flot maximum est un problème d'optimisation combinatoire classique en informatique et en recherche opérationnelle. Étant donné un réseau de flot, l'objectif est de déterminer la quantité maximale de flot qui peut être envoyée d'une source à un puits, tout en respectant les contraintes de capacité des arcs et de conservation du flot. Ce problème a de nombreuses applications pratiques, notamment dans la planification logistique, les réseaux de transport et les réseaux de communication. 
 
 Dans ce travail, nous comparons différentes méthodes de résolution du problème du flot maximum.  Nous étudions les algorithmes classiques tels que Ford-Fulkerson, Edmonds-Karp, Poussage-Réétiquetage et Dinic, ainsi que des approches basées sur la programmation linéaire. Nous mettons en œuvre ces algorithmes et les testons sur un ensemble de graphes générés aléatoirement. Nous analysons les performances de chaque méthode en termes de complexité théorique et de temps d'exécution pratique. 
 \end{abstract}
@@ -1234,14 +1234,13 @@ Ce théorème a de nombreuses applications concrètes :
 		\item Le théorème Max-Flow/Min-Cut permet de d'identifier les goulots d'étranglement pour optimiser le trafic.
 	\end{itemize}
 \end{eg}
-\begin{eg}[Réseaux de télécommunications]\,
+% \begin{eg}[Réseaux de télécommunications]\,
 
-	\begin{itemize}[label={\color{gray}\small \textbullet}]
-		\item Max-flow : combien de données peuvent être transmises entre deux points d'un réseau.
-		\item Min-cut : où placer des protections ou surveiller des failles critiques du réseau.
-	\end{itemize}
-\end{eg}
-
+% 	\begin{itemize}[label={\color{gray}\small \textbullet}]
+% 		\item Max-flow : combien de données peuvent être transmises entre deux points d'un réseau.
+% 		\item Min-cut : où placer des protections ou surveiller des failles critiques du réseau.
+% 	\end{itemize}
+% \end{eg}
 Ainsi, nous comprenons que le flot maximum est un problème d'optimisation très important et résoudre rapidement ce problème est crucial dans de nombreux domaines.
 
 On peut aussi remarquer que la modélisation du problème de coupe minimum sous forme de programme linéaire est en fait le problème \emph{dual} du problème de flot maximum. En d'autres termes, ces deux problèmes ne sont en réalité qu'un seul et même problème, mais sous deux perspectives différentes, l'un exprimé comme une maximisation et l'autre comme une minimisation.
@@ -1423,7 +1422,7 @@ Nous avons ensuite entamé une période de recherche sur les algorithmes. En eff
 
 Nous nous sommes à nouveau retrouvé semaine 3 pour discuter de l'avancement de la recherche et de la mise en place des algorithmes. Nous avons choisi notre langage de programmation, C\#, et nous sommes mis d'accord sur la structure pour commencer à développer les premières classes.\\
 
-Nous nous sommes repartis les algorithmes à implémenter, et chacun a commencé à travailler sur son propre algorithme. Nous avons également attribuer la tâche de la création des instances à un membre de l'équipe ainsi que celle de la création des tests unitaires. En parallèle, nous avons commencé à travailler sur le rapport, chacun sur sa partie. Lorsque tout était correctement implémenté, nous avons pu lancer les séries de calculs sur les différents algorithmes et ainsi produire les résultats et les courbes de performance dont font l'objet ce TER.
+Nous nous sommes répartis les algorithmes à implémenter, et chacun a commencé à travailler sur son propre algorithme. Nous avons également attribué la tâche de la création des instances à un membre de l'équipe ainsi que celle de la création des tests unitaires. En parallèle, nous avons commencé à travailler sur le rapport, chacun sur sa partie. Lorsque tout était correctement implémenté, nous avons pu lancer les séries de calculs sur les différents algorithmes et ainsi produire les résultats et les courbes de performance dont font l'objet ce TER.
 \subsection{Présentation des classes}
 
 Dans cette section, nous présentons les différentes classes développées dans le cadre de ce projet, ainsi que leur rôle et leurs interactions.
@@ -1534,7 +1533,7 @@ Ici \[\tilde{\mathcal{O}}\] indique une complexité asymptotique qui ignore cert
 C’est l’un des premiers résultats à montrer qu’on pouvait battre rigoureusement la barrière des $\mathcal{O}(m \sqrt{n})$ pour les graphes généraux.
 \subsection{Algorithme de Gao-Liu-Peng (2021)}
 
-Proposé par \textbf{Gao, Liu et Peng}, cet algorithme repose sur l’observation que le problème de flot maximal peut être résolu à l’aide de méthodes de préconditionnement et de raccourcissement de chemins dans les graphes\cite{barick2024effectspacetimegeometryneutrino}. En appliquant une stratégie d’approximation contrôlée, les auteurs parviennent à une complexité :
+Proposé par \textbf{Gao, Liu et Peng}, cet algorithme repose sur l’observation que le problème de flot maximal peut être résolu à l’aide de méthodes de préconditionnement et de raccourcissement de chemins dans les graphes\cite{gao2021fullydynamicelectricalflows}. En appliquant une stratégie d’approximation contrôlée, les auteurs parviennent à une complexité :
 \[
 \tilde{\mathcal{O}}\left(E^{\frac{3}{2} - \frac{1}{32\delta}} \log U\right)
 \]

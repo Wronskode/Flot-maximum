@@ -1505,7 +1505,56 @@ Cette \textcolor{violet}{Program} classe principale constitue le point d'entrée
 
 \subsection{Tests}
 \section{Méthodologie Expérimentale}
-\section{Résultats et Discussion}
+
+
+\section{Crourbes, Résultats et Discussion}
+
+Après avoir conçu et implémenté l’ensemble des algorithmes de flot maximal, ainsi que l’infrastructure de génération d’instances de graphes, nous présentons ici la mise en œuvre expérimentale et l’analyse comparative des performances des différentes approches. L'objectif du TER était entre autres de comparer les algorithmes de flot maximum et pour cela nous avons généré différentes courbres de performance. Nous avons choisi de représenter les performances en fonction du nombre de sommets du graphe, car c'est un indicateur pertinent de la complexité des algorithmes.\\
+
+Afin de pouvoir commencer notre analyse nous présentons d'abord ce premier graphique :
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=1\textwidth]{courbes/benchmark_global_average_100.png}
+    \caption{Premier graphique - $n_{max} = 100$}
+    \label{fig:example}
+\end{figure}
+
+Cette première figure représente les performances de tous les algorithmes de flot maximum que nous avons implémentés. pour chaque point du graphe, nous avons fait la moyenne sur toutes les instances de même taille. Il y a ainsi 8 tailles différentes, de 30 à 200, on a donc $n \in \left\{30, 40, 50, 60, 70, 80, 90, 100, 120, 150, 200\right\}$, et pour chaque taille nous avons 4 densités différentes avec $d \in \left\{0.3, 0.5, 0.7, 0.9\right\}$ nous avons enfin 5 instances par densité. Chaque point est donc la moyenne de 20 instances.\\
+
+Nous pouvons donc constater le garphe ne présente aucune irrégularité, tester sur autant d'instances permet en effet d'armoniser et de trouver un résultat proche de ce que l'on attends en étudiant la complexité théorique.\\
+
+Pour cette premières figure nous ne dépassons pas $n = 100$ car au delà de cette taille, les algorithmes de Ford-Fulkerson et d'Edmonds-Karp deviennent trop lents prendraient trop de temps pour converger. Aussi leurs comparaisons avec les autres algorithmes ne seraient pas pertinentes. Les autres courbes se confondraient en bas du graphique pendant que Ford-Fulkerson et Edmonds-Karp exploseraient. Nous etudierons donc les algorithmes de flot maximum sur des graphes de taille supérieure séparement.\\
+
+Afin de commenter ces courbes, nous rappelons d'abord la complexité théorique de chaque algorithme :
+
+\begin{table}[H]
+	\centering
+	\begin{tabular}{|c|c|c|}
+		\hline
+		Algorithme & Complexité & Complexité en fonction de $n = |V|$ \\
+		\hline
+		Ford-Fulkerson & $O(|E|f^\star)$ &$O(n^2 f^\star)$\\
+		Edmonds-Karp & $O(|V||E|^2)$ &$O(n^5)$\\
+		Dinic & $O(|V|^2|E|)$& $O(n^4)$\\
+		Poussage-Réétiquetage & $O(|V|^2|E|)$&$O(n^4)$ \\
+		\hline
+	\end{tabular}
+	\caption{Récapitulatif des algorithmes de flot maximum}
+\end{table}
+
+Les premières courbes obtenues confirment clairement les écarts de complexité algorithmique entre les différentes méthodes étudiées. On observe que chaque algorithme occupe une position cohérente sur la courbe, en accord avec sa complexité théorique. Les approches naïves, telles que Ford-Fulkerson ou Edmonds-Karp, présentent une croissance rapide du temps d'exécution à mesure que la taille des graphes augmente, ce qui reflète leur complexité plus élevée.\\
+
+À l'inverse, des algorithmes plus avancés comme Dinic ou le Poussage-Réétiquetage, reconnus pour leur meilleure complexité théorique, se distinguent par une meilleure scalabilité. Leur temps d'exécution croît de manière bien plus modérée, ce qui les rend plus adaptés aux grands graphes.\\
+
+Concernant les solveurs de type PLNE, tels que Gurobi et SCIP, une différence de performance nette se dégage. SCIP s’avère significativement plus lent : il est environ deux fois plus long que l’algorithme de Poussage-Réétiquetage et jusqu’à dix fois plus lent que Dinic. À l’inverse, Gurobi offre des performances remarquables, surpassant l’ensemble des autres méthodes, y compris les algorithmes les plus puissants.\\
+
+Cela s’explique notamment par la sophistication de son infrastructure logicielle : Gurobi repose sur un moteur d’optimisation hautement performant, mais en grande partie opaque, fonctionnant comme une "boîte noire". À l’opposé, SCIP semble adopter une approche plus basique, plus proche d’une résolution manuelle d’un système linéaire, sans optimisation poussée des données ni techniques avancées de réduction du problème.\\
+
+Ces résultats sont en parfaite adéquation avec la littérature algorithmique, validant ainsi notre implémentation et notre protocole expérimental.
+
+
+
 \section{Revue de la littérature avancée}
 
 Les algorithmes classiques de flot maximal comme ceux de Ford-Fulkerson, Dinic ou Poussage-Réétiquetage ont longtemps constitué l’état de l’art pratique et théorique. Cependant, des avancées majeures ont été réalisées dans la dernière décennie en algorithmique théorique, avec l’apparition d’algorithmes extrêmement rapides reposant sur des outils sophistiqués d’optimisation, d’algèbre linéaire et de structures de graphes dynamiques.

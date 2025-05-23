@@ -325,6 +325,29 @@
       \verb https://doi.org/10.1515/9781400881987-014
       \endverb
     \endentry
+    \entry{jetbrains_rider}{misc}{}{}
+      \name{author}{1}{}{%
+        {{hash=b6a77f3f5bead76a495a90d63703e1f9}{%
+           family={{JetBrains}},
+           familyi={J\bibinitperiod}}}%
+      }
+      \strng{namehash}{b6a77f3f5bead76a495a90d63703e1f9}
+      \strng{fullhash}{b6a77f3f5bead76a495a90d63703e1f9}
+      \strng{fullhashraw}{b6a77f3f5bead76a495a90d63703e1f9}
+      \strng{bibnamehash}{b6a77f3f5bead76a495a90d63703e1f9}
+      \strng{authorbibnamehash}{b6a77f3f5bead76a495a90d63703e1f9}
+      \strng{authornamehash}{b6a77f3f5bead76a495a90d63703e1f9}
+      \strng{authorfullhash}{b6a77f3f5bead76a495a90d63703e1f9}
+      \strng{authorfullhashraw}{b6a77f3f5bead76a495a90d63703e1f9}
+      \field{sortinit}{J}
+      \field{sortinithash}{b2f54a9081ace9966a7cb9413811edb4}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{howpublished}{\url{https://www.jetbrains.com/rider/}}
+      \field{note}{Consulté en mai 2025}
+      \field{title}{Rider: Fast \& powerful cross-platform .NET IDE}
+      \field{year}{2024}
+    \endentry
     \entry{schrijver2002history}{article}{}{}
       \name{author}{1}{}{%
         {{hash=b45113388b1fa9c200ef1a41e9beb367}{%

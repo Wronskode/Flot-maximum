@@ -1,4 +1,4 @@
-This is LuaHBTeX, Version 1.21.0 (MiKTeX 25.2) (format=lualatex 2025.3.20)  23 MAY 2025 15:45
+This is LuaHBTeX, Version 1.21.0 (MiKTeX 25.2) (format=lualatex 2025.3.20)  23 MAY 2025 16:35
  restricted system commands enabled.
  file:line:error style messages enabled.
 **"c:/Users/adrie/Desktop/Master/S8/TER/Rapport/Flot-maximum/Rapport projet/rap
@@ -1754,6 +1754,9 @@ Package csquotes Info: Redefining alias 'default' -> 'french'.
 
 LaTeX Warning: Label `fig:example' multiply defined.
 
+
+LaTeX Warning: Label `fig:example' multiply defined.
+
 )
 \openout1 = rapport.aux
 
@@ -2251,25 +2254,32 @@ Package hyperref Warning: Token not allowed in a PDF string (Unicode):
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
 (hyperref)                removing `math shift' on input line 1558.
 
+<courbes/benchmark_global_average_500.png, id=551, 1505.625pt x 1003.75pt>
+File: courbes/benchmark_global_average_500.png Graphic file (type png)
+<use courbes/benchmark_global_average_500.png>
+Package luatex.def Info: courbes/benchmark_global_average_500.png  used on inpu
+t line 1562.
+(luatex.def)             Requested size: 418.25368pt x 278.82727pt.
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `math shift' on input line 1560.
+(hyperref)                removing `math shift' on input line 1567.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `subscript' on input line 1560.
+(hyperref)                removing `subscript' on input line 1567.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `math shift' on input line 1560.
+(hyperref)                removing `math shift' on input line 1567.
 
+
+
+[26<./courbes/benchmark_global_average_500.png>]
 Package mdframed Info: mdframed detected package amsthm 
  changed the theorem header of amsthm
-(mdframed)              on input line 1583.
+(mdframed)              on input line 1590.
 
-
-[26]
-Overfull \hbox (0.14586pt too wide) in paragraph at lines 1597--1597
+Overfull \hbox (0.14586pt too wide) in paragraph at lines 1604--1604
 []\TU/lmr/bx/n/12 Al-go-rithme de Chen, Kyng, Liu, Peng, Gu-ten-berg, Sa-ch-deva
  (2022) 
  []
@@ -2298,14 +2308,14 @@ Package logreq Info: Writing requests to 'rapport.run.xml'.
 )
 
 Here is how much of LuaTeX's memory you used:
- 50613 strings out of 475506
+ 50624 strings out of 475506
  195337,2373549 words of node,token memory allocated
- 5554 words of node memory still in use:
-   7 hlist, 2 vlist, 2 rule, 289 glue, 4 kern, 1 penalty, 2 glyph, 1197 attribut
-e, 113 glue_spec, 173 attribute_list, 2 write, 3 pdf_action nodes
-   avail lists: 1:15,2:27792,3:4688,4:184,5:504,6:153,7:8261,8:66,9:1760,10:23,1
+ 5570 words of node memory still in use:
+   7 hlist, 2 vlist, 2 rule, 289 glue, 4 kern, 1 penalty, 2 glyph, 1204 attribut
+e, 113 glue_spec, 174 attribute_list, 2 write, 3 pdf_action nodes
+   avail lists: 1:15,2:27784,3:4688,4:184,5:504,6:152,7:8261,8:66,9:1760,10:23,1
 1:683,12:1
- 72271 multiletter control sequences out of 65536+600000
+ 72278 multiletter control sequences out of 65536+600000
  80 fonts using 6199999 bytes
  89i,13n,99p,1228b,2755s stack positions out of 10000i,1000n,20000p,200000b,200000s
 <c:/users/adrie/appdata/local/programs/miktex/fonts/opentype/public/lm/lmmono9-r
@@ -2338,9 +2348,9 @@ rie/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy10.pfb><C:/
 Users/adrie/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy7.p
 fb><C:/Users/adrie/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/sym
 bols/msbm10.pfb>
-Output written on rapport.pdf (31 pages, 547902 bytes).
+Output written on rapport.pdf (31 pages, 607078 bytes).
 
-PDF statistics: 727 PDF objects out of 1000 (max. 8388607)
- 151 named destinations out of 1000 (max. 131072)
+PDF statistics: 728 PDF objects out of 1000 (max. 8388607)
+ 152 named destinations out of 1000 (max. 131072)
  544 words of extra memory for PDF output out of 10000 (max. 100000000)
 

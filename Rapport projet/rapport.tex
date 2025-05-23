@@ -1524,9 +1524,9 @@ Afin de pouvoir commencer notre analyse nous présentons d'abord ce premier grap
 
 Cette première figure représente les performances de tous les algorithmes de flot maximum que nous avons implémentés. pour chaque point du graphe, nous avons fait la moyenne sur toutes les instances de même taille. Il y a ainsi 8 tailles différentes, de 30 à 200, on a donc $n \in \left\{30, 40, 50, 60, 70, 80, 90, 100, 120, 150, 200\right\}$, et pour chaque taille nous avons 4 densités différentes avec $d \in \left\{0.3, 0.5, 0.7, 0.9\right\}$ nous avons enfin 5 instances par densité. Chaque point est donc la moyenne de 20 instances.\\
 
-Nous pouvons donc constater le garphe ne présente aucune irrégularité, tester sur autant d'instances permet en effet d'armoniser et de trouver un résultat proche de ce que l'on attends en étudiant la complexité théorique.\\
+Nous pouvons donc constater le graphe ne présente aucune irrégularité, tester sur autant d'instances permet en effet d'harmoniser et de trouver un résultat proche de ce que l'on attend en étudiant la complexité théorique.\\
 
-Pour cette premières figure nous ne dépassons pas $n = 100$ car au delà de cette taille, les algorithmes de Ford-Fulkerson et d'Edmonds-Karp deviennent trop lents prendraient trop de temps pour converger. Aussi leurs comparaisons avec les autres algorithmes ne seraient pas pertinentes. Les autres courbes se confondraient en bas du graphique pendant que Ford-Fulkerson et Edmonds-Karp exploseraient. Nous etudierons donc les algorithmes de flot maximum sur des graphes de taille supérieure séparement.\\
+Pour cette première figure nous ne dépassons pas $n = 100$ car au delà de cette taille, les algorithmes de Ford-Fulkerson et d'Edmonds-Karp deviennent trop lents prendraient trop de temps pour converger. Aussi leurs comparaisons avec les autres algorithmes ne seraient pas pertinentes. Les autres courbes se confondraient en bas du graphique pendant que Ford-Fulkerson et Edmonds-Karp exploseraient. Nous etudierons donc les algorithmes de flot maximum sur des graphes de taille supérieure séparement.\\
 
 Afin de commenter ces courbes, nous rappelons d'abord la complexité théorique de chaque algorithme :
 
@@ -1551,7 +1551,7 @@ Les premières courbes obtenues confirment clairement les écarts de complexité
 
 Concernant les solveurs de type PLNE, tels que Gurobi et SCIP, une différence de performance nette se dégage. SCIP s’avère significativement plus lent : il est environ deux fois plus long que l’algorithme de Poussage-Réétiquetage et jusqu’à dix fois plus lent que Dinic. À l’inverse, Gurobi offre des performances remarquables, surpassant l’ensemble des autres méthodes, y compris les algorithmes les plus puissants.\\
 
-Cela s’explique notamment par la sophistication de son infrastructure logicielle : Gurobi repose sur un moteur d’optimisation hautement performant, mais en grande partie opaque, fonctionnant comme une "boîte noire". À l’opposé, SCIP semble adopter une approche plus basique, plus proche d’une résolution manuelle d’un système linéaire, sans optimisation poussée des données ni techniques avancées de réduction du problème.\\
+Cela s’explique notamment par la sophistication de son infrastructure logicielle : Gurobi repose sur un moteur d’optimisation hautement performant, mais en grande partie opaque, fonctionnant comme une \og{}boîte noire\fg{}. À l’opposé, SCIP semble adopter une approche plus basique, plus proche d’une résolution manuelle d’un système linéaire, sans optimisation poussée des données ni techniques avancées de réduction du problème.\\
 
 Ces résultats sont en parfaite adéquation avec la littérature algorithmique, validant ainsi notre implémentation et notre protocole expérimental.
 

@@ -1,4 +1,4 @@
-This is LuaHBTeX, Version 1.21.0 (MiKTeX 25.2) (format=lualatex 2025.3.20)  23 MAY 2025 15:42
+This is LuaHBTeX, Version 1.21.0 (MiKTeX 25.2) (format=lualatex 2025.3.20)  23 MAY 2025 15:45
  restricted system commands enabled.
  file:line:error style messages enabled.
 **"c:/Users/adrie/Desktop/Master/S8/TER/Rapport/Flot-maximum/Rapport projet/rap
@@ -1932,7 +1932,7 @@ Package hyperref Info: Link coloring ON on input line 36.
 
 \openout5 = rapport.out
 \c@lstlisting=\count560
-<UM1.jpg, id=258, 811.03pt x 296.10625pt>
+<UM1.jpg, id=270, 811.03pt x 296.10625pt>
 File: UM1.jpg Graphic file (type jpg)
 <use UM1.jpg>
 Package luatex.def Info: UM1.jpg  used on input line 41.
@@ -2132,7 +2132,7 @@ Underfull \hbox (badness 10000) in paragraph at lines 1410--1411
 
 
 [19]
-<Gantt2.png, id=496, 724.50674pt x 263.18324pt>
+<Gantt2.png, id=511, 724.50674pt x 263.18324pt>
 File: Gantt2.png Graphic file (type png)
 <use Gantt2.png>
 Package luatex.def Info: Gantt2.png  used on input line 1414.
@@ -2181,31 +2181,38 @@ Underfull \hbox (badness 10000) in paragraph at lines 1512--1513
 
 
 [23]
-<courbes/benchmark_global_average_100.png, id=521, 1505.625pt x 1003.75pt>
+
+Package hyperref Warning: Token not allowed in a PDF string (Unicode):
+(hyperref)                removing `math shift' on input line 1514.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (Unicode):
+(hyperref)                removing `subscript' on input line 1514.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (Unicode):
+(hyperref)                removing `math shift' on input line 1514.
+
+<courbes/benchmark_global_average_100.png, id=536, 1505.625pt x 1003.75pt>
 File: courbes/benchmark_global_average_100.png Graphic file (type png)
 <use courbes/benchmark_global_average_100.png>
 Package luatex.def Info: courbes/benchmark_global_average_100.png  used on inpu
-t line 1518.
+t line 1520.
 (luatex.def)             Requested size: 418.25368pt x 278.82727pt.
 
-Underfull \hbox (badness 10000) in paragraph at lines 1523--1524
+Underfull \hbox (badness 10000) in paragraph at lines 1525--1526
 
  []
 
 
 
 [24<./courbes/benchmark_global_average_100.png>]
-Underfull \hbox (badness 10000) in paragraph at lines 1525--1526
-
- []
-
-
 Underfull \hbox (badness 10000) in paragraph at lines 1527--1528
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1546--1547
+Underfull \hbox (badness 10000) in paragraph at lines 1529--1530
 
  []
 
@@ -2225,20 +2232,49 @@ Underfull \hbox (badness 10000) in paragraph at lines 1552--1553
  []
 
 
+Underfull \hbox (badness 10000) in paragraph at lines 1554--1555
+
+ []
+
+
 
 [25]
+
+Package hyperref Warning: Token not allowed in a PDF string (Unicode):
+(hyperref)                removing `math shift' on input line 1558.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (Unicode):
+(hyperref)                removing `subscript' on input line 1558.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (Unicode):
+(hyperref)                removing `math shift' on input line 1558.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (Unicode):
+(hyperref)                removing `math shift' on input line 1560.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (Unicode):
+(hyperref)                removing `subscript' on input line 1560.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (Unicode):
+(hyperref)                removing `math shift' on input line 1560.
+
 Package mdframed Info: mdframed detected package amsthm 
  changed the theorem header of amsthm
-(mdframed)              on input line 1579.
+(mdframed)              on input line 1583.
 
-Overfull \hbox (0.14586pt too wide) in paragraph at lines 1593--1593
+
+[26]
+Overfull \hbox (0.14586pt too wide) in paragraph at lines 1597--1597
 []\TU/lmr/bx/n/12 Al-go-rithme de Chen, Kyng, Liu, Peng, Gu-ten-berg, Sa-ch-deva
  (2022) 
  []
 
 
-
-[26]
 
 [27]
 
@@ -2255,22 +2291,22 @@ LaTeX Font Warning: Some font shapes were not available, defaults substituted.
 LaTeX Warning: There were multiply-defined labels.
 
 Package rerunfilecheck Info: File `rapport.out' has not changed.
-(rerunfilecheck)             Checksum: 0139EB2ACCFB4130DAC54104EFB094E3;10979.
+(rerunfilecheck)             Checksum: D0008C9D1DF391458B6339EAEB9A7A22;11410.
 Package logreq Info: Writing requests to 'rapport.run.xml'.
 
 \openout1 = rapport.run.xml
 )
 
 Here is how much of LuaTeX's memory you used:
- 50585 strings out of 475506
+ 50613 strings out of 475506
  195337,2373549 words of node,token memory allocated
  5554 words of node memory still in use:
    7 hlist, 2 vlist, 2 rule, 289 glue, 4 kern, 1 penalty, 2 glyph, 1197 attribut
 e, 113 glue_spec, 173 attribute_list, 2 write, 3 pdf_action nodes
    avail lists: 1:15,2:27792,3:4688,4:184,5:504,6:153,7:8261,8:66,9:1760,10:23,1
 1:683,12:1
- 72246 multiletter control sequences out of 65536+600000
- 58 fonts using 4813999 bytes
+ 72271 multiletter control sequences out of 65536+600000
+ 80 fonts using 6199999 bytes
  89i,13n,99p,1228b,2755s stack positions out of 10000i,1000n,20000p,200000b,200000s
 <c:/users/adrie/appdata/local/programs/miktex/fonts/opentype/public/lm/lmmono9-r
 egular.otf><c:/users/adrie/appdata/local/programs/miktex/fonts/opentype/public/l
@@ -2290,17 +2326,21 @@ ie/appdata/local/programs/miktex/fonts/opentype/public/lm/lmroman12-bold.otf><C:
 /Users/adrie/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmex10
 .pfb><C:/Users/adrie/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/c
 m/cmmi10.pfb><C:/Users/adrie/AppData/Local/Programs/MiKTeX/fonts/type1/public/am
-sfonts/cm/cmmi5.pfb><C:/Users/adrie/AppData/Local/Programs/MiKTeX/fonts/type1/pu
-blic/amsfonts/cm/cmmi7.pfb><C:/Users/adrie/AppData/Local/Programs/MiKTeX/fonts/t
-ype1/public/amsfonts/cm/cmr10.pfb><C:/Users/adrie/AppData/Local/Programs/MiKTeX/
-fonts/type1/public/amsfonts/cm/cmr5.pfb><C:/Users/adrie/AppData/Local/Programs/M
-iKTeX/fonts/type1/public/amsfonts/cm/cmr7.pfb><C:/Users/adrie/AppData/Local/Prog
-rams/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy10.pfb><C:/Users/adrie/AppData/Lo
-cal/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy7.pfb><C:/Users/adrie/App
-Data/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/symbols/msbm10.pfb>
-Output written on rapport.pdf (31 pages, 521307 bytes).
+sfonts/cm/cmmi12.pfb><C:/Users/adrie/AppData/Local/Programs/MiKTeX/fonts/type1/p
+ublic/amsfonts/cm/cmmi5.pfb><C:/Users/adrie/AppData/Local/Programs/MiKTeX/fonts/
+type1/public/amsfonts/cm/cmmi7.pfb><C:/Users/adrie/AppData/Local/Programs/MiKTeX
+/fonts/type1/public/amsfonts/cm/cmmi8.pfb><C:/Users/adrie/AppData/Local/Programs
+/MiKTeX/fonts/type1/public/amsfonts/cm/cmr10.pfb><C:/Users/adrie/AppData/Local/P
+rograms/MiKTeX/fonts/type1/public/amsfonts/cm/cmr12.pfb><C:/Users/adrie/AppData/
+Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr5.pfb><C:/Users/adrie/Ap
+pData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr7.pfb><C:/Users/ad
+rie/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy10.pfb><C:/
+Users/adrie/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy7.p
+fb><C:/Users/adrie/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/sym
+bols/msbm10.pfb>
+Output written on rapport.pdf (31 pages, 547902 bytes).
 
-PDF statistics: 700 PDF objects out of 1000 (max. 8388607)
- 148 named destinations out of 1000 (max. 131072)
- 520 words of extra memory for PDF output out of 10000 (max. 100000000)
+PDF statistics: 727 PDF objects out of 1000 (max. 8388607)
+ 151 named destinations out of 1000 (max. 131072)
+ 544 words of extra memory for PDF output out of 10000 (max. 100000000)
 

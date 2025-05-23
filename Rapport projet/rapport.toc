@@ -56,6 +56,9 @@
 \contentsline {subsection}{\numberline {6.4}Tests}{24}{subsection.6.4}%
 \contentsline {section}{\numberline {7}Méthodologie Expérimentale}{24}{section.7}%
 \contentsline {section}{\numberline {8}Crourbes, Résultats et Discussion}{24}{section.8}%
+\contentsline {subsection}{\numberline {8.1}Avec $n_{max} = 100$}{24}{subsection.8.1}%
+\contentsline {subsection}{\numberline {8.2}Avec $n_{max} = 500$}{26}{subsection.8.2}%
+\contentsline {subsection}{\numberline {8.3}Avec $n_{max} = 2000$}{26}{subsection.8.3}%
 \contentsline {section}{\numberline {9}Revue de la littérature avancée}{26}{section.9}%
 \contentsline {subsection}{\numberline {9.1}Algorithme BLNPSSSW (2020)}{26}{subsection.9.1}%
 \contentsline {subsection}{\numberline {9.2}Algorithme de Gao-Liu-Peng (2021)}{26}{subsection.9.2}%

@@ -25,6 +25,7 @@
 \usepackage{datetime}
 \usepackage{numprint}
 \usepackage{listings}
+\usepackage{tabto}
 \usepackage{tcolorbox}
 \usepackage{xcolor}
 \lstset{
@@ -753,18 +754,34 @@ Nous aurons également besoin du flot bloquant.
 \end{definition}
 
 \subsubsection{Algorithme}
-Pour tout arc $xy$ du graphe $G$: on initialise la valeur du flot de $xy$ à $0$.
+%Pour tout arc $xy$ du graphe $G$: on initialise la valeur du flot de $xy$ à $0$.
 
-Tant qu'il existe un plus court chemin améliorant $C$ dans le graphe résiduel de $G$ et $f$:
-\begin{itemize}
-    \item 
-	On détermine le réseau de niveau $N_L$ de $N_f$.
-    \item
-    Calculer le flot bloquant $f'$ correspondant.
-    \item 
-    Augmenter $f$ par $f'$
-\end{itemize}
-Retourner $f$.
+%Tant qu'il existe un plus court chemin améliorant $C$ dans le graphe résiduel de $G$ et $f$:
+%\begin{itemize}
+    %\item 
+	%On détermine le réseau de niveau $N_L$ de $N_f$.
+    %\item
+    %Calculer le flot bloquant $f'$ correspondant.
+    %\item 
+    %Augmenter $f$ par $f'$
+%\end{itemize}
+%Retourner $f$.
+\begin{algorithm}[H]
+	\caption{Algorithme de Dinic}
+	\textbf{Entrée :} Un réseau de flot $G = (V, A, c, s, t)$ \\
+	\textbf{Sortie :} Un flot maximal $f$
+	\begin{algorithmic}[1]
+		\ForAll{arc $xy$ de $G$}
+		\State $f(xy) \gets 0$
+		\EndFor
+		\While{il existe un chemin améliorant $C$ dans le graphe résiduel $N_f$ de $G$ et $f$}
+		\State On détermine le réseau de niveau $N_L$ de $N_f$ 
+		\State On calcule le flot bloquant $f'$ correspondant
+		\State On augmente $f$ par $f'$
+		\EndWhile
+		\State \Return $f$
+	\end{algorithmic}
+\end{algorithm}
 \subsubsection{Complexité}
 
 La complexité dépend de la nature du graphe :
@@ -1013,6 +1030,570 @@ Nous avons un chemin améliorant $SABDP$ de valeur $1$.
 Le puits $P$ n'est plus atteignable, l'algorithme se termine.
 
 Finalement la coupe minimale de ce réseau est l'ensemble $\{S,A,C\}$ et son flot maximal est de valeur $5$.
+
+\subsection{L'algorithme de Poussage-Réétiquetage}
+
+\subsubsection{Motivations et historique}
+
+\subsubsection{Fonctionnement général}
+L'algorithme de Poussage-Réétiquetage (ou Push-Relabel en anglais) est l'un des algorithmes les plus efficaces pour calculer un flot maximum. \\
+
+\subsubsection{Algorithme}
+\begin{algorithm}[H]
+	\caption{Algorithme de Poussage}
+	\textbf{Entrée :} Un arc $(u,v)$ \\
+	\textbf{Sortie :} Aucune
+	\begin{algorithmic}[1]
+		\State $m = \min(ex(u), r(u,v)=c(u,v)-f(u,v))$
+		\State $ex(u) \gets ex(u) - m$
+		\State $ex(v) \gets ex(v) + m$
+		\State $f(u,v) \gets f(u,v) + m$
+		\State $f(v,u) \gets f(v,u) - m$
+	\end{algorithmic}
+\end{algorithm}
+
+\begin{algorithm}[H]
+	\caption{Algorithme de Réétiquetage}
+	\textbf{Entrée :} Un sommet $u$ \\
+	\textbf{Sortie :} Aucune
+	\begin{algorithmic}[1]
+		\State $h(u) \gets 1 + \min(h(v)$ $|$ $v \in V_+(u), r(u,v)>0 )$
+	\end{algorithmic}
+\end{algorithm}
+
+\begin{algorithm}[H]
+	\caption{Algorithme de Poussage-Réétiquetage}
+	\textbf{Entrée :} Un réseau de flot $G = (V, A, c, s, t)$ \\
+	\textbf{Sortie :} Un flot maximal $f$
+	\begin{algorithmic}[1]
+		\State $h = ${$0 $\ForAll {$v \in V$}}
+		\State $h[s] \gets |V|$
+		\State $ex = ${$0 $\ForAll {$v \in V$}}
+		\ForAll{$v \in V_+(s)$}
+			\State $ex[v] \gets c[s,v]$
+		\EndFor
+		\While{il existe des sommets actifs (dont l'excédent est strictement positif)}
+			\State Appliquer Poussage ou Réétiquetage
+		\EndWhile
+		
+	\end{algorithmic}
+\end{algorithm}
+
+\subsubsection{Complexité}
+
+\subsubsection{Avantages/inconvénients}
+\textbf{Avantages :}
+\begin{itemize}
+	\item Complexité identique à celle de Dinic, il est alors de meilleure complexité asymptotique que Ford-Fulkerson et Edmonds-Karp.
+\end{itemize}
+
+\textbf{Inconvénients :}
+\begin{itemize}
+	\item Implémentation plus complexe que les autres algorithmes de base.
+	\item Assez lent en pratique.
+\end{itemize}
+L’algorithme de Dinic est aujourd’hui largement utilisé dans les solveurs de flot maximal, notamment lorsqu’on a affaire à des réseaux de grande taille ou dans des applications à contraintes unitaires. Il sert également de base à d’autres algorithmes avancés, et est souvent utilisé dans les compétitions algorithmiques et l’optimisation combinatoire\cite{article}.
+
+\subsubsection{Application sur l'exemple}
+Reprenons notre exemple :
+
+\begin{center}
+	\begin{tikzpicture}[
+		vertex/.style={circle, draw, fill=blue!20, inner sep=2pt},
+		every edge/.style={draw, ->, thick}, % Ajout de flèches
+		->,>=stealth % Style explicite de flèches (stealth' pour une tête nette)
+		]
+		
+		% Les sommets
+		\node[vertex] (S) at (0.5, 1) {$\mathcal{S}$};
+		\node[vertex] (A) at (2, 2) {A};
+		\node[vertex] (B) at (4, 2) {B};
+		\node[vertex] (C) at (2, 0) {C};
+		\node[vertex] (D) at (4, 0) {D};
+		\node[vertex] (P) at (5.5, 1) {$\mathcal{P}$};
+		
+		% Les arêtes orientées
+		%\draw[->, bend left=15] (A) to (B);
+		\draw[->] (S) to node[midway, above left] {4} (A);
+		\draw[->] (S) to node[midway, below left] {3} (C);
+		\draw[->] (A) to node[midway, above] {3} (B);
+		\draw[->] (A) to node[midway, left] {2} (C);
+		\draw[->] (B) to node[midway, right] {3} (D);
+		\draw[->] (B) to node[midway, above right] {2} (P);
+		\draw[->] (C) to node[midway, below] {2} (D);
+		\draw[->] (D) to node[midway, below left] {1} (A);
+		\draw[->] (D) to node[midway, below right] {4} (P);
+	\end{tikzpicture}
+\end{center}
+On initialise les différents éléments dont on a besoin :
+\tabto{2.5cm} $\rightarrow$ hauteur $= \{S : 6, A:0,B:0,C:0,D:0,P:0\}$
+\tabto{2.5cm} $\rightarrow$ excédent $= \{S : 0, A:4,B:0,C:3,D:0,P:0\}$
+\tabto{2.5cm} $\rightarrow$ sommets$\_$actifs $= [A,C]$
+\begin{center}
+	\begin{tikzpicture}[
+		vertex/.style={circle, draw, fill=blue!20, inner sep=2pt},
+		every edge/.style={draw, ->, thick}, % Ajout de flèches
+		->,>=stealth % Style explicite de flèches (stealth' pour une tête nette)
+		]
+		
+		% Les sommets
+		\node[vertex] (S) at (0.5, 1) {$\mathcal{S}$};
+		\node[vertex] (A) at (2, 2) {A};
+		\node[vertex] (B) at (4, 2) {B};
+		\node[vertex] (C) at (2, 0) {C};
+		\node[vertex] (D) at (4, 0) {D};
+		\node[vertex] (P) at (5.5, 1) {$\mathcal{P}$};
+		
+		% Les arêtes orientées
+		%\draw[->, bend left=15] (A) to (B);
+		\draw[->] (S) to node[midway, above left] {4/4} (A);
+		\draw[->] (S) to node[midway, below left] {3/3} (C);
+		\draw[->] (A) to node[midway, above] {3} (B);
+		\draw[->] (A) to node[midway, left] {2} (C);
+		\draw[->] (B) to node[midway, right] {3} (D);
+		\draw[->] (B) to node[midway, above right] {2} (P);
+		\draw[->] (C) to node[midway, below] {2} (D);
+		\draw[->] (D) to node[midway, below left] {1} (A);
+		\draw[->] (D) to node[midway, below right] {4} (P);
+	\end{tikzpicture}
+\end{center}
+On traite le sommet $A$ :\\
+\tabto{1cm} $\rightarrow$ On réétiquette $A$ : hauteur$[A] = 1$
+\tabto{1cm} $\rightarrow$ On regarde les successeurs de $A$ :
+\tabto{2.5cm} On réétiquette $B$ et $C$ : hauteur$[B] = 1$ et hauteur$[C] = 1$
+\tabto{2.5cm} On ne pousse pas le préflot : hauteur$[A] = $ hauteur$[B] = $ hauteur$[C]$
+\tabto{1cm} $\rightarrow$ On réétiquette $A$ : hauteur$[A] = 1+ \min\{1;1\} = 2$
+\tabto{1cm} $\rightarrow$ L'excédent de $A$ est strictement positif : sommets$\_$actifs $= [C,A]$
+\\\\
+Faisons un point sur les dictionnaires :
+\tabto{2.5cm} $\rightarrow$ hauteur $= \{S : 6, A:2,B:1,C:1,D:0,P:0\}$
+\tabto{2.5cm} $\rightarrow$ excédent $= \{S : 0, A:4,B:0,C:3,D:0,P:0\}$
+\begin{center}
+	\begin{tikzpicture}[
+		vertex/.style={circle, draw, fill=blue!20, inner sep=2pt},
+		every edge/.style={draw, ->, thick}, % Ajout de flèches
+		->,>=stealth % Style explicite de flèches (stealth' pour une tête nette)
+		]
+		
+		% Les sommets
+		\node[vertex] (S) at (0.5, 1) {$\mathcal{S}$};
+		\node[vertex] (A) at (2, 2) {A};
+		\node[vertex] (B) at (4, 2) {B};
+		\node[vertex] (C) at (2, 0) {C};
+		\node[vertex] (D) at (4, 0) {D};
+		\node[vertex] (P) at (5.5, 1) {$\mathcal{P}$};
+		
+		% Les arêtes orientées
+		%\draw[->, bend left=15] (A) to (B);
+		\draw[->] (S) to node[midway, above left] {4/4} (A);
+		\draw[->] (S) to node[midway, below left] {3/3} (C);
+		\draw[->] (A) to node[midway, above] {3} (B);
+		\draw[->] (A) to node[midway, left] {2} (C);
+		\draw[->] (B) to node[midway, right] {3} (D);
+		\draw[->] (B) to node[midway, above right] {2} (P);
+		\draw[->] (C) to node[midway, below] {2} (D);
+		\draw[->] (D) to node[midway, below left] {1} (A);
+		\draw[->] (D) to node[midway, below right] {4} (P);
+	\end{tikzpicture}
+\end{center}
+On traite le sommet $C$ :\\
+\tabto{1cm} $\rightarrow$ On réétiquette $C$ : hauteur$[C] = 1 + 0 = 1$
+\tabto{1cm} $\rightarrow$ On regarde les successeurs de $C$ :
+\tabto{2.5cm} On réétiquette $D$ : hauteur$[D] = 1 + \min\{2;0\} = 1$
+\tabto{2.5cm} On ne pousse pas le préflot : hauteur$[C] = $ hauteur$[D]$
+\tabto{1cm} $\rightarrow$ On réétiquette $C$ : hauteur$[C] = 1 + 1 = 2$
+\tabto{1cm} $\rightarrow$ L'excédent de $C$ est strictement positif : sommets$\_$actifs $= [A,C]$
+\\\\
+Faisons un point sur les dictionnaires :
+\tabto{2.5cm} $\rightarrow$ hauteur $= \{S : 6, A:2,B:1,C:2,D:1,P:0\}$
+\tabto{2.5cm} $\rightarrow$ excédent $= \{S : 0, A:4,B:0,C:3,D:0,P:0\}$
+\begin{center}
+	\begin{tikzpicture}[
+		vertex/.style={circle, draw, fill=blue!20, inner sep=2pt},
+		every edge/.style={draw, ->, thick}, % Ajout de flèches
+		->,>=stealth % Style explicite de flèches (stealth' pour une tête nette)
+		]
+		
+		% Les sommets
+		\node[vertex] (S) at (0.5, 1) {$\mathcal{S}$};
+		\node[vertex] (A) at (2, 2) {A};
+		\node[vertex] (B) at (4, 2) {B};
+		\node[vertex] (C) at (2, 0) {C};
+		\node[vertex] (D) at (4, 0) {D};
+		\node[vertex] (P) at (5.5, 1) {$\mathcal{P}$};
+		
+		% Les arêtes orientées
+		%\draw[->, bend left=15] (A) to (B);
+		\draw[->] (S) to node[midway, above left] {4/4} (A);
+		\draw[->] (S) to node[midway, below left] {3/3} (C);
+		\draw[->] (A) to node[midway, above] {3} (B);
+		\draw[->] (A) to node[midway, left] {2} (C);
+		\draw[->] (B) to node[midway, right] {3} (D);
+		\draw[->] (B) to node[midway, above right] {2} (P);
+		\draw[->] (C) to node[midway, below] {2} (D);
+		\draw[->] (D) to node[midway, below left] {1} (A);
+		\draw[->] (D) to node[midway, below right] {4} (P);
+	\end{tikzpicture}
+\end{center}
+On traite le sommet $A$ :\\
+\tabto{1cm} $\rightarrow$ On réétiquette $A$ : hauteur$[A] = 1 + \min\{1;2\} = 2$
+\tabto{1cm} $\rightarrow$ On regarde les successeurs de $A$ :
+\tabto{2.5cm} On réétiquette $B$ et $C$ : hauteur$[B] = 1 + \min\{1;0\} = 1$ et hauteur$[C] = 1 + 1 = 2$
+\tabto{2.5cm} On pousse le préflot : hauteur$[A] = $ hauteur$[B] + 1= $ hauteur$[C]$ et $r(A,B)>0$, $r(A,C)=0$\\
+\tabto{4cm} excédent$[A] = 4 - 3 = 1$, excédent$[B] = 0 + 3 = 3$, flot$[A,B] = 0 + 3 = 3$, flot$[B,A] = 0 - 3 = -3$, sommets$\_$actifs $= [C,B]$
+\tabto{1cm} $\rightarrow$ On réétiquette $A$ : hauteur$[A] = 1+ \min\{1;2\} = 2$
+\tabto{1cm} $\rightarrow$ L'excédent de $A$ est strictement positif : sommets$\_$actifs $= [C,B,A]$
+\\\\
+Faisons un point sur les dictionnaires :
+\tabto{2.5cm} $\rightarrow$ hauteur $= \{S : 6, A:2,B:1,C:2,D:3,P:0\}$
+\tabto{2.5cm} $\rightarrow$ excédent $= \{S : 0, A:1,B:3,C:3,D:0,P:0\}$
+\begin{center}
+	\begin{tikzpicture}[
+		vertex/.style={circle, draw, fill=blue!20, inner sep=2pt},
+		every edge/.style={draw, ->, thick}, % Ajout de flèches
+		->,>=stealth % Style explicite de flèches (stealth' pour une tête nette)
+		]
+		
+		% Les sommets
+		\node[vertex] (S) at (0.5, 1) {$\mathcal{S}$};
+		\node[vertex] (A) at (2, 2) {A};
+		\node[vertex] (B) at (4, 2) {B};
+		\node[vertex] (C) at (2, 0) {C};
+		\node[vertex] (D) at (4, 0) {D};
+		\node[vertex] (P) at (5.5, 1) {$\mathcal{P}$};
+		
+		% Les arêtes orientées
+		%\draw[->, bend left=15] (A) to (B);
+		\draw[->] (S) to node[midway, above left] {4/4} (A);
+		\draw[->] (S) to node[midway, below left] {3/3} (C);
+		\draw[->] (A) to node[midway, above] {3/3} (B);
+		\draw[->] (A) to node[midway, left] {2} (C);
+		\draw[->] (B) to node[midway, right] {3} (D);
+		\draw[->] (B) to node[midway, above right] {2} (P);
+		\draw[->] (C) to node[midway, below] {2} (D);
+		\draw[->] (D) to node[midway, below left] {1} (A);
+		\draw[->] (D) to node[midway, below right] {4} (P);
+	\end{tikzpicture}
+\end{center}
+On traite le sommet $C$ :\\
+\tabto{1cm} $\rightarrow$ On réétiquette $C$ : hauteur$[C] = 1+1=2$
+\tabto{1cm} $\rightarrow$ On regarde les successeurs de $C$ :
+\tabto{2.5cm} On réétiquette $D$ : hauteur$[D] = 1+0 = 1$
+\tabto{2.5cm} On pousse le préflot : hauteur$[C] = $ hauteur$[D] + 1$ et $r(C,D)>0)$\\
+\tabto{4cm} excédent$[C] = 3 - 2 = 1$, excédent$[B] = 0 + 2 = 2$, flot$[A,B] = 0 + 2 = 2$, flot$[B,A] = 0 - 2 = -2$, sommets$\_$actifs $= [B,A,D]$
+\tabto{1cm} $\rightarrow$ On réétiquette $C$ : hauteur$[C] = 1+1=2$
+\tabto{1cm} $\rightarrow$ L'excédent de $C$ est strictement positif : sommets$\_$actifs $= [B,A,D,C]$
+\\\\
+Faisons un point sur les dictionnaires :
+\tabto{2.5cm} $\rightarrow$ hauteur $= \{S : 6, A:2,B:1,C:2,D:1,P:0\}$
+\tabto{2.5cm} $\rightarrow$ excédent $= \{S : 0, A:1,B:3,C:1,D:2,P:0\}$
+\begin{center}
+	\begin{tikzpicture}[
+		vertex/.style={circle, draw, fill=blue!20, inner sep=2pt},
+		every edge/.style={draw, ->, thick}, % Ajout de flèches
+		->,>=stealth % Style explicite de flèches (stealth' pour une tête nette)
+		]
+		
+		% Les sommets
+		\node[vertex] (S) at (0.5, 1) {$\mathcal{S}$};
+		\node[vertex] (A) at (2, 2) {A};
+		\node[vertex] (B) at (4, 2) {B};
+		\node[vertex] (C) at (2, 0) {C};
+		\node[vertex] (D) at (4, 0) {D};
+		\node[vertex] (P) at (5.5, 1) {$\mathcal{P}$};
+		
+		% Les arêtes orientées
+		%\draw[->, bend left=15] (A) to (B);
+		\draw[->] (S) to node[midway, above left] {4/4} (A);
+		\draw[->] (S) to node[midway, below left] {3/3} (C);
+		\draw[->] (A) to node[midway, above] {3/3} (B);
+		\draw[->] (A) to node[midway, left] {2} (C);
+		\draw[->] (B) to node[midway, right] {3} (D);
+		\draw[->] (B) to node[midway, above right] {2} (P);
+		\draw[->] (C) to node[midway, below] {2/2} (D);
+		\draw[->] (D) to node[midway, below left] {1} (A);
+		\draw[->] (D) to node[midway, below right] {4} (P);
+	\end{tikzpicture}
+\end{center}
+On traite le sommet $B$ :\\
+\tabto{1cm} $\rightarrow$ On réétiquette $B$ : hauteur$[B] = 1 + \min\{1,0\} = 1$
+\tabto{1cm} $\rightarrow$ On regarde les successeurs de $B$ :
+\tabto{2.5cm} On réétiquette $D$ et $P$ : hauteur$[D] = 1 + \min\{2,0\} = 1$ et hauteur$[P] = 0$
+\tabto{2.5cm} On pousse le préflot sur $[B,P]$: hauteur$[B] = $ hauteur$[D] = $ hauteur$[P] +1$ et $r(B,D)=0$, $r(B,P)>0$\\
+\tabto{4cm} excédent$[B] = 3 - 2 = 1$, excédent$[P] = 0 + 2 = 2$, flot$[B,P] = 0 + 2 = 2$, flot$[P,B] = 0 -2 = -2$, sommets$\_$actifs $= [C]$
+\tabto{1cm} $\rightarrow$ On réétiquette $B$ : hauteur$[B] = 1 + 1 = 2$
+\tabto{1cm} $\rightarrow$ L'excédent de $B$ est strictement positif : sommets$\_$actifs $= [A,D,C,B]$
+\\\\
+Faisons un point sur les dictionnaires :
+\tabto{2.5cm} $\rightarrow$ hauteur $= \{S : 6, A:2,B:2,C:2,D:1,P:0\}$
+\tabto{2.5cm} $\rightarrow$ excédent $= \{S : 0, A:1,B:1,C:1,D:2,P:2\}$
+\begin{center}
+	\begin{tikzpicture}[
+		vertex/.style={circle, draw, fill=blue!20, inner sep=2pt},
+		every edge/.style={draw, ->, thick}, % Ajout de flèches
+		->,>=stealth % Style explicite de flèches (stealth' pour une tête nette)
+		]
+		
+		% Les sommets
+		\node[vertex] (S) at (0.5, 1) {$\mathcal{S}$};
+		\node[vertex] (A) at (2, 2) {A};
+		\node[vertex] (B) at (4, 2) {B};
+		\node[vertex] (C) at (2, 0) {C};
+		\node[vertex] (D) at (4, 0) {D};
+		\node[vertex] (P) at (5.5, 1) {$\mathcal{P}$};
+		
+		% Les arêtes orientées
+		%\draw[->, bend left=15] (A) to (B);
+		\draw[->] (S) to node[midway, above left] {4/4} (A);
+		\draw[->] (S) to node[midway, below left] {3/3} (C);
+		\draw[->] (A) to node[midway, above] {3/3} (B);
+		\draw[->] (A) to node[midway, left] {2} (C);
+		\draw[->] (B) to node[midway, right] {3} (D);
+		\draw[->] (B) to node[midway, above right] {2/2} (P);
+		\draw[->] (C) to node[midway, below] {2/2} (D);
+		\draw[->] (D) to node[midway, below left] {1} (A);
+		\draw[->] (D) to node[midway, below right] {4} (P);
+	\end{tikzpicture}
+\end{center}
+On traite le sommet $A$ :\\
+\tabto{1cm} $\rightarrow$ On réétiquette $A$ : hauteur$[A] = 1 + 2 = 3$
+\tabto{1cm} $\rightarrow$ On regarde les successeurs de $A$ :
+\tabto{2.5cm} On réétiquette $C$ : hauteur$[C] = 1$
+\tabto{2.5cm} On ne pousse pas le préflot : hauteur$[A] = $ hauteur$[C] + 2$ 
+\tabto{1cm} $\rightarrow$ On réétiquette $A$ : hauteur$[A] = 1 + 1 =2$
+\tabto{1cm} $\rightarrow$ L'excédent de $A$ est strictement positif : sommets$\_$actifs $= [D,C,B,A]$
+\\\\
+Faisons un point sur les dictionnaires :
+\tabto{2.5cm} $\rightarrow$ hauteur $= \{S : 6, A:2,B:2,C:1,D:1,P:0\}$
+\tabto{2.5cm} $\rightarrow$ excédent $= \{S : 0, A:1,B:1,C:1,D:2,P:2\}$
+\begin{center}
+	\begin{tikzpicture}[
+		vertex/.style={circle, draw, fill=blue!20, inner sep=2pt},
+		every edge/.style={draw, ->, thick}, % Ajout de flèches
+		->,>=stealth % Style explicite de flèches (stealth' pour une tête nette)
+		]
+		
+		% Les sommets
+		\node[vertex] (S) at (0.5, 1) {$\mathcal{S}$};
+		\node[vertex] (A) at (2, 2) {A};
+		\node[vertex] (B) at (4, 2) {B};
+		\node[vertex] (C) at (2, 0) {C};
+		\node[vertex] (D) at (4, 0) {D};
+		\node[vertex] (P) at (5.5, 1) {$\mathcal{P}$};
+		
+		% Les arêtes orientées
+		%\draw[->, bend left=15] (A) to (B);
+		\draw[->] (S) to node[midway, above left] {4/4} (A);
+		\draw[->] (S) to node[midway, below left] {3/3} (C);
+		\draw[->] (A) to node[midway, above] {3/3} (B);
+		\draw[->] (A) to node[midway, left] {2} (C);
+		\draw[->] (B) to node[midway, right] {3} (D);
+		\draw[->] (B) to node[midway, above right] {2/2} (P);
+		\draw[->] (C) to node[midway, below] {2/2} (D);
+		\draw[->] (D) to node[midway, below left] {1} (A);
+		\draw[->] (D) to node[midway, below right] {4} (P);
+	\end{tikzpicture}
+\end{center}
+On traite le sommet $D$ :\\
+\tabto{1cm} $\rightarrow$ On réétiquette $D$ : hauteur$[D] = 1 + \min\{2;0\} = 1 $
+\tabto{1cm} $\rightarrow$ On regarde les successeurs de $D$ :
+\tabto{2.5cm} On réétiquette $A$ et $P$ : hauteur$[A] = 1 + 1 = 2$ et hauteur$[P] = 0$
+\tabto{2.5cm} On pousse le préflot sur $[D,P]$: hauteur$[D] = $ hauteur$[A] -1 = $ hauteur$[P] + 1$ et $r(D,A)>0$, $r(D,P) > 0$\\
+\tabto{4cm} excédent$[D] = 2 - 2 = 0$, excédent$[P] = 2 + 2 = 4$, flot$[D,P] = 0 + 2 = 2$, flot$[P,B] = 0 -2 = -2$, sommets$\_$actifs $= [C,B,A]$
+\tabto{1cm} $\rightarrow$ On réétiquette $D$ : hauteur$[D] = 1 + \min\{2;0\} = 1$
+\tabto{1cm} $\rightarrow$ L'excédent de $D$ est nul : sommets$\_$actifs $= [C,B,A]$
+\\\\
+Faisons un point sur les dictionnaires :
+\tabto{2.5cm} $\rightarrow$ hauteur $= \{S : 6, A:2,B:2,C:1,D:1,P:0\}$
+\tabto{2.5cm} $\rightarrow$ excédent $= \{S : 0, A:1,B:1,C:1,D:0,P:4\}$
+\begin{center}
+	\begin{tikzpicture}[
+		vertex/.style={circle, draw, fill=blue!20, inner sep=2pt},
+		every edge/.style={draw, ->, thick}, % Ajout de flèches
+		->,>=stealth % Style explicite de flèches (stealth' pour une tête nette)
+		]
+		
+		% Les sommets
+		\node[vertex] (S) at (0.5, 1) {$\mathcal{S}$};
+		\node[vertex] (A) at (2, 2) {A};
+		\node[vertex] (B) at (4, 2) {B};
+		\node[vertex] (C) at (2, 0) {C};
+		\node[vertex] (D) at (4, 0) {D};
+		\node[vertex] (P) at (5.5, 1) {$\mathcal{P}$};
+		
+		% Les arêtes orientées
+		%\draw[->, bend left=15] (A) to (B);
+		\draw[->] (S) to node[midway, above left] {4/4} (A);
+		\draw[->] (S) to node[midway, below left] {3/3} (C);
+		\draw[->] (A) to node[midway, above] {3/3} (B);
+		\draw[->] (A) to node[midway, left] {2} (C);
+		\draw[->] (B) to node[midway, right] {3} (D);
+		\draw[->] (B) to node[midway, above right] {2/2} (P);
+		\draw[->] (C) to node[midway, below] {2/2} (D);
+		\draw[->] (D) to node[midway, below left] {1} (A);
+		\draw[->] (D) to node[midway, below right] {2/4} (P);
+	\end{tikzpicture}
+\end{center}
+On traite le sommet $C$ :\\
+\tabto{1cm} $\rightarrow$ On réétiquette $C$ : hauteur$[C] = 1$
+\tabto{1cm} $\rightarrow$ On regarde les successeurs de $C$ : il n'y en a plus
+\tabto{1cm} $\rightarrow$ On réétiquette $C$ : hauteur$[C] = 1$
+\tabto{1cm} $\rightarrow$ Aucune modification dans hauteur ou excédent n'a été réalisé : sommets$\_$actifs $= [B,A]$
+\\\\
+Faisons un point sur les dictionnaires :
+\tabto{2.5cm} $\rightarrow$ hauteur $= \{S : 6, A:2,B:2,C:1,D:1,P:0\}$
+\tabto{2.5cm} $\rightarrow$ excédent $= \{S : 0, A:1,B:1,C:1,D:0,P:4\}$
+\begin{center}
+	\begin{tikzpicture}[
+		vertex/.style={circle, draw, fill=blue!20, inner sep=2pt},
+		every edge/.style={draw, ->, thick}, % Ajout de flèches
+		->,>=stealth % Style explicite de flèches (stealth' pour une tête nette)
+		]
+		
+		% Les sommets
+		\node[vertex] (S) at (0.5, 1) {$\mathcal{S}$};
+		\node[vertex] (A) at (2, 2) {A};
+		\node[vertex] (B) at (4, 2) {B};
+		\node[vertex] (C) at (2, 0) {C};
+		\node[vertex] (D) at (4, 0) {D};
+		\node[vertex] (P) at (5.5, 1) {$\mathcal{P}$};
+		
+		% Les arêtes orientées
+		%\draw[->, bend left=15] (A) to (B);
+		\draw[->] (S) to node[midway, above left] {4/4} (A);
+		\draw[->] (S) to node[midway, below left] {3/3} (C);
+		\draw[->] (A) to node[midway, above] {3/3} (B);
+		\draw[->] (A) to node[midway, left] {2} (C);
+		\draw[->] (B) to node[midway, right] {3} (D);
+		\draw[->] (B) to node[midway, above right] {2/2} (P);
+		\draw[->] (C) to node[midway, below] {2/2} (D);
+		\draw[->] (D) to node[midway, below left] {1} (A);
+		\draw[->] (D) to node[midway, below right] {2/4} (P);
+	\end{tikzpicture}
+\end{center}
+On traite le sommet $B$ :\\
+\tabto{1cm} $\rightarrow$ On réétiquette $B$ : hauteur$[B] = 1 + 1 = 2$
+\tabto{1cm} $\rightarrow$ On regarde les successeurs de $B$ :
+\tabto{2.5cm} On réétiquette $D$ : hauteur$[D] = 1 + \min\{2,0\} = 1$
+\tabto{2.5cm} On pousse le préflot sur $[B,D]$: hauteur$[B] = $ hauteur$[D] + 1$ et $r(B,D)=0$\\
+\tabto{4cm} excédent$[B] = 1 -1 = 0$, excédent$[D] = 0 + 1 = 1$, flot$[B,D] = 0 + 1 = 1$, flot$[D,B] = 0 -1 = -1$, sommets$\_$actifs $= [A,D]$
+\tabto{1cm} $\rightarrow$ On réétiquette $B$ : hauteur$[B] = 1 + 1 = 2$
+\tabto{1cm} $\rightarrow$ L'excédent de $B$ est nul : sommets$\_$actifs $= [A,D]$
+\\\\
+Faisons un point sur les dictionnaires :
+\tabto{2.5cm} $\rightarrow$ hauteur $= \{S : 6, A:2,B:2,C:1,D:1,P:0\}$
+\tabto{2.5cm} $\rightarrow$ excédent $= \{S : 0, A:1,B:0,C:1,D:1,P:4\}$
+\begin{center}
+	\begin{tikzpicture}[
+		vertex/.style={circle, draw, fill=blue!20, inner sep=2pt},
+		every edge/.style={draw, ->, thick}, % Ajout de flèches
+		->,>=stealth % Style explicite de flèches (stealth' pour une tête nette)
+		]
+		
+		% Les sommets
+		\node[vertex] (S) at (0.5, 1) {$\mathcal{S}$};
+		\node[vertex] (A) at (2, 2) {A};
+		\node[vertex] (B) at (4, 2) {B};
+		\node[vertex] (C) at (2, 0) {C};
+		\node[vertex] (D) at (4, 0) {D};
+		\node[vertex] (P) at (5.5, 1) {$\mathcal{P}$};
+		
+		% Les arêtes orientées
+		%\draw[->, bend left=15] (A) to (B);
+		\draw[->] (S) to node[midway, above left] {4/4} (A);
+		\draw[->] (S) to node[midway, below left] {3/3} (C);
+		\draw[->] (A) to node[midway, above] {3/3} (B);
+		\draw[->] (A) to node[midway, left] {2} (C);
+		\draw[->] (B) to node[midway, right] {1/3} (D);
+		\draw[->] (B) to node[midway, above right] {2/2} (P);
+		\draw[->] (C) to node[midway, below] {2/2} (D);
+		\draw[->] (D) to node[midway, below left] {1} (A);
+		\draw[->] (D) to node[midway, below right] {2/4} (P);
+	\end{tikzpicture}
+\end{center}
+On traite le sommet $A$ :\\
+\tabto{1cm} $\rightarrow$ On réétiquette $A$ : hauteur$[A] = 1 + 1 = 2$
+\tabto{1cm} $\rightarrow$ On regarde les successeurs de $A$ :
+\tabto{2.5cm} On réétiquette $C$ : hauteur$[C] = 1$
+\tabto{2.5cm} On ne pousse pas le préflot : hauteur$[A] = $ hauteur$[C] + 2$ 
+\tabto{1cm} $\rightarrow$ On réétiquette $A$ : hauteur$[A] = 1 + 1 =2$
+\tabto{1cm} $\rightarrow$ Aucune modification dans hauteur ou excédent n'a été réalisé : sommets$\_$actifs $= [D]$
+\\\\
+Faisons un point sur les dictionnaires :
+\tabto{2.5cm} $\rightarrow$ hauteur $= \{S : 6, A:2,B:2,C:1,D:1,P:0\}$
+\tabto{2.5cm} $\rightarrow$ excédent $= \{S : 0, A:1,B:0,C:1,D:1,P:4\}$
+\begin{center}
+	\begin{tikzpicture}[
+		vertex/.style={circle, draw, fill=blue!20, inner sep=2pt},
+		every edge/.style={draw, ->, thick}, % Ajout de flèches
+		->,>=stealth % Style explicite de flèches (stealth' pour une tête nette)
+		]
+		
+		% Les sommets
+		\node[vertex] (S) at (0.5, 1) {$\mathcal{S}$};
+		\node[vertex] (A) at (2, 2) {A};
+		\node[vertex] (B) at (4, 2) {B};
+		\node[vertex] (C) at (2, 0) {C};
+		\node[vertex] (D) at (4, 0) {D};
+		\node[vertex] (P) at (5.5, 1) {$\mathcal{P}$};
+		
+		% Les arêtes orientées
+		%\draw[->, bend left=15] (A) to (B);
+		\draw[->] (S) to node[midway, above left] {4/4} (A);
+		\draw[->] (S) to node[midway, below left] {3/3} (C);
+		\draw[->] (A) to node[midway, above] {3/3} (B);
+		\draw[->] (A) to node[midway, left] {2} (C);
+		\draw[->] (B) to node[midway, right] {1/3} (D);
+		\draw[->] (B) to node[midway, above right] {2/2} (P);
+		\draw[->] (C) to node[midway, below] {2/2} (D);
+		\draw[->] (D) to node[midway, below left] {1} (A);
+		\draw[->] (D) to node[midway, below right] {2/4} (P);
+	\end{tikzpicture}
+\end{center}
+On traite le sommet $D$ :\\
+\tabto{1cm} $\rightarrow$ On réétiquette $D$ : hauteur$[D] = 1 + \min\{2;0\} = 1 $
+\tabto{1cm} $\rightarrow$ On regarde les successeurs de $D$ :
+\tabto{2.5cm} On réétiquette $A$ et $P$ : hauteur$[A] = 1 + 1 = 2$ et hauteur$[P] = 0$
+\tabto{2.5cm} On pousse le préflot sur $[D,P]$: hauteur$[D] = $ hauteur$[A] -1 = $ hauteur$[P] + 1$ et $r(D,A)>0$, $r(D,P) > 0$\\
+\tabto{4cm} excédent$[D] = 1 - 1 = 0$, excédent$[P] = 4 + 1 = 5$, flot$[D,P] = 2 + 1 = 3$, flot$[P,B] = -2 - 1 = -3$, sommets$\_$actifs $= []$
+\tabto{1cm} $\rightarrow$ On réétiquette $D$ : hauteur$[D] = 1 + \min\{2;0\} = 1$
+\tabto{1cm} $\rightarrow$ L'excédent de $D$ est nul : sommets$\_$actifs $= [$ $]$
+\\\\
+Faisons un point sur les dictionnaires :
+\tabto{2.5cm} $\rightarrow$ hauteur $= \{S : 6, A:2,B:2,C:1,D:1,P:0\}$
+\tabto{2.5cm} $\rightarrow$ excédent $= \{S : 0, A:1,B:0,C:1,D:1,P:4\}$
+\begin{center}
+	\begin{tikzpicture}[
+		vertex/.style={circle, draw, fill=blue!20, inner sep=2pt},
+		every edge/.style={draw, ->, thick}, % Ajout de flèches
+		->,>=stealth % Style explicite de flèches (stealth' pour une tête nette)
+		]
+		
+		% Les sommets
+		\node[vertex] (S) at (0.5, 1) {$\mathcal{S}$};
+		\node[vertex] (A) at (2, 2) {A};
+		\node[vertex] (B) at (4, 2) {B};
+		\node[vertex] (C) at (2, 0) {C};
+		\node[vertex] (D) at (4, 0) {D};
+		\node[vertex] (P) at (5.5, 1) {$\mathcal{P}$};
+		
+		% Les arêtes orientées
+		%\draw[->, bend left=15] (A) to (B);
+		\draw[->] (S) to node[midway, above left] {4/4} (A);
+		\draw[->] (S) to node[midway, below left] {3/3} (C);
+		\draw[->] (A) to node[midway, above] {3/3} (B);
+		\draw[->] (A) to node[midway, left] {2} (C);
+		\draw[->] (B) to node[midway, right] {1/3} (D);
+		\draw[->] (B) to node[midway, above right] {2/2} (P);
+		\draw[->] (C) to node[midway, below] {2/2} (D);
+		\draw[->] (D) to node[midway, below left] {1} (A);
+		\draw[->] (D) to node[midway, below right] {3/4} (P);
+	\end{tikzpicture}
+\end{center}
+La file des sommets actifs est vide, l'algorithme se termine.\\
+Finalement, le flot maximum a une valeur égale à $f(B,P)+f(D,P)=2+3=5$.
+
+
 \subsection{Récapitulatif des algorithmes et leur complexité}
 \begin{table}[H]
 	\centering
@@ -1515,7 +2096,7 @@ Même si C\# n’est pas le langage le plus utilisé dans les publications en al
 \section{Méthodologie Expérimentale}
 
 
-\section{Crourbes, Résultats et Discussion}
+\section{Courbes, Résultats et Discussion}
 
 Après avoir conçu et implémenté l’ensemble des algorithmes de flot maximal, ainsi que l’infrastructure de génération d’instances de graphes, nous présentons ici la mise en œuvre expérimentale et l’analyse comparative des performances des différentes approches. L'objectif du TER était entre autres de comparer les algorithmes de flot maximum et pour cela nous avons généré différentes courbres de performance. Nous avons choisi de représenter les performances en fonction du nombre de sommets du graphe, car c'est un indicateur pertinent de la complexité des algorithmes.\\
 

@@ -28,6 +28,8 @@
 \usepackage{tabto}
 \usepackage{tcolorbox}
 \usepackage{xcolor}
+\usepackage{graphicx}
+\usepackage{subcaption}
 \lstset{
   basicstyle=\ttfamily\small,
   frame=single,
@@ -2255,14 +2257,71 @@ Cela s’explique notamment par la sophistication de son infrastructure logiciel
 
 Ces résultats sont en parfaite adéquation avec la littérature algorithmique, validant ainsi notre implémentation et notre protocole expérimental.
 
+
 \subsection{Avec $n_{max} = 500$}
+
 \begin{figure}[h]
     \centering
     \includegraphics[width=1\textwidth]{courbes/benchmark_global_average_500.png}
     \caption{Premier graphique - $n_{max} = 100$}
     \label{fig:example}
 \end{figure}
+
+Sur cette seconde courbe (jusqu’à 500 nœuds), on observe de manière encore plus marquée la divergence de performance entre les trois algorithmes comparés :\\
+
+Poussage-Réétiquetage devient très coûteux en temps à partir d’environ 300 sommets. Son temps d'exécution explose, atteignant plus de 20 secondes pour 500 nœuds. Cela reflète les limites pratiques de cet algorithme sur des instances plus grandes, malgré sa bonne complexité théorique. Dinic conserve une progression régulière, avec un temps d'exécution qui augmente de manière maîtrisée. Il s'agit donc d’une méthode performante et stable sur des graphes de taille moyenne à grande. Gurobi, encore une fois, se démarque nettement : son temps d’exécution reste très faible, quasiment constant jusqu’à 500 sommets. Cela démontre la puissance de son moteur d’optimisation, capable de traiter efficacement de grands graphes en très peu de temps.
+
 \subsection{Avec $n_{max} = 2000$}
+
+
+\subsection{Densités spécificiques}
+
+\begin{figure}[H]
+    \centering
+    \begin{subfigure}[b]{0.45\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{courbes/benchmark0,3_100.png}
+        \caption{Courbes densité $0{,}3$}
+        \label{fig:image1}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.45\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{courbes/benchmark0,5_100.png}
+        \caption{Courbes densité $0{,}5$}
+        \label{fig:image2}
+    \end{subfigure}
+    \vskip\baselineskip
+    \begin{subfigure}[b]{0.45\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{courbes/benchmark0,7_100.png}
+        \caption{Courbes densité $0{,}7$}
+        \label{fig:image3}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.45\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{courbes/benchmark0,9_100.png}
+        \caption{Courbes densité $0{,}9$}
+        \label{fig:image4}
+    \end{subfigure}
+    \caption{Comparaisons pour les différentes densités}
+    \label{fig:group}
+\end{figure}
+
+Les expérimentations ont été menées sur des graphes de densités variées, allant de très clairsemés à fortement connectés. Un constat remarquable est que, malgré ces variations structurelles, l’ordre de performance entre les algorithmes reste strictement inchangé. Autrement dit, quel que soit le nombre d’arêtes dans les graphes, les algorithmes les plus rapides conservent leur avance, tandis que les plus lents restent en queue de classement.
+
+Ce phénomène témoigne d’une certaine robustesse des méthodes évaluées : leur comportement asymptotique est gouverné principalement par leur complexité algorithmique propre, et non par des variations contextuelles comme la densité du graphe. Cela renforce la pertinence de cette comparaison expérimentale, en montrant que les écarts de performance sont structurels et non accidentels.
+
+\subsection{Observation générale}
+
+Parmi les différents algorithmes évalués pour résoudre le problème de flot maximum, les résultats expérimentaux montrent des écarts de performance marqués, directement liés à leurs principes algorithmiques. Ford-Fulkerson est de loin le plus lent : son approche naïve par chemins augmentants sans stratégie d’optimisation le rend peu adapté aux grandes instances. Edmonds-Karp améliore légèrement la situation grâce à l’utilisation de chemins les plus courts, mais reste limité par une complexité en O(VE²). Vient ensuite SCIP, un solveur généraliste de programmation linéaire, qui reste moins performant qu’on ne pourrait l’attendre, probablement en raison d’un manque d’optimisation spécifique pour ce type de problème.\\
+
+En revanche, l’algorithme de poussage-réétiquetage se révèle bien plus efficace : en se basant sur des opérations locales et une gestion intelligente des hauteurs, il limite considérablement le nombre de recalculs. Dinic fait encore mieux grâce à sa stratégie basée sur les niveaux et les envois de flots par bloc, ce qui le rend particulièrement performant, même sur de grandes tailles. Enfin, Gurobi, grâce à ses techniques d’optimisation industrielles et son efficacité dans la résolution des modèles linéaires, se démarque comme le plus rapide dans ces tests.
+
+
+
+
 \section{Revue de la littérature avancée}
 Les algorithmes classiques de flot maximal comme ceux de Ford-Fulkerson, Dinic ou Poussage-Réétiquetage ont longtemps constitué l’état de l’art pratique et théorique. Cependant, des avancées majeures ont été réalisées dans la dernière décennie en algorithmique théorique, avec l’apparition d’algorithmes extrêmement rapides reposant sur des outils sophistiqués d’optimisation, d’algèbre linéaire et de structures de graphes dynamiques.
 

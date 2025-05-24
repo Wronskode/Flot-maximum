@@ -2199,20 +2199,20 @@ Pour ce projet de TER, nous avons décidé d’utiliser le langage C\#. Ce choix
 
 Nous avons utilisé l’environnement de développement Rider (JetBrains), qui offre de nombreux outils utiles comme l’autocomplétion, la navigation dans le code, le refactoring ou encore un bon débogueur \cite{jetbrains_rider}. Ces fonctionnalités nous ont vraiment facilité le développement et nous ont permis de rester concentrés sur l’essentiel : l’implémentation des algorithmes et l’analyse de leurs performances.
 
-Plutôt que d’utiliser une bibliothèque externe, nous avons choisi d’implémenter nous-mêmes les structures de graphes nécessaires (nœuds, arêtes, flux, etc.). Cette approche nous a permis de mieux comprendre le fonctionnement interne des algorithmes et d’adapter notre représentation à leurs besoins spécifiques.
+Plutôt que d’utiliser une bibliothèque externe, nous avons choisi d’implémenter nous-mêmes les structures de graphes nécessaires (nœuds, arêtes, flot, etc.). Cette approche nous a permis de mieux comprendre le fonctionnement interne des algorithmes et d’adapter notre représentation à leurs besoins spécifiques.
 
-Même si C\# n’est pas le langage le plus utilisé dans les publications en algorithmique (où C++ ou Python sont plus populaires), il reste suffisamment performant pour notre projet, qui ne traite pas de très gros graphes. De plus, il offre un bon compromis entre lisibilité, facilité de prise en main, et performances, ce qui en fait un choix raisonnable pour un projet de recherche appliquée encadré.
-
+Même si C\# n’est pas le langage le plus utilisé dans les publications en algorithmique (où C++ ou Python sont plus populaires), il reste suffisamment performant pour notre projet. De plus, il offre un bon compromis entre lisibilité, facilité de prise en main, et performances, ce qui en fait un choix raisonnable pour un projet de recherche appliquée encadré.
 \subsection{Tests}
+Tout au long du projet, nous avons mis en place des tests unitaires pour vérifier le bon fonctionnement de nos algorithmes et de nos classes. Ces tests ont été réalisés à l'aide du framework de test intégré à Rider, qui nous a permis d'écrire des tests clairs et faciles à maintenir.
+
+Nous vérifions notamment que les algorithmes de flot maximum renvoyaient bien le flot maximum attendu pour des instances connues, et que les graphes générés étaient bien formés (connectés, avec une source et un puits valides). Ces tests nous ont permis de garantir la robustesse de notre code et de détecter rapidement d'éventuelles régressions lors des modifications. Nous testons nos algorithmes sur des centaines, voir des milliers d'instances aléatoirement générées, ce qui nous permet de nous assurer que les algorithmes fonctionnent correctement dans une grande variété de cas.
 \section{Méthodologie Expérimentale}
 
 
 \section{Courbes, Résultats et Discussion}
-
 Après avoir conçu et implémenté l’ensemble des algorithmes de flot maximal, ainsi que l’infrastructure de génération d’instances de graphes, nous présentons ici la mise en œuvre expérimentale et l’analyse comparative des performances des différentes approches. L'objectif du TER était entre autres de comparer les algorithmes de flot maximum et pour cela nous avons généré différentes courbres de performance. Nous avons choisi de représenter les performances en fonction du nombre de sommets du graphe, car c'est un indicateur pertinent de la complexité des algorithmes.\\
 
 \subsection{Avec $n_{max} = 100$}
-
 Afin de pouvoir commencer notre analyse nous présentons d'abord ce premier graphique :
 
 \begin{figure}[h]
@@ -2256,24 +2256,19 @@ Cela s’explique notamment par la sophistication de son infrastructure logiciel
 Ces résultats sont en parfaite adéquation avec la littérature algorithmique, validant ainsi notre implémentation et notre protocole expérimental.
 
 \subsection{Avec $n_{max} = 500$}
-
 \begin{figure}[h]
     \centering
     \includegraphics[width=1\textwidth]{courbes/benchmark_global_average_500.png}
     \caption{Premier graphique - $n_{max} = 100$}
     \label{fig:example}
 \end{figure}
-
 \subsection{Avec $n_{max} = 2000$}
-
 \section{Revue de la littérature avancée}
-
 Les algorithmes classiques de flot maximal comme ceux de Ford-Fulkerson, Dinic ou Poussage-Réétiquetage ont longtemps constitué l’état de l’art pratique et théorique. Cependant, des avancées majeures ont été réalisées dans la dernière décennie en algorithmique théorique, avec l’apparition d’algorithmes extrêmement rapides reposant sur des outils sophistiqués d’optimisation, d’algèbre linéaire et de structures de graphes dynamiques.
 
 Ces algorithmes atteignent pour la première fois une complexité proche ou quasi-linéaire, dans certains cas, en combinant des approches structurelles (arborescences, décompositions récursives), des techniques de descente de potentiel (interior point methods), ou encore des méthodes de résolution de systèmes linéaires dans les graphes.
 
 \subsection{Algorithme BLNPSSSW (2020)}
-
 L’algorithme proposé par \textbf{Bernstein, Liu, Nanongkai, Probst Gutenberg, Sidford, Spinrad, Sun et Wang} en 2020 marque une percée dans l’optimisation du flot maximal\cite{chen2022maximumflowminimumcostflow}. Il atteint une complexité de :
 \[
 \tilde{\mathcal{O}}((E+ V^{3/2} - \varepsilon)log U)
@@ -2292,7 +2287,6 @@ Ici \[\tilde{\mathcal{O}}\] indique une complexité asymptotique qui ignore cert
 \end{definition}
 C’est l’un des premiers résultats à montrer qu’on pouvait battre rigoureusement la barrière des $\mathcal{O}(m \sqrt{n})$ pour les graphes généraux.
 \subsection{Algorithme de Gao-Liu-Peng (2021)}
-
 Proposé par \textbf{Gao, Liu et Peng}, cet algorithme repose sur l’observation que le problème de flot maximal peut être résolu à l’aide de méthodes de préconditionnement et de raccourcissement de chemins dans les graphes\cite{gao2021fullydynamicelectricalflows}. En appliquant une stratégie d’approximation contrôlée, les auteurs parviennent à une complexité :
 \[
 \tilde{\mathcal{O}}\left(E^{\frac{3}{2} - \frac{1}{32\delta}} \log U\right)
@@ -2302,7 +2296,6 @@ avec des garanties sur l’erreur relative du flot obtenu.
 Leur méthode repose notamment sur des techniques hybrides entre les algorithmes de flot bloquant et la résolution approchée de systèmes linéaires associés aux graphes.
 
 \subsection{Algorithme de Chen, Kyng, Liu, Peng, Gutenberg, Sachdeva (2022)}
-
 Ce collectif d’auteurs a contribué à généraliser et raffiner les algorithmes de flot maximal en s’appuyant sur des outils puissants de l’algèbre linéaire numérique, notamment les solveurs Laplaciens.
 
 L’approche consiste à ramener le flot maximum à un problème de minimisation de potentiel dans un graphe résiduel, résolu par une succession de systèmes linéaires approchés\cite{chen2022maximumflowminimumcostflow}. Les résultats atteignent des complexités du type :
@@ -2314,7 +2307,6 @@ dans certains cas, avec de très bonnes constantes pratiques.
 Leur travail fait partie d’une série d’efforts visant à transposer les méthodes numériques continues (optimisation convexe, gradients, projections) à des problèmes discrets de flot.
 
 \subsection{Conclusion}
-
 Ces algorithmes récents montrent qu’il est désormais possible d’approcher la complexité quasi-linéaire pour le problème de flot maximal, dans certains modèles. Toutefois, leur complexité théorique s’accompagne souvent d’une complexité d’implémentation élevée, ce qui limite leur adoption dans les applications courantes.
 
 \section{Conclusion et Perspectives}

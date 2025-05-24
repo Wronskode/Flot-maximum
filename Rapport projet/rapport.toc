@@ -35,40 +35,40 @@
 \contentsline {subsubsection}{\numberline {3.4.4}Complexité}{13}{subsubsection.3.4.4}%
 \contentsline {subsubsection}{\numberline {3.4.5}Avantages/inconvénients}{13}{subsubsection.3.4.5}%
 \contentsline {subsubsection}{\numberline {3.4.6}Application sur l'exemple}{13}{subsubsection.3.4.6}%
-\contentsline {subsection}{\numberline {3.5}Récapitulatif des algorithmes et leur complexité}{19}{subsection.3.5}%
-\contentsline {section}{\numberline {4}Programmation linéaire}{19}{section.4}%
-\contentsline {subsection}{\numberline {4.1}Introduction à la programmation linéaire}{19}{subsection.4.1}%
-\contentsline {subsection}{\numberline {4.2}Problème de flot maximum}{21}{subsection.4.2}%
-\contentsline {subsection}{\numberline {4.3}Matrices totalement unimodulaires}{22}{subsection.4.3}%
-\contentsline {subsection}{\numberline {4.4}Le théorème Max-Flow/Min-Cut}{23}{subsection.4.4}%
-\contentsline {subsection}{\numberline {4.5}Solveurs de programmation linéaire}{24}{subsection.4.5}%
-\contentsline {section}{\numberline {5}Création des instances}{24}{section.5}%
-\contentsline {subsection}{\numberline {5.1}La classe RandomFlowNetwork}{24}{subsection.5.1}%
-\contentsline {subsection}{\numberline {5.2}Tests sur les graphes générés}{25}{subsection.5.2}%
-\contentsline {subsection}{\numberline {5.3}Représentation des instances}{26}{subsection.5.3}%
-\contentsline {subsection}{\numberline {5.4}Les instances choisies}{26}{subsection.5.4}%
-\contentsline {section}{\numberline {6}Développement Logiciel}{27}{section.6}%
-\contentsline {subsection}{\numberline {6.1}Organisation du projet}{27}{subsection.6.1}%
-\contentsline {subsection}{\numberline {6.2}Présentation des classes}{28}{subsection.6.2}%
-\contentsline {subsubsection}{\numberline {6.2.1}Vertex}{28}{subsubsection.6.2.1}%
-\contentsline {subsubsection}{\numberline {6.2.2}Graph}{28}{subsubsection.6.2.2}%
-\contentsline {subsubsection}{\numberline {6.2.3}FlowNetwork}{28}{subsubsection.6.2.3}%
-\contentsline {subsubsection}{\numberline {6.2.4}FileFlowNetwork}{29}{subsubsection.6.2.4}%
-\contentsline {subsubsection}{\numberline {6.2.5}RandomFlowNetwork}{30}{subsubsection.6.2.5}%
-\contentsline {subsubsection}{\numberline {6.2.6}Flow}{30}{subsubsection.6.2.6}%
-\contentsline {subsubsection}{\numberline {6.2.7}PL}{30}{subsubsection.6.2.7}%
-\contentsline {subsubsection}{\numberline {6.2.8}Curve}{30}{subsubsection.6.2.8}%
-\contentsline {subsubsection}{\numberline {6.2.9}Program}{30}{subsubsection.6.2.9}%
-\contentsline {subsection}{\numberline {6.3}Langage et classes}{31}{subsection.6.3}%
-\contentsline {subsection}{\numberline {6.4}Tests}{31}{subsection.6.4}%
-\contentsline {section}{\numberline {7}Méthodologie Expérimentale}{31}{section.7}%
-\contentsline {section}{\numberline {8}Courbes, Résultats et Discussion}{31}{section.8}%
-\contentsline {subsection}{\numberline {8.1}Avec $n_{max} = 100$}{31}{subsection.8.1}%
-\contentsline {subsection}{\numberline {8.2}Avec $n_{max} = 500$}{33}{subsection.8.2}%
-\contentsline {subsection}{\numberline {8.3}Avec $n_{max} = 2000$}{34}{subsection.8.3}%
-\contentsline {section}{\numberline {9}Revue de la littérature avancée}{34}{section.9}%
-\contentsline {subsection}{\numberline {9.1}Algorithme BLNPSSSW (2020)}{34}{subsection.9.1}%
-\contentsline {subsection}{\numberline {9.2}Algorithme de Gao-Liu-Peng (2021)}{34}{subsection.9.2}%
-\contentsline {subsection}{\numberline {9.3}Algorithme de Chen, Kyng, Liu, Peng, Gutenberg, Sachdeva (2022)}{35}{subsection.9.3}%
-\contentsline {subsection}{\numberline {9.4}Conclusion}{35}{subsection.9.4}%
-\contentsline {section}{\numberline {10}Conclusion et Perspectives}{35}{section.10}%
+\contentsline {subsection}{\numberline {3.5}Récapitulatif des algorithmes et leur complexité}{20}{subsection.3.5}%
+\contentsline {section}{\numberline {4}Programmation linéaire}{20}{section.4}%
+\contentsline {subsection}{\numberline {4.1}Introduction à la programmation linéaire}{20}{subsection.4.1}%
+\contentsline {subsection}{\numberline {4.2}Problème de flot maximum}{22}{subsection.4.2}%
+\contentsline {subsection}{\numberline {4.3}Matrices totalement unimodulaires}{23}{subsection.4.3}%
+\contentsline {subsection}{\numberline {4.4}Le théorème Max-Flow/Min-Cut}{24}{subsection.4.4}%
+\contentsline {subsection}{\numberline {4.5}Solveurs de programmation linéaire}{25}{subsection.4.5}%
+\contentsline {section}{\numberline {5}Création des instances}{25}{section.5}%
+\contentsline {subsection}{\numberline {5.1}La classe RandomFlowNetwork}{25}{subsection.5.1}%
+\contentsline {subsection}{\numberline {5.2}Tests sur les graphes générés}{26}{subsection.5.2}%
+\contentsline {subsection}{\numberline {5.3}Représentation des instances}{27}{subsection.5.3}%
+\contentsline {subsection}{\numberline {5.4}Les instances choisies}{27}{subsection.5.4}%
+\contentsline {section}{\numberline {6}Développement Logiciel}{28}{section.6}%
+\contentsline {subsection}{\numberline {6.1}Organisation du projet}{28}{subsection.6.1}%
+\contentsline {subsection}{\numberline {6.2}Présentation des classes}{29}{subsection.6.2}%
+\contentsline {subsubsection}{\numberline {6.2.1}Vertex}{29}{subsubsection.6.2.1}%
+\contentsline {subsubsection}{\numberline {6.2.2}Graph}{29}{subsubsection.6.2.2}%
+\contentsline {subsubsection}{\numberline {6.2.3}FlowNetwork}{29}{subsubsection.6.2.3}%
+\contentsline {subsubsection}{\numberline {6.2.4}FileFlowNetwork}{30}{subsubsection.6.2.4}%
+\contentsline {subsubsection}{\numberline {6.2.5}RandomFlowNetwork}{31}{subsubsection.6.2.5}%
+\contentsline {subsubsection}{\numberline {6.2.6}Flow}{31}{subsubsection.6.2.6}%
+\contentsline {subsubsection}{\numberline {6.2.7}PL}{31}{subsubsection.6.2.7}%
+\contentsline {subsubsection}{\numberline {6.2.8}Curve}{31}{subsubsection.6.2.8}%
+\contentsline {subsubsection}{\numberline {6.2.9}Program}{31}{subsubsection.6.2.9}%
+\contentsline {subsection}{\numberline {6.3}Langage et classes}{32}{subsection.6.3}%
+\contentsline {subsection}{\numberline {6.4}Tests}{32}{subsection.6.4}%
+\contentsline {section}{\numberline {7}Méthodologie Expérimentale}{32}{section.7}%
+\contentsline {section}{\numberline {8}Courbes, Résultats et Discussion}{32}{section.8}%
+\contentsline {subsection}{\numberline {8.1}Avec $n_{max} = 100$}{32}{subsection.8.1}%
+\contentsline {subsection}{\numberline {8.2}Avec $n_{max} = 500$}{34}{subsection.8.2}%
+\contentsline {subsection}{\numberline {8.3}Avec $n_{max} = 2000$}{35}{subsection.8.3}%
+\contentsline {section}{\numberline {9}Revue de la littérature avancée}{35}{section.9}%
+\contentsline {subsection}{\numberline {9.1}Algorithme BLNPSSSW (2020)}{35}{subsection.9.1}%
+\contentsline {subsection}{\numberline {9.2}Algorithme de Gao-Liu-Peng (2021)}{35}{subsection.9.2}%
+\contentsline {subsection}{\numberline {9.3}Algorithme de Chen, Kyng, Liu, Peng, Gutenberg, Sachdeva (2022)}{36}{subsection.9.3}%
+\contentsline {subsection}{\numberline {9.4}Conclusion}{36}{subsection.9.4}%
+\contentsline {section}{\numberline {10}Conclusion et Perspectives}{36}{section.10}%

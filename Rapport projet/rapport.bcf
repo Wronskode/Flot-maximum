@@ -2367,12 +2367,11 @@
     <bcf:citekey order="4" intorder="1">10.1145/321694.321699</bcf:citekey>
     <bcf:citekey order="5" intorder="1">article</bcf:citekey>
     <bcf:citekey order="6" intorder="1">article</bcf:citekey>
-    <bcf:citekey order="7" intorder="1">article</bcf:citekey>
-    <bcf:citekey order="8" intorder="1">hoffman-1957</bcf:citekey>
-    <bcf:citekey order="9" intorder="1">jetbrains_rider</bcf:citekey>
-    <bcf:citekey order="10" intorder="1">chen2022maximumflowminimumcostflow</bcf:citekey>
-    <bcf:citekey order="11" intorder="1">gao2021fullydynamicelectricalflows</bcf:citekey>
-    <bcf:citekey order="12" intorder="1">chen2022maximumflowminimumcostflow</bcf:citekey>
+    <bcf:citekey order="7" intorder="1">hoffman-1957</bcf:citekey>
+    <bcf:citekey order="8" intorder="1">jetbrains_rider</bcf:citekey>
+    <bcf:citekey order="9" intorder="1">chen2022maximumflowminimumcostflow</bcf:citekey>
+    <bcf:citekey order="10" intorder="1">gao2021fullydynamicelectricalflows</bcf:citekey>
+    <bcf:citekey order="11" intorder="1">chen2022maximumflowminimumcostflow</bcf:citekey>
   </bcf:section>
   <!-- SORTING TEMPLATES -->
   <bcf:sortingtemplate name="nty">

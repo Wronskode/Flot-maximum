@@ -1,4 +1,4 @@
-This is LuaHBTeX, Version 1.17.1 (MiKTeX 24.1) (format=lualatex 2025.3.28)  24 MAY 2025 23:23
+This is LuaHBTeX, Version 1.17.1 (MiKTeX 24.1) (format=lualatex 2025.3.28)  24 MAY 2025 23:32
  restricted system commands enabled.
 **rapport.tex
 (./rapport.tex
@@ -2050,212 +2050,208 @@ Underfull \hbox (badness 10000) in paragraph at lines 1055--1067
 
  []
 
-[12]
-
-LaTeX Warning: Citation 'article' on page 13 undefined on input line 1117.
-
-[13]
+[12] [13]
 Package mdframed Info: mdframed detected package amsthm 
  changed the theorem header of amsthm
-(mdframed)              on input line 1185.
+(mdframed)              on input line 1184.
 Package mdframed Info: mdframed detected package amsthm 
  changed the theorem header of amsthm
-(mdframed)              on input line 1189.
+(mdframed)              on input line 1188.
 Package mdframed Info: mdframed inside a box 
- mdframed uses option nobreak mdframed on input line 1191.
+ mdframed uses option nobreak mdframed on input line 1190.
 Package mdframed Info: mdframed detected package amsthm 
  changed the theorem header of amsthm
-(mdframed)              on input line 1231.
+(mdframed)              on input line 1230.
 Package mdframed Info: mdframed detected package amsthm 
  changed the theorem header of amsthm
-(mdframed)              on input line 1235.
+(mdframed)              on input line 1234.
 Package mdframed Info: mdframed inside a box 
- mdframed uses option nobreak mdframed on input line 1237.
+ mdframed uses option nobreak mdframed on input line 1236.
  [14]
 Package mdframed Info: mdframed detected package amsthm 
  changed the theorem header of amsthm
-(mdframed)              on input line 1277.
+(mdframed)              on input line 1276.
 Package mdframed Info: mdframed detected package amsthm 
  changed the theorem header of amsthm
-(mdframed)              on input line 1281.
+(mdframed)              on input line 1280.
 Package mdframed Info: mdframed detected package amsthm 
  changed the theorem header of amsthm
-(mdframed)              on input line 1285.
+(mdframed)              on input line 1284.
+Package mdframed Info: mdframed inside a box 
+ mdframed uses option nobreak mdframed on input line 1285.
 Package mdframed Info: mdframed inside a box 
  mdframed uses option nobreak mdframed on input line 1286.
+Package mdframed Info: mdframed detected package amsthm 
+ changed the theorem header of amsthm
+(mdframed)              on input line 1326.
+Package mdframed Info: mdframed detected package amsthm 
+ changed the theorem header of amsthm
+(mdframed)              on input line 1330.
+Package mdframed Info: mdframed detected package amsthm 
+ changed the theorem header of amsthm
+(mdframed)              on input line 1334.
 Package mdframed Info: mdframed inside a box 
- mdframed uses option nobreak mdframed on input line 1287.
-Package mdframed Info: mdframed detected package amsthm 
- changed the theorem header of amsthm
-(mdframed)              on input line 1327.
-Package mdframed Info: mdframed detected package amsthm 
- changed the theorem header of amsthm
-(mdframed)              on input line 1331.
-Package mdframed Info: mdframed detected package amsthm 
- changed the theorem header of amsthm
-(mdframed)              on input line 1335.
+ mdframed uses option nobreak mdframed on input line 1335.
 Package mdframed Info: mdframed inside a box 
  mdframed uses option nobreak mdframed on input line 1336.
-Package mdframed Info: mdframed inside a box 
- mdframed uses option nobreak mdframed on input line 1337.
  [15]
 Package mdframed Info: mdframed detected package amsthm 
  changed the theorem header of amsthm
-(mdframed)              on input line 1377.
+(mdframed)              on input line 1376.
 Package mdframed Info: mdframed detected package amsthm 
  changed the theorem header of amsthm
-(mdframed)              on input line 1381.
+(mdframed)              on input line 1380.
 Package mdframed Info: mdframed detected package amsthm 
  changed the theorem header of amsthm
-(mdframed)              on input line 1385.
+(mdframed)              on input line 1384.
+Package mdframed Info: mdframed inside a box 
+ mdframed uses option nobreak mdframed on input line 1385.
 Package mdframed Info: mdframed inside a box 
  mdframed uses option nobreak mdframed on input line 1386.
-Package mdframed Info: mdframed inside a box 
- mdframed uses option nobreak mdframed on input line 1387.
 Package mdframed Info: mdframed detected package amsthm 
  changed the theorem header of amsthm
-(mdframed)              on input line 1427.
+(mdframed)              on input line 1426.
 Package mdframed Info: mdframed detected package amsthm 
  changed the theorem header of amsthm
-(mdframed)              on input line 1431.
+(mdframed)              on input line 1430.
 Package mdframed Info: mdframed inside a box 
- mdframed uses option nobreak mdframed on input line 1433.
+ mdframed uses option nobreak mdframed on input line 1432.
  [16]
 Package mdframed Info: mdframed detected package amsthm 
  changed the theorem header of amsthm
-(mdframed)              on input line 1473.
+(mdframed)              on input line 1472.
 Package mdframed Info: mdframed detected package amsthm 
  changed the theorem header of amsthm
-(mdframed)              on input line 1477.
+(mdframed)              on input line 1476.
 Package mdframed Info: mdframed detected package amsthm 
  changed the theorem header of amsthm
-(mdframed)              on input line 1481.
+(mdframed)              on input line 1480.
+Package mdframed Info: mdframed inside a box 
+ mdframed uses option nobreak mdframed on input line 1481.
 Package mdframed Info: mdframed inside a box 
  mdframed uses option nobreak mdframed on input line 1482.
-Package mdframed Info: mdframed inside a box 
- mdframed uses option nobreak mdframed on input line 1483.
 Package mdframed Info: mdframed detected package amsthm 
  changed the theorem header of amsthm
-(mdframed)              on input line 1523.
+(mdframed)              on input line 1522.
  [17]
-Package mdframed Info: Not enough space on this page on input line 1527.
+Package mdframed Info: Not enough space on this page on input line 1526.
 Package mdframed Info: mdframed detected package amsthm 
  changed the theorem header of amsthm
-(mdframed)              on input line 1564.
+(mdframed)              on input line 1563.
 Package mdframed Info: mdframed detected package amsthm 
  changed the theorem header of amsthm
-(mdframed)              on input line 1568.
+(mdframed)              on input line 1567.
 Package mdframed Info: mdframed detected package amsthm 
  changed the theorem header of amsthm
-(mdframed)              on input line 1572.
+(mdframed)              on input line 1571.
+Package mdframed Info: mdframed inside a box 
+ mdframed uses option nobreak mdframed on input line 1572.
 Package mdframed Info: mdframed inside a box 
  mdframed uses option nobreak mdframed on input line 1573.
-Package mdframed Info: mdframed inside a box 
- mdframed uses option nobreak mdframed on input line 1574.
 Package mdframed Info: mdframed detected package amsthm 
  changed the theorem header of amsthm
-(mdframed)              on input line 1614.
+(mdframed)              on input line 1613.
 Package mdframed Info: mdframed detected package amsthm 
  changed the theorem header of amsthm
-(mdframed)              on input line 1618.
+(mdframed)              on input line 1617.
 Package mdframed Info: mdframed inside a box 
- mdframed uses option nobreak mdframed on input line 1620.
-Package mdframed Info: Not enough space on this page on input line 1623.
+ mdframed uses option nobreak mdframed on input line 1619.
+Package mdframed Info: Not enough space on this page on input line 1622.
  [18]
-Package mdframed Info: Not enough space on this page on input line 1623.
+Package mdframed Info: Not enough space on this page on input line 1622.
 Package mdframed Info: mdframed detected package amsthm 
  changed the theorem header of amsthm
-(mdframed)              on input line 1660.
+(mdframed)              on input line 1659.
 Package mdframed Info: mdframed detected package amsthm 
  changed the theorem header of amsthm
-(mdframed)              on input line 1664.
+(mdframed)              on input line 1663.
 Package mdframed Info: mdframed detected package amsthm 
  changed the theorem header of amsthm
-(mdframed)              on input line 1668.
+(mdframed)              on input line 1667.
+Package mdframed Info: mdframed inside a box 
+ mdframed uses option nobreak mdframed on input line 1668.
 Package mdframed Info: mdframed inside a box 
  mdframed uses option nobreak mdframed on input line 1669.
-Package mdframed Info: mdframed inside a box 
- mdframed uses option nobreak mdframed on input line 1670.
  [19]
 Package mdframed Info: mdframed detected package amsthm 
  changed the theorem header of amsthm
-(mdframed)              on input line 1754.
+(mdframed)              on input line 1753.
 Package mdframed Info: You first box width is to small
  mdframed fixed it
-(mdframed)              on input line 1777.
+(mdframed)              on input line 1776.
  [20]
 Package mdframed Info: mdframed detected package amsthm 
  changed the theorem header of amsthm
-(mdframed)              on input line 1779.
+(mdframed)              on input line 1778.
 Package hyperref Info: bookmark level for unknown remark defaults to 0 on input
- line 1779.
+ line 1778.
 Package mdframed Info: mdframed detected package amsthm 
  changed the theorem header of amsthm
-(mdframed)              on input line 1789.
+(mdframed)              on input line 1788.
 Package hyperref Info: bookmark level for unknown theorem defaults to 0 on inpu
-t line 1789.
+t line 1788.
 Package mdframed Info: mdframed detected package amsthm 
  changed the theorem header of amsthm
-(mdframed)              on input line 1792.
+(mdframed)              on input line 1791.
 Package hyperref Info: bookmark level for unknown replacementproof defaults to 
-0 on input line 1792.
+0 on input line 1791.
 Package mdframed Info: Box was splittet wrong
  starting loop to iterate the splitting point
-(mdframed)              on input line 1803.
+(mdframed)              on input line 1802.
  [21]
 Package mdframed Info: mdframed detected package amsthm 
  changed the theorem header of amsthm
-(mdframed)              on input line 1823.
+(mdframed)              on input line 1822.
  [22]
 Package mdframed Info: mdframed detected package amsthm 
  changed the theorem header of amsthm
-(mdframed)              on input line 1873.
+(mdframed)              on input line 1872.
 Package mdframed Info: mdframed detected package amsthm 
  changed the theorem header of amsthm
-(mdframed)              on input line 1878.
+(mdframed)              on input line 1877.
 Package mdframed Info: mdframed detected package amsthm 
  changed the theorem header of amsthm
-(mdframed)              on input line 1881.
+(mdframed)              on input line 1880.
  [23]
 Package mdframed Info: mdframed detected package amsthm 
  changed the theorem header of amsthm
-(mdframed)              on input line 1899.
-Package mdframed Info: Not enough space on this page on input line 1900.
+(mdframed)              on input line 1898.
+Package mdframed Info: Not enough space on this page on input line 1899.
 Package mdframed Info: mdframed detected package amsthm 
  changed the theorem header of amsthm
-(mdframed)              on input line 1901.
+(mdframed)              on input line 1900.
 
 
-LaTeX Warning: Citation 'hoffman-1957' on page 24 undefined on input line 1901.
+LaTeX Warning: Citation 'hoffman-1957' on page 24 undefined on input line 1900.
 
 
 Package mdframed Info: mdframed detected package amsthm 
  changed the theorem header of amsthm
-(mdframed)              on input line 1907.
+(mdframed)              on input line 1906.
 Package mdframed Info: mdframed detected package amsthm 
  changed the theorem header of amsthm
-(mdframed)              on input line 1914.
+(mdframed)              on input line 1913.
 Package mdframed Info: mdframed detected package amsthm 
  changed the theorem header of amsthm
-(mdframed)              on input line 1925.
+(mdframed)              on input line 1924.
 [24]
-Underfull \hbox (badness 10000) in paragraph at lines 1951--1952
+Underfull \hbox (badness 10000) in paragraph at lines 1950--1951
 
  []
 
 
-Overfull \hbox (6.88739pt too wide) in paragraph at lines 1961--1962
+Overfull \hbox (6.88739pt too wide) in paragraph at lines 1960--1961
 []\TU/lmr/m/n/10 Soit on uti-lise une den-sité, c’est-à-dire une pro-por-tio
 n du nombre maxi-mal de connexions
  []
 
 [25]
-Underfull \hbox (badness 10000) in paragraph at lines 1984--1985
+Underfull \hbox (badness 10000) in paragraph at lines 1983--1984
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1993--1994
+Underfull \hbox (badness 10000) in paragraph at lines 1992--1993
 
  []
 
@@ -2263,7 +2259,7 @@ Underfull \hbox (badness 10000) in paragraph at lines 1993--1994
 Missing character: There is no 2 (U+0032) in font nullfont!
 Missing character: There is no ; (U+003B) in font nullfont!
 ]
-Underfull \hbox (badness 10000) in paragraph at lines 2105--2106
+Underfull \hbox (badness 10000) in paragraph at lines 2104--2105
 
  []
 
@@ -2271,154 +2267,154 @@ Underfull \hbox (badness 10000) in paragraph at lines 2105--2106
 <Gantt2.png, id=558, 724.50674pt x 263.18324pt>
 File: Gantt2.png Graphic file (type png)
 <use Gantt2.png>
-Package luatex.def Info: Gantt2.png  used on input line 2109.
+Package luatex.def Info: Gantt2.png  used on input line 2108.
 (luatex.def)             Requested size: 418.25368pt x 151.93156pt.
 
-Underfull \hbox (badness 10000) in paragraph at lines 2114--2115
+Underfull \hbox (badness 10000) in paragraph at lines 2113--2114
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 2116--2117
+Underfull \hbox (badness 10000) in paragraph at lines 2115--2116
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 2118--2119
+Underfull \hbox (badness 10000) in paragraph at lines 2117--2118
 
  []
 
 [28<./Gantt2.png>]
-Underfull \hbox (badness 10000) in paragraph at lines 2152--2153
+Underfull \hbox (badness 10000) in paragraph at lines 2151--2152
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 2154--2155
+Underfull \hbox (badness 10000) in paragraph at lines 2153--2154
 
  []
 
 [29]
-Underfull \hbox (badness 10000) in paragraph at lines 2163--2164
+Underfull \hbox (badness 10000) in paragraph at lines 2162--2163
 
  []
 
 [30] [31]
 
 LaTeX Warning: Citation 'jetbrains_rider' on page 32 undefined on input line 22
-03.
+02.
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 2215--2216
+Underfull \hbox (badness 10000) in paragraph at lines 2214--2215
 
  []
 
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `math shift' on input line 2217.
+(hyperref)                removing `math shift' on input line 2216.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `subscript' on input line 2217.
+(hyperref)                removing `subscript' on input line 2216.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `math shift' on input line 2217.
+(hyperref)                removing `math shift' on input line 2216.
 
 <courbes/benchmark_global_average_100.png, id=584, 1505.625pt x 1003.75pt>
 File: courbes/benchmark_global_average_100.png Graphic file (type png)
 <use courbes/benchmark_global_average_100.png>
 Package luatex.def Info: courbes/benchmark_global_average_100.png  used on inpu
-t line 2223.
+t line 2222.
 (luatex.def)             Requested size: 418.25368pt x 278.82727pt.
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 2228--2229
+Underfull \hbox (badness 10000) in paragraph at lines 2227--2228
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 2230--2231
+Underfull \hbox (badness 10000) in paragraph at lines 2229--2230
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 2232--2233
+Underfull \hbox (badness 10000) in paragraph at lines 2231--2232
 
  []
 
 [32]
-Underfull \hbox (badness 10000) in paragraph at lines 2251--2252
+Underfull \hbox (badness 10000) in paragraph at lines 2250--2251
 
  []
 
 [33<./courbes/benchmark_global_average_100.png>]
-Underfull \hbox (badness 10000) in paragraph at lines 2253--2254
+Underfull \hbox (badness 10000) in paragraph at lines 2252--2253
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 2255--2256
+Underfull \hbox (badness 10000) in paragraph at lines 2254--2255
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 2257--2258
+Underfull \hbox (badness 10000) in paragraph at lines 2256--2257
 
  []
 
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `math shift' on input line 2261.
+(hyperref)                removing `math shift' on input line 2260.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `subscript' on input line 2261.
+(hyperref)                removing `subscript' on input line 2260.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `math shift' on input line 2261.
+(hyperref)                removing `math shift' on input line 2260.
 
 <courbes/benchmark_global_average_500.png, id=599, 1505.625pt x 1003.75pt>
 File: courbes/benchmark_global_average_500.png Graphic file (type png)
 <use courbes/benchmark_global_average_500.png>
 Package luatex.def Info: courbes/benchmark_global_average_500.png  used on inpu
-t line 2265.
+t line 2264.
 (luatex.def)             Requested size: 418.25368pt x 278.82727pt.
 [34<./courbes/benchmark_global_average_500.png>]
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `math shift' on input line 2270.
+(hyperref)                removing `math shift' on input line 2269.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `subscript' on input line 2270.
+(hyperref)                removing `subscript' on input line 2269.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `math shift' on input line 2270.
+(hyperref)                removing `math shift' on input line 2269.
 
 
 LaTeX Warning: Citation 'chen2022maximumflowminimumcostflow' on page 35 undefin
-ed on input line 2280.
+ed on input line 2279.
 
 
-Overfull \hbox (171.80756pt too wide) in paragraph at lines 2280--2281
+Overfull \hbox (171.80756pt too wide) in paragraph at lines 2279--2280
 \TU/lmr/bx/sc/10 Spin-rad, Sun et Wang \TU/lmr/m/n/10 en 2020 marque une per-c
 ée dans l’op-ti-mi-sa-tion du flot maxi-mal[[]].
  []
 
 Package mdframed Info: mdframed detected package amsthm 
  changed the theorem header of amsthm
-(mdframed)              on input line 2293.
+(mdframed)              on input line 2292.
 
 LaTeX Warning: Citation 'gao2021fullydynamicelectricalflows' on page 35 undefin
-ed on input line 2299.
+ed on input line 2298.
 
 
-Overfull \hbox (0.14586pt too wide) in paragraph at lines 2307--2307
+Overfull \hbox (0.14586pt too wide) in paragraph at lines 2306--2306
 []\TU/lmr/bx/n/12 Al-go-rithme de Chen, Kyng, Liu, Peng, Gu-ten-berg, Sa-ch-deva
  (2022) 
  []
@@ -2426,16 +2422,16 @@ Overfull \hbox (0.14586pt too wide) in paragraph at lines 2307--2307
 [35]
 
 LaTeX Warning: Citation 'chen2022maximumflowminimumcostflow' on page 36 undefin
-ed on input line 2311.
+ed on input line 2310.
 
 
-Overfull \hbox (141.55742pt too wide) in paragraph at lines 2311--2312
+Overfull \hbox (141.55742pt too wide) in paragraph at lines 2310--2311
 \TU/lmr/m/n/10 dans un graphe ré-si-duel, ré-solu par une suc-ces-sion de sys-
 tèmes li-néaires ap-pro-chés[[]].
  []
 
 
-LaTeX Warning: Empty bibliography on input line 2324.
+LaTeX Warning: Empty bibliography on input line 2323.
 
 [36] (./rapport.aux)
  ***********
@@ -2471,7 +2467,7 @@ Here is how much of LuaTeX's memory you used:
    9 hlist, 2 vlist, 2 rule, 522 glue, 4 kern, 1 penalty, 2 glyph, 1953 attribut
 e, 111 glue_spec, 281 attribute_list, 2 write, 1 pdf_action, 2 pdf_colorstack no
 des
-   avail lists: 1:14,2:25320,3:3996,4:182,5:532,6:137,7:7922,8:52,9:1514,10:22,1
+   avail lists: 1:14,2:25320,3:3995,4:182,5:532,6:137,7:7922,8:52,9:1514,10:22,1
 1:644,12:1
  71112 multiletter control sequences out of 65536+600000
  80 fonts using 6199999 bytes
@@ -2506,7 +2502,7 @@ fonts/type1/public/amsfonts/cm/cmr7.pfb><C:/Users/Marie/AppData/Local/Programs/M
 iKTeX/fonts/type1/public/amsfonts/cm/cmsy10.pfb><C:/Users/Marie/AppData/Local/Pr
 ograms/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy7.pfb><C:/Users/Marie/AppData/L
 ocal/Programs/MiKTeX/fonts/type1/public/amsfonts/symbols/msbm10.pfb>
-Output written on rapport.pdf (39 pages, 633591 bytes).
+Output written on rapport.pdf (39 pages, 633334 bytes).
 
 PDF statistics: 745 PDF objects out of 1000 (max. 8388607)
  162 named destinations out of 1000 (max. 131072)

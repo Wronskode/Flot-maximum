@@ -1051,12 +1051,14 @@ Finalement la coupe minimale de ce réseau est l'ensemble $\{S,A,C\}$ et son flo
 L'algorithme de Poussage-Réétiquetage (ou Push-Relabel en anglais) est l'un des algorithmes les plus efficaces pour calculer un flot maximum. \\
 
 \subsubsection{Algorithme}
+
+Pour la suite, nous avons besoin de noter $r(u,v)=c(u,v)-f(u,v)$ qui correspond à la quantité de flot qu'on peut encore faire passer par l'arc $(u,v)$.\\
 \begin{algorithm}[H]
 	\caption{Algorithme de Poussage}
 	\textbf{Entrée :} Un arc $(u,v)$ \\
 	\textbf{Sortie :} Aucune
 	\begin{algorithmic}[1]
-		\State $m = \min(ex(u), r(u,v)=c(u,v)-f(u,v))$
+		\State $m = \min(ex(u), r(u,v))$
 		\State $ex(u) \gets ex(u) - m$
 		\State $ex(v) \gets ex(v) + m$
 		\State $f(u,v) \gets f(u,v) + m$

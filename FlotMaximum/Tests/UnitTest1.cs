@@ -54,7 +54,7 @@ public class Tests
         for (int i = 0; i < 1000; i++)
         {
             RandomFlowNetwork randomFlow = new(100, 1000);
-            var nf = randomFlow.Generate();
+            var nf = randomFlow.Generategit ();
             var val = nf.FordFulkerson();
             var val2 = nf.EdmondsKarp();
             var val3 = PL.SolveWithGurobi(nf);

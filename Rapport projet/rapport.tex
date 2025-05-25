@@ -2295,7 +2295,7 @@ Les premières courbes obtenues confirment clairement les écarts de complexité
 
 À l'inverse, des algorithmes plus avancés comme Dinic ou le Poussage-Réétiquetage, reconnus pour leur meilleure complexité théorique, se distinguent par une meilleure scalabilité. Leur temps d'exécution croît de manière bien plus modérée, ce qui les rend plus adaptés aux grands graphes.\\
 
-Concernant les solveurs de type PLNE, tels que Gurobi et SCIP, une différence de performance nette se dégage. SCIP s’avère significativement plus lent : il est environ deux fois plus long que l’algorithme de Poussage-Réétiquetage et jusqu’à dix fois plus lent que Dinic. À l’inverse, Gurobi offre des performances remarquables, surpassant l’ensemble des autres méthodes, y compris les algorithmes les plus puissants. Cela s’explique notamment par la sophistication de son infrastructure logicielle : Gurobi repose sur un moteur d’optimisation hautement performant, mais en grande partie opaque, fonctionnant comme une \og{}boîte noire\fg{}. À l’opposé, SCIP semble adopter une approche plus basique, plus proche d’une résolution manuelle d’un système linéaire, sans optimisation poussée des données ni techniques avancées de réduction du problème. De plus, il convient de noter que le temps d’exécution des solveurs de type PLNE inclut non seulement la résolution du programme linéaire, mais aussi la phase de modélisation du graphe en tant que programme linéaire. Cette conversion reste cependant peu coûteuse, comme en témoignent les excellentes performances de Gurobi. En effet, si cette phase de modélisation prenait le pas sur la résolution elle-même, Gurobi et SCIP présenteraient des temps d’exécution similaires à mesure que la taille des instances augmente. Ce n'est cependant pas le cas, on peut donc bien dire que les resultats obtenus témoigne bien de la complexité de résolution du système.\\
+Concernant les solveurs de type PLNE, tels que Gurobi et SCIP, une différence de performance nette se dégage. SCIP s’avère significativement plus lent : il est environ deux fois plus long que l’algorithme de Poussage-Réétiquetage et jusqu’à dix fois plus lent que Dinic. À l’inverse, Gurobi offre des performances remarquables, surpassant l’ensemble des autres méthodes, y compris les algorithmes les plus puissants. Cela s’explique notamment par la sophistication de son infrastructure logicielle : Gurobi repose sur un moteur d’optimisation hautement performant, mais en grande partie opaque, fonctionnant comme une \og{}boîte noire\fg{}. À l’opposé, SCIP semble adopter une approche plus basique, plus proche d’une résolution manuelle d’un système linéaire, sans optimisation poussée des données ni techniques avancées de réduction du problème. De plus, il convient de noter que le temps d’exécution des solveurs de type PLNE inclut non seulement la résolution du programme linéaire, mais aussi la phase de modélisation du graphe en tant que programme linéaire. Cette conversion reste cependant peu coûteuse, comme en témoignent les excellentes performances de Gurobi. En effet, si cette phase de modélisation prenait le pas sur la résolution elle-même, Gurobi et SCIP présenteraient des temps d’exécution similaires à mesure que la taille des instances augmente. Ce n'est cependant pas le cas, on peut donc bien dire que les resultats obtenus témoignent bien de la complexité de résolution du système.\\
 
 On peut constater que les résultats sont en parfaite adéquation avec la littérature algorithmique, validant ainsi notre implémentation et notre protocole expérimental.
 
@@ -2305,7 +2305,7 @@ On peut constater que les résultats sont en parfaite adéquation avec la litté
 \begin{figure}[H]
     \centering
     \includegraphics[width=1\textwidth]{courbes/benchmark_global_average_500.png}
-    \caption{Temps de convergence en fonction du nombre de sommets avec $n_{max} = 100$}
+    \caption{Temps de convergence en fonction du nombre de sommets avec $n_{max} = 500$}
     \label{fig:example}
 \end{figure}
 
@@ -2313,7 +2313,7 @@ Sur cette seconde courbe (jusqu’à 500 nœuds), on observe de manière encore 
 
 Poussage-Réétiquetage devient très coûteux en temps à partir d’environ 300 sommets. Son temps d'exécution explose, atteignant plus de 20 secondes pour 500 nœuds. Cela reflète les limites pratiques de cet algorithme sur des instances plus grandes, malgré sa bonne complexité théorique. Dinic conserve une progression régulière, avec un temps d'exécution qui augmente de manière maîtrisée. Il s'agit donc d’une méthode performante et stable sur des graphes de taille moyenne à grande. Gurobi, encore une fois, se démarque nettement : son temps d’exécution reste très faible, quasiment constant jusqu’à 500 sommets. Cela démontre la puissance de son moteur d’optimisation, capable de traiter efficacement de grands graphes en très peu de temps.
 
-\subsection{Avec $n_{max} = 2000$}
+\subsection{Temps de convergence en fonction du nombre de sommets avec $n_{max} = 2000$}
 
 \begin{figure}[H]
     \centering

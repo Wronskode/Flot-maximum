@@ -1,4 +1,4 @@
-This is LuaHBTeX, Version 1.21.0 (MiKTeX 25.2) (format=lualatex 2025.3.20)  25 MAY 2025 21:49
+This is LuaHBTeX, Version 1.21.0 (MiKTeX 25.2) (format=lualatex 2025.3.20)  25 MAY 2025 23:32
  restricted system commands enabled.
  file:line:error style messages enabled.
 **"c:/Users/adrie/Desktop/Master/S8/TER/Rapport/Flot-maximum/Rapport projet/rap
@@ -2508,7 +2508,7 @@ Underfull \hbox (badness 10000) in paragraph at lines 2383--2384
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 2389--2390
+Underfull \hbox (badness 10000) in paragraph at lines 2385--2386
 
  []
 
@@ -2516,22 +2516,22 @@ Underfull \hbox (badness 10000) in paragraph at lines 2389--2390
 
 [38<./courbes/benchmark0,3_100.png><./courbes/benchmark0,5_100.png><./courbes/be
 nchmark0,7_100.png><./courbes/benchmark0,9_100.png>]
-Package mdframed Info: mdframed detected package amsthm 
- changed the theorem header of amsthm
-(mdframed)              on input line 2415.
+Underfull \hbox (badness 10000) in paragraph at lines 2391--2392
+
+ []
+
 
 
 [39
 Missing character: There is no   (U+202F) in font [lmroman10-regular]:+tlig;!
 ]
-Overfull \hbox (0.14586pt too wide) in paragraph at lines 2428--2428
+Package mdframed Info: mdframed detected package amsthm 
+ changed the theorem header of amsthm
+(mdframed)              on input line 2417.
+
+Overfull \hbox (0.14586pt too wide) in paragraph at lines 2430--2430
 []\TU/lmr/bx/n/12 Al-go-rithme de Chen, Kyng, Liu, Peng, Gu-ten-berg, Sa-ch-deva
  (2022) 
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 2444--2445
-
  []
 
 
@@ -2540,15 +2540,22 @@ Underfull \hbox (badness 10000) in paragraph at lines 2446--2447
  []
 
 
+
+[40]
 Underfull \hbox (badness 10000) in paragraph at lines 2448--2449
 
  []
 
 
+Underfull \hbox (badness 10000) in paragraph at lines 2450--2451
 
-[40]
+ []
 
-[41] (./rapport.aux)
+
+
+[41]
+
+[42] (./rapport.aux)
  ***********
 LaTeX2e <2024-11-01> patch level 2
 L3 programming layer <2025-01-18>
@@ -2568,13 +2575,13 @@ Package logreq Info: Writing requests to 'rapport.run.xml'.
 )
 
 Here is how much of LuaTeX's memory you used:
- 52207 strings out of 475506
+ 52208 strings out of 475506
  195343,2373549 words of node,token memory allocated
- 9909 words of node memory still in use:
-   7 hlist, 2 vlist, 2 rule, 584 glue, 4 kern, 1 penalty, 2 glyph, 2191 attribut
-e, 113 glue_spec, 315 attribute_list, 2 write, 6 pdf_action nodes
-   avail lists: 1:15,2:26647,3:4843,4:179,5:533,6:160,7:7792,8:66,9:1804,10:29,1
-1:634,12:1
+ 9939 words of node memory still in use:
+   7 hlist, 2 vlist, 2 rule, 586 glue, 4 kern, 1 penalty, 2 glyph, 2198 attribut
+e, 113 glue_spec, 316 attribute_list, 2 write, 6 pdf_action nodes
+   avail lists: 1:15,2:26640,3:4843,4:179,5:533,6:159,7:7987,8:66,9:1804,10:29,1
+1:658,12:1
  73794 multiletter control sequences out of 65536+600000
  87 fonts using 6618103 bytes
  89i,13n,128p,1676b,2753s stack positions out of 10000i,1000n,20000p,200000b,200000s
@@ -2610,9 +2617,9 @@ sers/adrie/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr9.pfb
 sy10.pfb><C:/Users/adrie/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfon
 ts/cm/cmsy7.pfb><C:/Users/adrie/AppData/Local/Programs/MiKTeX/fonts/type1/public
 /amsfonts/symbols/msbm10.pfb>
-Output written on rapport.pdf (44 pages, 1082578 bytes).
+Output written on rapport.pdf (45 pages, 1084295 bytes).
 
-PDF statistics: 875 PDF objects out of 1000 (max. 8388607)
- 184 named destinations out of 1000 (max. 131072)
+PDF statistics: 880 PDF objects out of 1000 (max. 8388607)
+ 185 named destinations out of 1000 (max. 131072)
  624 words of extra memory for PDF output out of 10000 (max. 100000000)
 

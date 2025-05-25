@@ -1,17 +1,17 @@
 [0] Config.pm:308> INFO - This is Biber 2.20
-[0] Config.pm:311> INFO - Logfile is 'rapport.blg'
-[160] biber-MSWIN64:340> INFO - === 
-[208] Biber.pm:420> INFO - Reading 'rapport.bcf'
-[353] Biber.pm:994> INFO - Found 10 citekeys in bib section 0
-[374] Biber.pm:4463> INFO - Processing section 0
-[395] Biber.pm:4654> INFO - Looking for bibtex file 'biblio.bib' for section 0
-[447] bibtex.pm:1713> INFO - LaTeX decoding ...
-[469] bibtex.pm:1519> INFO - Found BibTeX data source 'biblio.bib'
-[606] UCollate.pm:68> INFO - Overriding locale 'fr-FR' defaults 'normalization = NFD' with 'normalization = prenormalized'
-[606] UCollate.pm:68> INFO - Overriding locale 'fr-FR' defaults 'variable = shifted' with 'variable = non-ignorable'
-[607] Biber.pm:4283> INFO - Sorting list 'nty/global//global/global/global' of type 'entry' with template 'nty' and locale 'fr-FR'
-[607] Biber.pm:4289> INFO - No sort tailoring available for locale 'fr-FR'
-[630] bbl.pm:676> INFO - Writing 'rapport.bbl' with encoding 'UTF-8'
-[640] bbl.pm:779> INFO - Output to rapport.bbl
-[641] Biber.pm:131> WARN - Duplicate entry key: 'chen2022maximumflowminimumcostflow' in file 'biblio.bib', skipping ...
-[641] Biber.pm:133> INFO - WARNINGS: 1
+[1] Config.pm:311> INFO - Logfile is 'rapport.blg'
+[164] biber-MSWIN64:340> INFO - === 
+[216] Biber.pm:420> INFO - Reading 'rapport.bcf'
+[361] Biber.pm:994> INFO - Found 10 citekeys in bib section 0
+[382] Biber.pm:4463> INFO - Processing section 0
+[403] Biber.pm:4654> INFO - Looking for bibtex file 'biblio.bib' for section 0
+[470] bibtex.pm:1713> INFO - LaTeX decoding ...
+[495] bibtex.pm:1519> INFO - Found BibTeX data source 'biblio.bib'
+[618] UCollate.pm:68> INFO - Overriding locale 'fr-FR' defaults 'variable = shifted' with 'variable = non-ignorable'
+[618] UCollate.pm:68> INFO - Overriding locale 'fr-FR' defaults 'normalization = NFD' with 'normalization = prenormalized'
+[619] Biber.pm:4283> INFO - Sorting list 'nty/global//global/global/global' of type 'entry' with template 'nty' and locale 'fr-FR'
+[619] Biber.pm:4289> INFO - No sort tailoring available for locale 'fr-FR'
+[641] bbl.pm:676> INFO - Writing 'rapport.bbl' with encoding 'UTF-8'
+[649] bbl.pm:779> INFO - Output to rapport.bbl
+[649] Biber.pm:131> WARN - Duplicate entry key: 'chen2022maximumflowminimumcostflow' in file 'biblio.bib', skipping ...
+[650] Biber.pm:133> INFO - WARNINGS: 1

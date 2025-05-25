@@ -2380,9 +2380,11 @@ Quelques tests ont également été effectués sur des instances de très grande
     \label{fig:group}
 \end{figure}
 
-Les expérimentations ont été menées sur des graphes de densités variées, allant de très clairsemés à fortement connectés. Un constat remarquable est que, malgré ces variations structurelles, l’ordre de performance entre les algorithmes reste strictement inchangé. Autrement dit, quel que soit le nombre d’arêtes dans les graphes, les algorithmes les plus rapides conservent leur avance, tandis que les plus lents restent en queue de classement.\\
+Les expérimentations ont été menées sur des graphes de densités variées, allant de très clairsemés à fortement connectés. Un constat remarquable est que, malgré ces variations structurelles, l’ordre de performance entre les algorithmes reste inchangé. Autrement dit, quel que soit le nombre d’arêtes dans les graphes, les algorithmes les plus rapides conservent leur avance, tandis que les plus lents restent en queue de classement.\\
 
-Ce phénomène témoigne d’une certaine robustesse des méthodes évaluées : leur comportement asymptotique est gouverné principalement par leur complexité algorithmique propre, et non par des variations contextuelles comme la densité du graphe. Cela renforce la pertinence de cette comparaison expérimentale, en montrant que les écarts de performance sont structurels et non accidentels.
+Ce phénomène témoigne d’une certaine robustesse des méthodes évaluées : leur comportement asymptotique est gouverné principalement par leur complexité algorithmique propre, et non par des variations contextuelles comme la densité du graphe. Cela renforce la pertinence de cette comparaison expérimentale, en montrant que les écarts de performance sont structurels et non accidentels.\\
+
+On aperçoit tout de même quelques petites irrégularités, dans les courbes $(a)$ et $(b)$ pour l’algorithme de Poussage-Réétiquetage, qui présente des fluctuations locales inhabituelles par rapport à la tendance générale. Ce comportement peut s’expliquer par la structure particulière de certains graphes : densité, répartition des capacités, ou encore position de la source et du puits influencent directement l’efficacité de cet algorithme fondé sur des opérations locales. Toutefois, comme le montrent les résultats des sections précédentes, ces irrégularités sont très isolées. Lorsqu’on moyenne les temps d’exécution sur un grand nombre d’instances aléatoires, la courbe retrouve un aspect régulier et croissant.
 
 \subsection{Observation générale}
 

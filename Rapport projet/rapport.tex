@@ -2264,13 +2264,11 @@ Afin de pouvoir commencer notre analyse nous présentons d'abord ce premier grap
 \begin{figure}[h]
     \centering
     \includegraphics[width=1\textwidth]{courbes/benchmark_global_average_100.png}
-    \caption{Premier graphique - $n_{max} = 100$}
+    \caption{Temps de convergence en fonction du nombre de sommets avec $n_{max} = 100$}
     \label{fig:example}
 \end{figure}
 
 Cette première figure représente les performances de tous les algorithmes de flot maximum que nous avons implémentés. pour chaque point du graphe, nous avons fait la moyenne sur toutes les instances de même taille. Il y a ainsi 8 tailles différentes, de 30 à 200, on a donc $n \in \left\{30, 40, 50, 60, 70, 80, 90, 100, 120, 150, 200\right\}$, et pour chaque taille nous avons 4 densités différentes avec $d \in \left\{0.3, 0.5, 0.7, 0.9\right\}$ nous avons enfin 5 instances par densité. Chaque point est donc la moyenne de 20 instances.\\
-
-Nous pouvons donc constater le graphe ne présente aucune irrégularité, tester sur autant d'instances permet en effet d'harmoniser et de trouver un résultat proche de ce que l'on attend en étudiant la complexité théorique.\\
 
 Pour cette première figure nous ne dépassons pas $n = 100$ car au delà de cette taille, les algorithmes de Ford-Fulkerson et d'Edmonds-Karp deviennent trop lents prendraient trop de temps pour converger. Aussi leurs comparaisons avec les autres algorithmes ne seraient pas pertinentes. Les autres courbes se confondraient en bas du graphique pendant que Ford-Fulkerson et Edmonds-Karp exploseraient. Nous etudierons donc les algorithmes de flot maximum sur des graphes de taille supérieure séparement.\\
 
@@ -2291,23 +2289,23 @@ Afin de commenter ces courbes, nous rappelons d'abord la complexité théorique 
 	\caption{Récapitulatif des algorithmes de flot maximum}
 \end{table}
 
+Nous pouvons constater le graphe ne présente aucune irrégularité, tester sur autant d'instances permet en effet d'harmoniser et de trouver un résultat proche de ce que l'on attend en étudiant la complexité théorique.\\
+
 Les premières courbes obtenues confirment clairement les écarts de complexité algorithmique entre les différentes méthodes étudiées. On observe que chaque algorithme occupe une position cohérente sur la courbe, en accord avec sa complexité théorique. Les approches naïves, telles que Ford-Fulkerson ou Edmonds-Karp, présentent une croissance rapide du temps d'exécution à mesure que la taille des graphes augmente, ce qui reflète leur complexité plus élevée.\\
 
 À l'inverse, des algorithmes plus avancés comme Dinic ou le Poussage-Réétiquetage, reconnus pour leur meilleure complexité théorique, se distinguent par une meilleure scalabilité. Leur temps d'exécution croît de manière bien plus modérée, ce qui les rend plus adaptés aux grands graphes.\\
 
-Concernant les solveurs de type PLNE, tels que Gurobi et SCIP, une différence de performance nette se dégage. SCIP s’avère significativement plus lent : il est environ deux fois plus long que l’algorithme de Poussage-Réétiquetage et jusqu’à dix fois plus lent que Dinic. À l’inverse, Gurobi offre des performances remarquables, surpassant l’ensemble des autres méthodes, y compris les algorithmes les plus puissants.\\
+Concernant les solveurs de type PLNE, tels que Gurobi et SCIP, une différence de performance nette se dégage. SCIP s’avère significativement plus lent : il est environ deux fois plus long que l’algorithme de Poussage-Réétiquetage et jusqu’à dix fois plus lent que Dinic. À l’inverse, Gurobi offre des performances remarquables, surpassant l’ensemble des autres méthodes, y compris les algorithmes les plus puissants. Cela s’explique notamment par la sophistication de son infrastructure logicielle : Gurobi repose sur un moteur d’optimisation hautement performant, mais en grande partie opaque, fonctionnant comme une \og{}boîte noire\fg{}. À l’opposé, SCIP semble adopter une approche plus basique, plus proche d’une résolution manuelle d’un système linéaire, sans optimisation poussée des données ni techniques avancées de réduction du problème. De plus, il convient de noter que le temps d’exécution des solveurs de type PLNE inclut non seulement la résolution du programme linéaire, mais aussi la phase de modélisation du graphe en tant que programme linéaire. Cette conversion reste cependant peu coûteuse, comme en témoignent les excellentes performances de Gurobi. En effet, si cette phase de modélisation prenait le pas sur la résolution elle-même, Gurobi et SCIP présenteraient des temps d’exécution similaires à mesure que la taille des instances augmente. Ce n'est cependant pas le cas, on peut donc bien dire que les resultats obtenus témoigne bien de la complexité de résolution du système.\\
 
-Cela s’explique notamment par la sophistication de son infrastructure logicielle : Gurobi repose sur un moteur d’optimisation hautement performant, mais en grande partie opaque, fonctionnant comme une \og{}boîte noire\fg{}. À l’opposé, SCIP semble adopter une approche plus basique, plus proche d’une résolution manuelle d’un système linéaire, sans optimisation poussée des données ni techniques avancées de réduction du problème.\\
-
-Ces résultats sont en parfaite adéquation avec la littérature algorithmique, validant ainsi notre implémentation et notre protocole expérimental.
+On peut constater que les résultats sont en parfaite adéquation avec la littérature algorithmique, validant ainsi notre implémentation et notre protocole expérimental.
 
 
 \subsection{Avec $n_{max} = 500$}
 
-\begin{figure}[h]
+\begin{figure}[H]
     \centering
     \includegraphics[width=1\textwidth]{courbes/benchmark_global_average_500.png}
-    \caption{Premier graphique - $n_{max} = 100$}
+    \caption{Temps de convergence en fonction du nombre de sommets avec $n_{max} = 100$}
     \label{fig:example}
 \end{figure}
 
@@ -2317,6 +2315,14 @@ Poussage-Réétiquetage devient très coûteux en temps à partir d’environ 30
 
 \subsection{Avec $n_{max} = 2000$}
 
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{courbes/benchmark0,7_2000.png}
+    \caption{Premier graphique - $n_{max} = 2000$}
+    \label{fig:example}
+\end{figure}
+
+Quelques tests ont également été effectués sur des instances de très grande taille, comportant jusqu’à 2000 sommets. On aura pu comparer uniquement l'algorithmes de Dinic et le solver Gurobi, car les autres algorithmes deviennent trop lents pour converger sur des instances de cette taille en temps raisonnable. Bien que l’algorithme de Dinic, reconnu pour son efficacité, parvienne à résoudre ces instances, il nécessite tout de même plusieurs minutes d’exécution. À l’inverse, Gurobi continue de se distinguer par sa rapidité, ne mettant que quelques secondes pour atteindre une solution, même sur ces très grandes tailles.\\
 
 \subsection{Densités spécificiques}
 
@@ -2353,7 +2359,7 @@ Poussage-Réétiquetage devient très coûteux en temps à partir d’environ 30
     \label{fig:group}
 \end{figure}
 
-Les expérimentations ont été menées sur des graphes de densités variées, allant de très clairsemés à fortement connectés. Un constat remarquable est que, malgré ces variations structurelles, l’ordre de performance entre les algorithmes reste strictement inchangé. Autrement dit, quel que soit le nombre d’arêtes dans les graphes, les algorithmes les plus rapides conservent leur avance, tandis que les plus lents restent en queue de classement.
+Les expérimentations ont été menées sur des graphes de densités variées, allant de très clairsemés à fortement connectés. Un constat remarquable est que, malgré ces variations structurelles, l’ordre de performance entre les algorithmes reste strictement inchangé. Autrement dit, quel que soit le nombre d’arêtes dans les graphes, les algorithmes les plus rapides conservent leur avance, tandis que les plus lents restent en queue de classement.\\
 
 Ce phénomène témoigne d’une certaine robustesse des méthodes évaluées : leur comportement asymptotique est gouverné principalement par leur complexité algorithmique propre, et non par des variations contextuelles comme la densité du graphe. Cela renforce la pertinence de cette comparaison expérimentale, en montrant que les écarts de performance sont structurels et non accidentels.
 
@@ -2361,7 +2367,7 @@ Ce phénomène témoigne d’une certaine robustesse des méthodes évaluées : 
 
 Parmi les différents algorithmes évalués pour résoudre le problème de flot maximum, les résultats expérimentaux montrent des écarts de performance marqués, directement liés à leurs principes algorithmiques. Ford-Fulkerson est de loin le plus lent : son approche naïve par chemins augmentants sans stratégie d’optimisation le rend peu adapté aux grandes instances. Edmonds-Karp améliore légèrement la situation grâce à l’utilisation de chemins les plus courts, mais reste limité par une complexité en O(VE²). Vient ensuite SCIP, un solveur généraliste de programmation linéaire, qui reste moins performant qu’on ne pourrait l’attendre, probablement en raison d’un manque d’optimisation spécifique pour ce type de problème.\\
 
-En revanche, l’algorithme de poussage-réétiquetage se révèle bien plus efficace : en se basant sur des opérations locales et une gestion intelligente des hauteurs, il limite considérablement le nombre de recalculs. Dinic fait encore mieux grâce à sa stratégie basée sur les niveaux et les envois de flots par bloc, ce qui le rend particulièrement performant, même sur de grandes tailles. Enfin, Gurobi, grâce à ses techniques d’optimisation industrielles et son efficacité dans la résolution des modèles linéaires, se démarque comme le plus rapide dans ces tests.
+En revanche, l’algorithme de poussage-réétiquetage se révèle bien plus efficace : en se basant sur des opérations locales et une gestion intelligente des hauteurs, il limite considérablement le nombre de recalculs. Dinic fait encore mieux grâce à sa stratégie basée sur les niveaux et les envois de flots par blocs, ce qui le rend particulièrement performant, même sur de grandes tailles. Il s'agit du seul algorithme de résolution implémenté (hors programmation linéaire) capable de s'exécuter en un temps raisonnable sur des instances de très grande taille. Enfin, Gurobi, grâce à ses techniques d’optimisation industrielles et son efficacité dans la résolution des modèles linéaires, se démarque comme le plus rapide dans ces tests.
 
 
 

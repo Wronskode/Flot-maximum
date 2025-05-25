@@ -12,16 +12,8 @@ public static class PL
         foreach (var edge in flowNetwork.Edges)
         {
             var (u, v) = edge.Key; // u et v sont les sommets
-            Variable var = solver.MakeNumVar(0.0, double.PositiveInfinity, $"x_{u}_{v}");
+            Variable var = solver.MakeNumVar(0.0, edge.Value, $"x_{u}_{v}");
             variablesDic[(u, v)] = var;
-        }
-        
-        foreach (var edge in flowNetwork.Edges)
-        {
-            var (u, v) = edge.Key; // u et v sont les sommets
-            int poids = edge.Value;
-            Constraint constraint = solver.MakeConstraint(0, poids);
-            constraint.SetCoefficient(variablesDic[(u, v)], 1);
         }
         
         foreach (Vertex v in flowNetwork.AdjVertices.Keys)

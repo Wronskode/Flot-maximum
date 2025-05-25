@@ -2313,12 +2313,12 @@ Sur cette seconde courbe (jusqu’à 500 nœuds), on observe de manière encore 
 
 Poussage-Réétiquetage devient très coûteux en temps à partir d’environ 300 sommets. Son temps d'exécution explose, atteignant plus de 20 secondes pour 500 nœuds. Cela reflète les limites pratiques de cet algorithme sur des instances plus grandes, malgré sa bonne complexité théorique. Dinic conserve une progression régulière, avec un temps d'exécution qui augmente de manière maîtrisée. Il s'agit donc d’une méthode performante et stable sur des graphes de taille moyenne à grande. Gurobi, encore une fois, se démarque nettement : son temps d’exécution reste très faible, quasiment constant jusqu’à 500 sommets. Cela démontre la puissance de son moteur d’optimisation, capable de traiter efficacement de grands graphes en très peu de temps.
 
-\subsection{Temps de convergence en fonction du nombre de sommets avec $n_{max} = 2000$}
+\subsection{Avec $n_{max} = 500$}
 
 \begin{figure}[H]
     \centering
     \includegraphics[width=1\textwidth]{courbes/benchmark0,7_2000.png}
-    \caption{Premier graphique - $n_{max} = 2000$}
+    \caption{Temps de convergence en fonction du nombre de sommets avec $n_{max} = 2000$}
     \label{fig:example}
 \end{figure}
 

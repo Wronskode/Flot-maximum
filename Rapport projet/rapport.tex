@@ -2440,5 +2440,14 @@ Leur travail fait partie d’une série d’efforts visant à transposer les mé
 Ces algorithmes récents montrent qu’il est désormais possible d’approcher la complexité quasi-linéaire pour le problème de flot maximal, dans certains modèles. Toutefois, leur complexité théorique s’accompagne souvent d’une complexité d’implémentation élevée, ce qui limite leur adoption dans les applications courantes.
 
 \section{Conclusion et Perspectives}
+
+Nous avons étudié en profondeur le problème du flot maximum, un problème central en algorithmique et en recherche opérationnelle, aux applications nombreuses et variées. Nous avons présenté plusieurs approches classiques de résolution, parmi lesquelles les algorithmes de Ford-Fulkerson, Edmonds-Karp, Dinic et Poussage-Réétiquetage, ainsi qu’une modélisation via la programmation linéaire.\\
+
+Nos travaux théoriques ont mis en évidence les forces et limites de chaque méthode, tant sur le plan de la complexité algorithmique que sur leur adaptabilité aux différentes structures de graphes. Les expérimentations menées sur des graphes générés aléatoirement ont confirmé ces analyses. En particulier, les algorithmes de Dinic et de Poussage-Réétiquetage se sont montrés très performants, notamment sur des graphes de grande taille ou à forte densité.\\
+
+Par ailleurs, l’utilisation de la programmation linéaire, rendue efficace grâce à la structure totalement unimodulaire de la matrice associée au problème, offre une alternative élégante et puissante, notamment lorsque des solveurs spécialisés sont disponibles.\\
+
+En définitive, le choix de la méthode de résolution dépendra largement du contexte : taille et densité du graphe, exigences en temps réel, ou encore contraintes d’implémentation. Dans un environnement contraint ou pour des cas particuliers, les algorithmes classiques restent pertinents et efficaces. Néanmoins, lorsqu’on dispose de ressources avancées telles qu’un solveur comme Gurobi, la programmation linéaire devient une solution particulièrement compétitive, combinant précision, rapidité et garantie d’intégralité grâce aux propriétés structurelles du problème. Enfin, ce travail ouvre la voie à plusieurs prolongements : l’étude d’algorithmes plus récents, l’intégration d’heuristiques hybrides, ou encore l’exploitation du calcul parallèle pour traiter des instances à très grande échelle.
+
 \printbibliography[heading=bibintoc]
 \end{document}

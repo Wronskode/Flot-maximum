@@ -1049,6 +1049,13 @@ Finalement la coupe minimale de ce réseau est l'ensemble $\{S,A,C\}$ et son flo
 
 \subsubsection{Motivations et historique}
 
+L’algorithme de poussage-réétiquetage, ou \emph{Push-Relabel}, a été introduit par Andrew V. Goldberg et Robert E. Tarjan en 1986~\cite{goldberg1988new}. Il a été conçu comme une alternative aux algorithmes à base de chemins augmentants, tels que Ford-Fulkerson ou Edmonds-Karp, afin de résoudre le problème du flot maximum de manière plus efficace, notamment sur les graphes très denses.
+
+Contrairement aux approches classiques qui cherchent à établir des chemins complets de la source vers le puits, l’algorithme de poussage-réétiquetage adopte une stratégie plus locale. Il fonctionne en maintenant un \emph{pré-flot}, où l’on autorise un excès temporaire de flot dans certains sommets. Le flot est progressivement déplacé vers le puits par des opérations de \textit{poussage} (push) et de \textit{réétiquetage} (relabel), en fonction de la hauteur assignée à chaque sommet, qui simule une estimation de la distance au puits.
+
+Cette approche a permis d’établir pour la première fois un algorithme de flot maximal avec une complexité polynomiale plus compétitive sur les graphes denses, notamment grâce à l’utilisation de structures de données adaptées. Depuis sa publication, l’algorithme a donné lieu à de nombreuses variantes et optimisations, dont certaines sont toujours utilisées dans les solveurs modernes.
+
+
 \subsubsection{Fonctionnement général}
 L'algorithme de Poussage-Réétiquetage (ou Push-Relabel en anglais) est l'un des algorithmes les plus efficaces pour calculer un flot maximum. \\
 

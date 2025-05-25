@@ -235,6 +235,51 @@
       \verb https://arxiv.org/abs/2101.07233
       \endverb
     \endentry
+    \entry{goldberg1988new}{article}{}{}
+      \name{author}{2}{}{%
+        {{hash=575546439bd6e9b2cbc49d9c92ced13f}{%
+           family={Goldberg},
+           familyi={G\bibinitperiod},
+           given={Andrew\bibnamedelima V.},
+           giveni={A\bibinitperiod\bibinitdelim V\bibinitperiod}}}%
+        {{hash=5db7b92ac36b92505a52cbe66bcce4d6}{%
+           family={Tarjan},
+           familyi={T\bibinitperiod},
+           given={Robert\bibnamedelima E.},
+           giveni={R\bibinitperiod\bibinitdelim E\bibinitperiod}}}%
+      }
+      \list{publisher}{1}{%
+        {ACM}%
+      }
+      \strng{namehash}{0c5f1d0c7d47338a0051a6ca3a2dfb2e}
+      \strng{fullhash}{0c5f1d0c7d47338a0051a6ca3a2dfb2e}
+      \strng{fullhashraw}{0c5f1d0c7d47338a0051a6ca3a2dfb2e}
+      \strng{bibnamehash}{0c5f1d0c7d47338a0051a6ca3a2dfb2e}
+      \strng{authorbibnamehash}{0c5f1d0c7d47338a0051a6ca3a2dfb2e}
+      \strng{authornamehash}{0c5f1d0c7d47338a0051a6ca3a2dfb2e}
+      \strng{authorfullhash}{0c5f1d0c7d47338a0051a6ca3a2dfb2e}
+      \strng{authorfullhashraw}{0c5f1d0c7d47338a0051a6ca3a2dfb2e}
+      \field{sortinit}{G}
+      \field{sortinithash}{32d67eca0634bf53703493fb1090a2e8}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Journal of the ACM (JACM)}
+      \field{number}{4}
+      \field{title}{A New Approach to the Maximum-Flow Problem}
+      \field{volume}{35}
+      \field{year}{1988}
+      \field{pages}{921\bibrangedash 940}
+      \range{pages}{20}
+      \verb{doi}
+      \verb 10.1145/48014.61051
+      \endverb
+      \verb{urlraw}
+      \verb https://dl.acm.org/doi/10.1145/48014.61051
+      \endverb
+      \verb{url}
+      \verb https://dl.acm.org/doi/10.1145/48014.61051
+      \endverb
+    \endentry
     \entry{GOLDSCHLAGER1982105}{article}{}{}
       \name{author}{3}{}{%
         {{hash=a21da9335bb84448526a9345b0f9159c}{%

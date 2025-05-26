@@ -75,4 +75,3 @@
 \contentsline {subsection}{\numberline {9.3}Algorithme de Chen, Kyng, Liu, Peng, Gutenberg, Sachdeva (2022)}{40}{subsection.9.3}%
 \contentsline {subsection}{\numberline {9.4}Conclusion}{40}{subsection.9.4}%
 \contentsline {section}{\numberline {10}Conclusion et Perspectives}{41}{section.10}%
-\contentsline {section}{R\'ef\'erences}{41}{section*.12}%

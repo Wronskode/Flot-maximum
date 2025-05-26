@@ -91,9 +91,9 @@ Rodolphe Giroudeau
 \end{center}
 \newpage
 \begin{abstract}	
-Le problème du flot maximum est un problème d'optimisation combinatoire classique en informatique et en recherche opérationnelle. Étant donné un réseau de flot, l'objectif est de déterminer la quantité maximale de flot qui peut être envoyée d'une source à un puits, tout en respectant les contraintes de capacité des arcs et de conservation du flot. Ce problème a de nombreuses applications pratiques, notamment dans la planification logistique, les réseaux de transport et les réseaux de communication. 
+Le problème du flot maximum est un problème d'optimisation combinatoire classique en informatique et en recherche opérationnelle. Étant donné un réseau de flot, l'objectif est de déterminer la quantité maximale de flots qui peut être envoyée d'une source à un puits, tout en respectant les contraintes de capacité des arcs et de conservation du flot. Ce problème a de nombreuses applications pratiques, notamment dans la planification logistique, les réseaux de transport et les réseaux de communication. 
 
-Dans ce travail, nous comparons différentes méthodes de résolution du problème du flot maximum.  Nous étudions les algorithmes classiques tels que Ford-Fulkerson, Edmonds-Karp, Poussage-Réétiquetage et Dinic, ainsi que des approches basées sur la programmation linéaire. Nous mettons en œuvre ces algorithmes et les testons sur un ensemble de graphes générés aléatoirement. Nous analysons les performances de chaque méthode en termes de complexité théorique et de temps d'exécution pratique. 
+Dans ce travail, nous comparons différentes méthodes de résolution du problème du flot maximum.  Nous étudions les algorithmes classiques, tels que Ford-Fulkerson, Edmonds-Karp, Poussage-Réétiquetage et Dinic, ainsi que des approches basées sur la programmation linéaire. Nous mettons en œuvre ces algorithmes et les testons sur un ensemble de graphes générés aléatoirement. Nous analysons les performances de chaque méthode en termes de complexité théorique et de temps d'exécution pratique. 
 \end{abstract}
 \newpage
 {\hypersetup{hidelinks}
@@ -105,7 +105,7 @@ Dans ce travail, nous comparons différentes méthodes de résolution du problè
 \section{Introduction}
 Le problème du flot maximum est l’un des problèmes fondamentaux en algorithmique et en recherche opérationnelle. Il consiste à trouver, dans un réseau orienté avec des capacités sur les arcs, le flot de valeur maximale entre une source et un puits, tout en respectant les contraintes de capacité et de conservation des flots.
 
-Depuis plusieurs décennies, de nombreux algorithmes ont été développés pour résoudre ce problème, parmi lesquels on compte les méthodes classiques comme Ford-Fulkerson, Edmonds-Karp ou encore Dinic, mais aussi des approches basées sur la programmation linéaire. Ces algorithmes diffèrent à la fois par leur complexité théorique, leur comportement pratique et leur adaptabilité à différents types de graphes.
+Depuis plusieurs décennies, de nombreux algorithmes ont été développés pour résoudre ce problème, parmi lesquels on compte les méthodes classiques, comme Ford-Fulkerson, Edmonds-Karp ou encore Dinic, mais aussi des approches basées sur la programmation linéaire. Ces algorithmes diffèrent à la fois par leur complexité théorique, leur comportement pratique et leur adaptabilité à différents types de graphes.
 
 L’objectif de ce travail est de comparer ces différentes méthodes de résolution, à la fois sur le plan théorique et expérimental. Nous mettrons en \oe uvre ces algorithmes, puis les testerons sur des jeux d’essais variés pour évaluer leurs performances respectives.
 
@@ -132,7 +132,7 @@ Le problème du flot maximum se définit sur un graphe orienté $G = (V, E)$, o�
 \end{itemize}
 \end{definition}
 Le problème du flot maximum consiste donc à trouver un flot $f$ dans un réseau de flot, respectant les contraintes ci-dessus et maximisant $|f|$. Dans notre cas particulier, nous allons nous intéresser à des graphes orientés avec un flot entier et des capacités entières.
-\paragraph{Applications :} Le flot maximum possède de nombreuses applications concrètes : planification logistique, réseaux de transport (par exemple pour maximiser le trafic dans un réseau routier), routage dans les réseaux de communication, allocation de ressources, et même en algorithmique pour résoudre d’autres problèmes puisque le problème du flot maximum est \textsc{P-complet}. C'est-à-dire qu'il se résout en temps polynomial, et que tout problème polynomial peut s'y réduire par une réduction en espace logarithmique\cite{GOLDSCHLAGER1982105}.
+\paragraph{Applications :} Le flot maximum possède de nombreuses applications concrètes : planification logistique, réseaux de transport (par exemple pour maximiser le trafic dans un réseau routier), routage dans les réseaux de communication, allocation de ressources, et même en algorithmique pour résoudre d’autres problèmes, puisque le problème du flot maximum est \textsc{P-complet}. C'est-à-dire qu'il se résout en temps polynomial, et que tout problème polynomial peut s'y réduire par une réduction en espace logarithmique\cite{GOLDSCHLAGER1982105}.
 
 Durant la guerre froide, le problème du flot maximum a été utilisé par l'US Air Force pour identifier les portions du réseau ferré soviétique à cibler\cite{schrijver2002history}.
 \subsection{Exemple}
@@ -168,7 +168,7 @@ Durant la guerre froide, le problème du flot maximum a été utilisé par l'US 
 	\end{center}
 \end{figure}
 
-Dans cet exemple, le sommet $A$ reçoit deux unités depuis la source et les envoies au sommet $B$. Le sommet $B$ redistribue ce flot vers les sommets $D$ et $P$. La valeur du flot est de $2$, c'est la somme des flots sortants de la source $S$ (et également la somme des flots entrants dans le puits). 
+Dans cet exemple, le sommet $A$ reçoit deux unités depuis la source et les envoie au sommet $B$. Le sommet $B$ redistribue ce flot vers les sommets $D$ et $P$. La valeur du flot est de $2$, c'est la somme des flots sortants de la source $S$ (et également la somme des flots entrants dans le puits). 
 
 \section{Définitions générales}
 
@@ -324,7 +324,7 @@ L'algorithme de Ford-Fulkerson est le plus connu parmi tous. Celui-ci consiste �
 \subsubsection{Complexité}
 La complexité de l’algorithme dépend du choix des chemins augmentants :
 \begin{itemize}
-    \item Si on choisit les chemins de manière arbitraire (parcours en profondeur par exemple), la complexité est $\mathcal{O}(|E|f^\star)$, où $f^\star$ est la valeur du flot maximal (supposée entière) et $|E|$ le nombre d’arêtes.
+    \item Si on choisit les chemins de manière arbitraire (parcours en profondeur, par exemple), la complexité est $\mathcal{O}(|E|f^\star)$, où $f^\star$ est la valeur du flot maximal (supposée entière) et $|E|$ le nombre d’arêtes.
     \item En l’absence de capacité entière, l’algorithme peut ne jamais converger.
 \end{itemize}
 Cette dépendance à la valeur du flot maximal rend l’algorithme peu efficace dans les cas où les capacités sont très grandes.
@@ -557,7 +557,7 @@ L’idée est que la distance (en nombre d’arêtes) entre la source et un somm
 \subsubsection{Avantages/inconvénients}
 \textbf{Avantages :}
 \begin{itemize}
-    \item Garantie de terminaison et de complexité polynomiale. car elle ne dépend plus de la valeur du flot maximal, mais du nombre d'arcs et de sommets.Cette Algorithme a un comportement déterministe il est donc sûr de terminer tout en étant simple à implémenter et à analyser.
+    \item Garantie de terminaison et de complexité polynomiale, car elle ne dépend plus de la valeur du flot maximal, mais du nombre d'arcs et de sommets. Cet Algorithme a un comportement déterministe, il est donc sûr de terminer tout en étant simple à implémenter et à analyser.
 \end{itemize}
 
 \textbf{Inconvénients :}
@@ -2003,20 +2003,20 @@ Afin de créer un grand nombre d'instances, nous avons dû commencer par génér
 Cette classe permet de générer un réseau de flot orienté en plusieurs étapes :
 
 \begin{enumerate}
-    \item Elle crée un graphe vide et commence par lui ajouter l'ensemble de ses sommets, chacun identifié par un nom ou un numéro. Le nombre de sommet $n$ crée est controlé à l'avance.
+    \item Elle crée un graphe vide et commence par lui ajouter l'ensemble de ses sommets, chacun identifié par un nom ou un numéro. Le nombre de sommets $n$ créés est contrôlé à l'avance.
     
     \item Ensuite, elle établit des arêtes orientées entre ces sommets. Ces connexions sont ajoutées de manière aléatoire, tout en respectant certaines contraintes :
     \begin{itemize}
         \item Soit on fixe à l’avance un nombre précis de connexions.
         \item Soit on utilise une densité, c’est-à-dire une proportion du nombre maximal de connexions possibles.
     \end{itemize}
-	Ici dans le cas de nos instances, cette derniere méthode est utilisée. Pour expliquer plus clairement comment cela fonctionne, pour un graphe $G=(E,V)$ on pose $d \in [0,1]$ la densité, et ensuite $\forall x, y \in V$ la probabilité d'apparition de l'arête $xy$ est $d$. On essaie donc de créer le graphe complet avec une probabilité $d$ d'apparition sur chaque arêtes.\\
+	Ici, dans le cas de nos instances, cette dernière méthode est utilisée. Pour expliquer plus clairement comment cela fonctionne, pour un graphe $G=(E,V)$ on pose $d \in [0,1]$ la densité, et ensuite $\forall x, y \in V$ la probabilité d'apparition de l'arête $xy$ est $d$. On essaie donc de créer le graphe complet avec une probabilité $d$ d'apparition sur chaque arête.\\
 	Nous avons ainsi pu faire varier la densité de nos graphes entre 0.1 et 0.9.\\
     Chaque arête reçoit finalement une capacité aléatoire, c’est-à-dire une valeur représentant sa \og capacité\fg{} ou \og poids\fg{}.
     
     \item Une fois les arêtes ajoutées, deux sommets distincts sont choisis au hasard : un sommet source (point de départ) et un sommet puits (point d’arrivée).
     
-    \item Les arêtes qui partent directement de la source et celles qui arrivent directement au puits sont récupérée et stockées à part.
+    \item Les arêtes qui partent directement de la source et celles qui arrivent directement au puits sont récupérées et stockées à part.
     
     \item Finalement, le graphe est retourné avec :
     \begin{itemize}
@@ -2031,7 +2031,7 @@ En résumé, cette classe construit un graphe orienté aléatoire, puis désigne
 \subsection{Tests sur les graphes générés}
 \label{sec:creer_instances}
 
-Les graphes étant générés aléatoirement, on peut obtenir des graphes non connexes, des sommets non reliés à la source ou au puits, etc. Tout cela fausserait les instances. En effet, si le graphe n’est pas connexe, cela pourrait fausser les résultats : un graphe de taille $1000$ pourrait se résumer à un de taille $100$ (si il n'est pas connexe par exemple), ce que l’on ne souhaite pas. On pourrait même tomber sur des graphes où nos algorithmes ne convergeraient pas, par exemple si la source et le puits ne sont pas reliés.\\
+Les graphes étant générés aléatoirement, on peut obtenir des graphes non connexes, des sommets non reliés à la source ou au puits, etc. Tout cela fausserait les instances. En effet, si le graphe n’est pas connexe, cela pourrait fausser les résultats : un graphe de taille $1000$ pourrait se résumer à un de taille $100$ (s'il n'est pas connexe, par exemple), ce que l’on ne souhaite pas. On pourrait même tomber sur des graphes où nos algorithmes ne convergeraient pas, par exemple si la source et le puits ne sont pas reliés.\\
 
 On va donc devoir créer un ensemble de tests sur nos graphes afin de s’assurer qu’ils soient bien formés et propices à être utilisées comme instances. Cela pourra prendre du temps car nous générons les graphes aléatoirement et n’en conservons qu’une petite partie. Cependant ce n’est pas très grave car le jeu d’instances n’a besoin d’être créé qu’une seule fois. Il n’est donc pas nécessaire que le code qui permet sa création soit bien optimisé : on le lance un soir et on récupère les instances le lendemain dans le pire des cas.
 Nous avons donc implémenté une fonction \textcolor{green!60!black}{IsConnected} qui permet de vérifier les deux critères suivants sur le graphe :
@@ -2040,7 +2040,7 @@ Nous avons donc implémenté une fonction \textcolor{green!60!black}{IsConnected
 	\item Depuis n'importe quel sommet du graphe, on peut atteindre le puits.
 \end{enumerate}
 
-Évidement, la vérification de ces deux propriétés implique la connexité du graphe. Ces tests permetent donc de nous assurer que le graphe que nous avons généré est bien formé. En effet, les algorithmes de flot convergerons sur nos graphes car le premier point nous assure qu'on peut créer un flot sur ce graphe (la source est bien connectée au puits). Les points 2 et 3 nous permettent d'être sûrs que sur un graphe de taille $n$, chaque sommet aura bien son importance et sera bien pris en compte par le calcul. Le graphe ne peut donc pas se résumer à une version plus petite de lui-même. Nous donnons ici quelques exemples de graphes générés aléatoirement et si ils sont valides ou non :\\
+Évidemment, la vérification de ces deux propriétés implique la connexité du graphe. Ces tests permettent donc de nous assurer que le graphe que nous avons généré est bien formé. En effet, les algorithmes de flot convergeront sur nos graphes car le premier point nous assure qu'on peut créer un flot sur ce graphe (la source est bien connectée au puits). Les points 2 et 3 nous permettent d'être sûrs que sur un graphe de taille $n$, chaque sommet aura bien son importance et sera bien pris en compte par le calcul. Le graphe ne peut donc pas se résumer à une version plus petite de lui-même. Nous donnons ici quelques exemples de graphes générés aléatoirement et s'ils sont valides ou non :\\
 \begin{center}
 	\begin{tikzpicture}[
 		vertex/.style={circle, draw, fill=blue!20, minimum size=15pt, inner sep=1pt},
@@ -2085,7 +2085,7 @@ Nous avons donc implémenté une fonction \textcolor{green!60!black}{IsConnected
 	\end{tikzpicture}
 \end{center}
 
-Ainsi le graphe $G$ ne sera pas pris car on ne peux pas accéder au puit depuis les sommets $A$ et $B$. Le graphe $G'$ quand à lui ne sera pas pris car il n'est pas connexe (le sommet $D'$ est isolé), aussi on ne peux pas accéder au sommet $A'$ depuis la source $S'$. En revanche, le graphe suivant est tout à fait valide :
+Ainsi le graphe $G$ ne sera pas pris car on ne peut pas accéder au puit depuis les sommets $A$ et $B$. Le graphe $G'$ quant à lui ne sera pas pris car il n'est pas connexe (le sommet $D'$ est isolé), aussi on ne peut pas accéder au sommet $A'$ depuis la source $S'$. En revanche, le graphe suivant est tout à fait valide :
 
 \begin{center}
 	\begin{tikzpicture}[
@@ -2147,7 +2147,7 @@ Nous avons choisi de rester sur des tailles raisonnables afin que tous les algor
 \begin{center}
 $\frac{200 \times (200-1)}{2} \times 2 \times 0{,}9 = 35 820$ arêtes
 \end{center}
-Le $\frac{200 \times (200-1)}{2} \times 2$ correspondant à toutes les arêtes possibles. En effet $\frac{n \times (n-1)}{2}$ pour le graphe complet, $\times 2$ car les arêtes sont orientés. On multiplie par la densité pour savoir le nombre d'arête en moyenne, dans notre exemple la densité est de $0,9$.
+Le $\frac{200 \times (200-1)}{2} \times 2$ correspondant à toutes les arêtes possibles. En effet $\frac{n \times (n-1)}{2}$ pour le graphe complet, $\times 2$ car les arêtes sont orientées. On multiplie par la densité pour savoir le nombre d'arête en moyenne, dans notre exemple la densité est de $0,9$.
 \section{Développement Logiciel}
 
 \subsection{Organisation du projet}
@@ -2167,7 +2167,7 @@ Nous avons ensuite entamé une période de recherche sur les algorithmes. En eff
 
 Nous nous sommes à nouveau retrouvé semaine 3 pour discuter de l'avancement de la recherche et de la mise en place des algorithmes. Nous avons choisi notre langage de programmation, C\#, et nous sommes mis d'accord sur la structure pour commencer à développer les premières classes.\\
 
-Nous nous sommes répartis les algorithmes à implémenter, et chacun a commencé à travailler sur son propre algorithme. Nous avons également attribué la tâche de la création des instances à un membre de l'équipe ainsi que celle de la création des tests unitaires. En parallèle, nous avons commencé à travailler sur le rapport, chacun sur sa partie. Lorsque tout était correctement implémenté, nous avons pu lancer les séries de calculs sur les différents algorithmes et ainsi produire les résultats et les courbes de performance dont font l'objet ce TER.
+Nous nous sommes réparti les algorithmes à implémenter, et chacun a commencé à travailler sur son propre algorithme. Nous avons également attribué la tâche de la création des instances à un membre de l'équipe ainsi que celle de la création des tests unitaires. En parallèle, nous avons commencé à travailler sur le rapport, chacun sur sa partie. Lorsque tout était correctement implémenté, nous avons pu lancer les séries de calculs sur les différents algorithmes et ainsi produire les résultats et les courbes de performance dont font l'objet ce TER.
 
 \subsection{Travail collaboratif avec Git}
 
@@ -2213,36 +2213,36 @@ Quelques fonctions de bases sont codées, comme par exemple \textcolor{green!60!
 
 \subsubsection{FlowNetwork}
 
-La classe \textcolor{violet}{FlowNetwork} est au cœur de la bibliothèque de calcul de flot maximal. Elle étend la structure de base \textcolor{violet}{Graph} en introduisant plusieurs notions fondamentales. C'est depuis cette classe que l'on va gérer tout les algorithmes de calcul de flot maximum qui consituent le coeur de ce projet. Nous nous proposons donc naturellement de détailler cette classe, qui est la plus importante.\\
+La classe \textcolor{violet}{FlowNetwork} est au cœur de la bibliothèque de calcul de flot maximal. Elle étend la structure de base \textcolor{violet}{Graph} en introduisant plusieurs notions fondamentales. C'est depuis cette classe que l'on va gérer tout les algorithmes de calcul de flot maximum qui constituent le cœur de ce projet. Nous nous proposons donc naturellement de détailler cette classe, qui est la plus importante.\\
 
 En plus de l'héritage de la classe \textcolor{violet}{Graph}, la classe \textcolor{violet}{FlowNetwork} introduit les attributs \textcolor{blue!60}{Source} et \textcolor{blue!60}{Puits}, qui représentent respectivement le sommet source et le sommet puits du réseau. Ces attributs sont essentiels pour les algorithmes de flot maximal, car ils définissent les points d'entrée et de sortie du réseau.\\
 
-Cette classe concentrant tout les algorithmes de calcul sur un réseau de flot, elle contient évidement tout les algorithmes de de calcul de flot maximum que nous avons implémentés. Nous en redonnons ici une liste non exhaustive :
+Cette classe concentrant tous les algorithmes de calcul sur un réseau de flot, elle contient évidemment tous les algorithmes de calcul de flot maximum que nous avons implémentés. Nous en redonnons ici une liste non exhaustive :
 \begin{itemize}
 	\item \textcolor{green!60!black}{FordFulkerson}
 	\item \textcolor{green!60!black}{EdmondsKarp}
 	\item \textcolor{green!60!black}{Dinic}
 	\item \textcolor{green!60!black}{PushRelabel}
 \end{itemize}
-La résolution via la programmation linéaire fait l'objet d'une classe séparée, \textcolor{violet}{PL}, car cette méthode ne constitue pas réellement en elle même un algorithmes sur les réseaux de flot.\\
+La résolution via la programmation linéaire fait l'objet d'une classe séparée, \textcolor{violet}{PL}, car cette méthode ne constitue pas réellement en elle même un algorithme sur les réseaux de flot.\\
 
-Plusieurs fontions essentielles aux fonctionnement de ces algorithmes où à d'autres taches telles que la constructions d'instances on également été implémentées. En voici les plus importantes :
+Plusieurs fonctions essentielles au fonctionnement de ces algorithmes ou à d'autres tâches telles que la construction d'instances ont  également été implémentées. En voici les plus importantes :
 \begin{itemize}
 	\item \textcolor{green!60!black}{DFS\_GetPathInLevelGraph} : implémente une recherche en profondeur (DFS) pour trouver un chemin augmentant dans un graphe résiduel (typiquement dans l'algorithme de FordFulkerson ou de Dinic).
 	\item \textcolor{green!60!black}{BFS\_GetLevels} : utilise une recherche en largeur (BFS) pour attribuer à chaque sommet son niveau (distance minimale en nombre d’arêtes depuis la source) dans un graphe.
 	\item \textcolor{green!60!black}{GetResidualGraph} : permet de récupérer le graphe résiduel du réseau de flot.
-	\item \textcolor{green!60!black}{GetMaxFlow} : permet de récupérer la valeur du flot maximum. L'interêt et les propriétés d'un tel graphes sont détaillés dans la section sur les algorithmes de flot maximum.
+	\item \textcolor{green!60!black}{GetMaxFlow} : permet de récupérer la valeur du flot maximum. L'intérêt et les propriétés d'un tel graphe sont détaillés dans la section sur les algorithmes de flot maximum.
 	\item \textcolor{green!60!black}{IsConnected} : cette méthode n'est pas utilisée dans les algorithmes de flot maximum, mais elle a été très utile lors de la création des instances. En effet, elle permet de vérifier plusieurs propriétés sur le graphe qui sont essentielles pour s'assurer que le graphe est \og{}bien formé\fg{}. Comme détaillé dans la partie sur les instances, elle vérifie que tout sommet est accessible depuis la source et que tout sommet admet un chemin jusqu'au puits. Elle décide donc si un graphe est gardé comme instance ou jeté.
 	\item \textcolor{green!60!black}{CreateGraphFile} : permet de créer un fichier texte contenant la représentation du graphe. Cette méthode est utilisée lors de la création des instances, afin de pouvoir les sauvegarder et les réutiliser plus tard.
 \end{itemize}
-Pour plus de precisions sur le fonctionnement des méthodes relatives aux algorithmes de flot maximum, nous vous renvoyons à la \hyperref[sec:algos]{\textcolor{black}{section sur les algorithmes de flot maximum.}}
+Pour plus de précisions sur le fonctionnement des méthodes relatives aux algorithmes de flot maximum, nous vous renvoyons à la \hyperref[sec:algos]{\textcolor{black}{section sur les algorithmes de flot maximum.}}
 
 \subsubsection{FileFlowNetwork}
 
 La classe \textcolor{violet}{FileFlowNetwork} a pour rôle de générer dynamiquement un réseau de flot (\textcolor{violet}{FlowNetwork}) à partir d’un fichier texte structuré. Elle lit dans ce fichier les informations nécessaires à la construction du graphe : l'identifiant du sommet source, celui du puits, puis une liste d’arêtes définies par deux sommets et une capacité. Le fichier est lu ligne par ligne, chaque sommet étant instancié sous forme d’objet \textcolor{violet}{Vertex}, et les arêtes ajoutées avec leur poids dans un objet \textcolor{violet}{Graph}. À la fin de la lecture, la méthode \textcolor{green!60!black}{Generate} de la classe construit et retourne une instance de \textcolor{violet}{FlowNetwork} contenant la topologie complète du graphe, prête à être utilisée dans les algorithmes de flot maximum.
 
 \subsubsection{RandomFlowNetwork}
-La classe \textcolor{violet}{RandomFlowNetwork} est responsable de la génération aléatoire de graphes orientés, qui sont ensuite utilisés comme instances pour les algorithmes de flot maximum. Elle crée un graphe orienté en ajoutant des sommets et des arêtes de manière aléatoire, tout en respectant une densité spécifiée. La classe permet également de définir une source et un puits, ainsi que d'assigner des capacités aux arêtes. Sa méthode \textcolor{green!60!black}{Generate} retourne un objet \textcolor{violet}{FlowNetwork} représentant le réseau de flot. La methode de génération de graphes aléatoires est détaillée dans la \hyperref[sec:creer_instances]{\textcolor{black}{section sur la création des instances}}.
+La classe \textcolor{violet}{RandomFlowNetwork} est responsable de la génération aléatoire de graphes orientés, qui sont ensuite utilisés comme instances pour les algorithmes de flot maximum. Elle crée un graphe orienté en ajoutant des sommets et des arêtes de manière aléatoire, tout en respectant une densité spécifiée. La classe permet également de définir une source et un puits, ainsi que d'assigner des capacités aux arêtes. Sa méthode \textcolor{green!60!black}{Generate} retourne un objet \textcolor{violet}{FlowNetwork} représentant le réseau de flot. La méthode de génération de graphes aléatoires est détaillée dans la \hyperref[sec:creer_instances]{\textcolor{black}{section sur la création des instances}}.
 
 \subsubsection{Flow}
 
@@ -2272,7 +2272,7 @@ Même si C\# n’est pas le langage le plus utilisé dans les publications en al
 \subsection{Tests}
 Tout au long du projet, nous avons mis en place des tests unitaires pour vérifier le bon fonctionnement de nos algorithmes et de nos classes. Ces tests ont été réalisés à l'aide du framework de test intégré à Rider, qui nous a permis d'écrire des tests clairs et faciles à maintenir.
 
-Nous vérifions notamment que les algorithmes de flot maximum renvoyaient bien le flot maximum attendu pour des instances connues, et que les graphes générés étaient bien formés (connectés, avec une source et un puits valides). Ces tests nous ont permis de garantir la robustesse de notre code et de détecter rapidement d'éventuelles régressions lors des modifications. Nous testons nos algorithmes sur des centaines, voir des milliers d'instances aléatoirement générées, ce qui nous permet de nous assurer que les algorithmes fonctionnent correctement dans une grande variété de cas.
+Nous vérifions notamment que les algorithmes de flot maximum renvoyaient bien le flot maximum attendu pour des instances connues, et que les graphes générés étaient bien formés (connectés, avec une source et un puits valides). Ces tests nous ont permis de garantir la robustesse de notre code et de détecter rapidement d'éventuelles régressions lors des modifications. Nous testons nos algorithmes sur des centaines, voire des milliers d'instances aléatoirement générées, ce qui nous permet de nous assurer que les algorithmes fonctionnent correctement dans une grande variété de cas.
 \section{Méthodologie Expérimentale}
 
 
@@ -2289,9 +2289,9 @@ Afin de pouvoir commencer notre analyse nous présentons d'abord ce premier grap
     \label{fig:example}
 \end{figure}
 
-Cette première figure représente les performances de tous les algorithmes de flot maximum que nous avons implémentés. pour chaque point du graphe, nous avons fait la moyenne sur toutes les instances de même taille. Il y a ainsi 8 tailles différentes, de 30 à 200, on a donc $n \in \left\{30, 40, 50, 60, 70, 80, 90, 100, 120, 150, 200\right\}$, et pour chaque taille nous avons 4 densités différentes avec $d \in \left\{0.3, 0.5, 0.7, 0.9\right\}$ nous avons enfin 5 instances par densité. Chaque point est donc la moyenne de 20 instances.\\
+Cette première figure représente les performances de tous les algorithmes de flot maximum que nous avons implémentés. Pour chaque point du graphe, nous avons fait la moyenne sur toutes les instances de même taille. Il y a ainsi 8 tailles différentes, de 30 à 200, on a donc $n \in \left\{30, 40, 50, 60, 70, 80, 90, 100, 120, 150, 200\right\}$, et pour chaque taille nous avons 4 densités différentes avec $d \in \left\{0.3, 0.5, 0.7, 0.9\right\}$ nous avons enfin 5 instances par densité. Chaque point est donc la moyenne de 20 instances.\\
 
-Pour cette première figure nous ne dépassons pas $n = 100$ car au delà de cette taille, les algorithmes de Ford-Fulkerson et d'Edmonds-Karp deviennent trop lents prendraient trop de temps pour converger. Aussi leurs comparaisons avec les autres algorithmes ne seraient pas pertinentes. Les autres courbes se confondraient en bas du graphique pendant que Ford-Fulkerson et Edmonds-Karp exploseraient. Nous etudierons donc les algorithmes de flot maximum sur des graphes de taille supérieure séparement.\\
+Pour cette première figure nous ne dépassons pas $n = 100$ car au delà de cette taille, les algorithmes de Ford-Fulkerson et d'Edmonds-Karp deviennent trop lents et prendraient trop de temps pour converger. Aussi leurs comparaisons avec les autres algorithmes ne seraient pas pertinentes. Les autres courbes se confondraient en bas du graphique pendant que Ford-Fulkerson et Edmonds-Karp exploseraient. Nous étudierons donc les algorithmes de flot maximum sur des graphes de taille supérieure séparément.\\
 
 Afin de commenter ces courbes, nous rappelons d'abord la complexité théorique de chaque algorithme :
 
@@ -2316,7 +2316,7 @@ Les premières courbes obtenues confirment clairement les écarts de complexité
 
 À l'inverse, des algorithmes plus avancés comme Dinic ou le Poussage-Réétiquetage, reconnus pour leur meilleure complexité théorique, se distinguent par une meilleure scalabilité. Leur temps d'exécution croît de manière bien plus modérée, ce qui les rend plus adaptés aux grands graphes.\\
 
-Concernant les solveurs de type PLNE, tels que Gurobi et SCIP, une différence de performance nette se dégage. SCIP s’avère significativement plus lent : il est environ deux fois plus long que l’algorithme de Poussage-Réétiquetage et jusqu’à dix fois plus lent que Dinic. À l’inverse, Gurobi offre des performances remarquables, surpassant l’ensemble des autres méthodes, y compris les algorithmes les plus puissants. Cela s’explique notamment par la sophistication de son infrastructure logicielle : Gurobi repose sur un moteur d’optimisation hautement performant, mais en grande partie opaque, fonctionnant comme une \og{}boîte noire\fg{}. À l’opposé, SCIP semble adopter une approche plus basique, plus proche d’une résolution manuelle d’un système linéaire, sans optimisation poussée des données ni techniques avancées de réduction du problème. De plus, il convient de noter que le temps d’exécution des solveurs de type PLNE inclut non seulement la résolution du programme linéaire, mais aussi la phase de modélisation du graphe en tant que programme linéaire. Cette conversion reste cependant peu coûteuse, comme en témoignent les excellentes performances de Gurobi. En effet, si cette phase de modélisation prenait le pas sur la résolution elle-même, Gurobi et SCIP présenteraient des temps d’exécution similaires à mesure que la taille des instances augmente. Ce n'est cependant pas le cas, on peut donc bien dire que les resultats obtenus témoignent bien de la complexité de résolution du système.\\
+Concernant les solveurs de type PLNE, tels que Gurobi et SCIP, une différence de performance nette se dégage. SCIP s’avère significativement plus lent : il est environ deux fois plus long que l’algorithme de Poussage-Réétiquetage et jusqu’à dix fois plus lent que Dinic. À l’inverse, Gurobi offre des performances remarquables, surpassant l’ensemble des autres méthodes, y compris les algorithmes les plus puissants. Cela s’explique notamment par la sophistication de son infrastructure logicielle : Gurobi repose sur un moteur d’optimisation hautement performant, mais en grande partie opaque, fonctionnant comme une \og{}boîte noire\fg{}. À l’opposé, SCIP semble adopter une approche plus basique, plus proche d’une résolution manuelle d’un système linéaire, sans optimisation poussée des données ni techniques avancées de réduction du problème. De plus, il convient de noter que le temps d’exécution des solveurs de type PLNE inclut non seulement la résolution du programme linéaire, mais aussi la phase de modélisation du graphe en tant que programme linéaire. Cette conversion reste cependant peu coûteuse, comme en témoignent les excellentes performances de Gurobi. En effet, si cette phase de modélisation prenait le pas sur la résolution elle-même, Gurobi et SCIP présenteraient des temps d’exécution similaires à mesure que la taille des instances augmente. Ce n'est cependant pas le cas, on peut donc bien dire que les résultats obtenus témoignent bien de la complexité de résolution du système.\\
 
 On peut constater que les résultats sont en parfaite adéquation avec la littérature algorithmique, validant ainsi notre implémentation et notre protocole expérimental.
 
